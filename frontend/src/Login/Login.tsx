@@ -39,9 +39,7 @@ function Login() {
 
 // Check for User
 function callUser(user: string, password: string){
-    console.log(password)
-    console.log(user)
-    axios.post('/api/echo', { user, password })
+    axios.post('/api/login', { user, password })
         .then(response => {
             console.log(response.data)
         })
