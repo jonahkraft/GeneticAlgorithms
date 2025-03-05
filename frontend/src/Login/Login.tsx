@@ -35,6 +35,7 @@ function Login() {
                     <div className="signup_link">
                         Not a Member ? <a href="signup.php">Signup</a>
                     </div>
+                    <a href="../../visualization.html" id="guest" >Continue as Simulator</a>
                 </form>
             </div>
         </>
@@ -52,8 +53,6 @@ function callUser(user: string, password: string){
             console.error(error)
         })
 }
-
-
 
 ReactDOM.createRoot(document.getElementById('root_login')!).render(<Login></Login>);
 //export default Login
