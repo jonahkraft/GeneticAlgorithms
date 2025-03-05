@@ -10,7 +10,7 @@ docker build --tag genetic-algorithms .
 To run the docker image use:
 
 ```bash
-docker run genetic-algorithms
+docker run -p 5000:5000 genetic-algorithms
 ```
 
 On Linux/Unix systems docker commands require root privileges by default.
