@@ -6,12 +6,19 @@ function HomePage() {
     return (
         <>
             <Header />
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut beatae fugiat non. Fuga nulla saepe tempore. Aliquam at consectetur distinctio eius eligendi, eum impedit obcaecati quos ratione saepe sit suscipit!</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi iste quos sapiente tempora ut veniam? Aliquid amet delectus dolores error et excepturi iure maxime, mollitia neque provident, sint ullam!</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus alias asperiores aspernatur cumque dolorem dolores error explicabo facilis id inventore ipsam ipsum maxime necessitatibus, nesciunt porro quam quas quod similique.</p>
-            <hr/>
+            <h2>Hallo Welt</h2>
 
+            <br/>
 
+            <div>
+                <button>Algorithmus 1</button>
+                <button>Algorithmus 2</button>
+                <button>Algorithmus 3</button>
+                <button>Algorithmus 4</button>
+                <button>Algorithmus 5</button>
+            </div>
+
+            <br/>
 
             <Footer />
         </>
