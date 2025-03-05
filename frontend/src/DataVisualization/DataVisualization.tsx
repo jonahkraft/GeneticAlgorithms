@@ -6,6 +6,11 @@ function toggleSidebar(side: any){
     document.getElementById(side + 'Sidebar')?.classList.toggle('open')
 }
 
+function printOutput(side: String) {
+    const para = document.getElementById("output")
+    para?.append("test")
+}
+
 function DataVisualization() {
     return (
         <>
@@ -18,7 +23,8 @@ function DataVisualization() {
                     <h2>Diagramm wird hier angezeigt</h2>
                 </div>
                 <div className="sidebar right" id="rightSidebar">Right Sidebar Content</div>
-                <button className="toggle-btn right-btn" onClick={() => toggleSidebar('right')}>☰</button>
+                <button type="button" className="toggle-btn right-btn" onClick={() => printOutput("test")}>☰</button>
+                <p id="output">Oh nein, wenn dass die Mama sieht.</p>
             </div>
             <Footer/>
         </>
