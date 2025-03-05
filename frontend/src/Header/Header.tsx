@@ -3,18 +3,15 @@ import './Header.module.css'
 function Header() {
     return (
         <nav>
-            <input type="checkbox" id="check"/>
             <label htmlFor="check" className="checkbtn">
                 <i className="fas fa-bars"></i>
             </label>
-            <a href="#home" className="logo">Logo</a>
+            <a href="../../index.html" className="logo"><img src="../../public/favicon.svg" alt="Logo" width="20px" height="20px"/></a>
             <ul id="navigation">
-                <li><a href="../../login.html" className="btn active">Home</a>
+                <li><a href="" className="btn active">Home</a>
                 </li>
-                <li><a href="#about" className="btn">Blank</a></li>
-                <li><a href="#menu" className="btn">Blank</a></li>
-                <li><a href="#order" className="btn">Blank</a></li>
-                <li><a href="#contact" className="btn">Blank</a></li>
+                <li><a href="#" className="btn">Datenvisualisierung</a></li>
+                <li><a href="../../login.html" className="btn">Login</a></li>
             </ul>
         </nav>
     )
