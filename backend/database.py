@@ -1,25 +1,20 @@
 import sqlite3
 import hashlib
 
-user_connection = sqlite3.connect("backend\\db\\users.db")
-
-#cur = user_connection.cursor()
+#user_connection = sqlite3.connect("backend\\db\\users.db")
+#cur.cursor()
 #cur.execute("""CREATE TABLE users(
 #            id INTEGER PRIMARY KEY,
-#            first_name text NOT NULL,
-#            last_name text NOT NULL,
+#            user_name text NOT NULL UNIQUE,
 #            role text NOT NULL,
 #            hashed_password text NOT NULL)""")
 
-def add_user(fist_name:str, last_name: str, role: str, password: str, connection: sqlite3.Connection = user_connection)-> None:
+def add_user(user_name: str, role: str, password: str, connection_path: str)-> None:
     """
     Adds a user to the user database
 
-    :param first_name: The first Name of the User
-    :type first_name: str
-
-    :param last_name: The last Name of the User
-    :type last_name: str
+    :param user_name: The first Name of the User
+    :type user_name: str
 
     :param role: The users role
     :type role: str
@@ -27,40 +22,55 @@ def add_user(fist_name:str, last_name: str, role: str, password: str, connection
     :param password: The users password
     :type password: str
 
-    :param conn: connection to the database
-    :type conn: sqlite3.Connection
+    :param conn: path to the database
+    :type conn: str
 
     """
-    sql = ("INSERT INTO users(first_name,last_name,role,hashed_password) VALUES(?,?,?,?)")
+    sql = ("INSERT INTO users(user_name,role,hashed_password) VALUES(?,?,?)")
     
+    connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
     h = hashlib.sha256()
     h.update(str.encode(password))
-    cur.execute(sql,(fist_name,last_name,role,h.hexdigest()))
+    cur.execute(sql,(user_name,role,h.hexdigest()))
 
     connection.commit()
 
-def check_password(users_first_name: str, users_last_name: str, password: str, connection: sqlite3.Connection = user_connection) -> bool:
+def get_role(user_name:int, connection_path: str)-> str:
+    """
+    Returns the role of the entered user
+
+    :param user_name: The name of the user
+    :type user_name: str
+
+    :param conn: path to the database
+    :type conn: str
+    """
+
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+    cur.execute("SELECT role FROM users WHERE ?=user_name",[user_name])
+    return cur.fetchone()[0]
+
+def check_password(user_name: str, password: str, connection_path: str) -> bool:
     """
     Checks if an entered password is correct
 
-    :param users_first_name: The first Name of the User
-    :type users_first_name: str
-
-    :param users_last_name: The last Name of the User
-    :type users_last_name: str
+    :param user_name: The name of the user
+    :type user_name: str
 
     :param password: The entered password
     :type password: str
 
-    :param conn: connection to the database
-    :type conn: sqlite3.Connection
+    :param conn: path to the database
+    :type conn: str
     """
 
+    connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
-    cur.execute(f"SELECT hashed_password FROM users WHERE ?=first_name AND ?=last_name",[users_first_name,users_last_name])
+    cur.execute("SELECT hashed_password FROM users WHERE ?=user_name",[user_name])
 
     users_hashed_password = cur.fetchone()[0]
     h = hashlib.sha256()
@@ -69,11 +79,27 @@ def check_password(users_first_name: str, users_last_name: str, password: str, c
 
     return users_hashed_password == entered_hased_password
 
+def user_exists(user_name: str, connection_path: str) -> bool:
+    """
+    Checks if a user exists in the database
+
+    :param user_name: The first Name of the User
+    :type user_name: str
+
+    :param conn: path to the database
+    :type conn: str
+    """
+
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+
+    cur.execute("SELECT * FROM users WHERE ?=user_name",[user_name])
+    return len(cur.fetchall()) == 1
 
 if __name__ == "__main__":
     con = sqlite3.connect("backend\\db\\users.db")
     
-    #add_user(con, "Simon", "Lauberheimer", "Guest", "password")
-    #add_user(con, "Thomas", "Kottenhahn", "Admin", "1234")
+    #add_user("Simon Lauberheimer", "Guest", "aab")
+    #add_user("Thomas Kottenhahn", "Admin", "1234")
 
-    print(check_password(con,"Thomas","Kottenhahn","1234"))
+    print(get_role("Thomas Kottenhahn"))
