@@ -31,35 +31,35 @@ section {
 }
 
 section#home {
-    background: url("assets/img.png");
+    background: url("../assets/img.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     color: #12192c;
 }
 
 section#about {
-    background: url("assets/img.png");
+    background: url("../assets/img.png");
     color: #fff;
     background-repeat: no-repeat;
     background-size: 100% 100%;
 }
 
 section#menu {
-    background: url("assets/img.png");
+    background: url("../assets/img.png");
     color: #fff;
     background-repeat: no-repeat;
     background-size: 100% 100%;
 }
 
 section#contact {
-    background: url("assets/img.png");
+    background: url("../assets/img.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     color: #fff;
 }
 
 section#order {
-    background: url("assets/img.png");
+    background: url("../assets/img.png");
     color: #fff;
     background-repeat: no-repeat;
     background-size: 100% 100%;
