@@ -39,31 +39,36 @@ def login():
     :returns JSON
     {
         "registered": bool,
-        "passwordCorrect": bool,
+        "password_correct": bool,
+        "access_token": "<token>"
     }
 
     """
     
-    username = request.json.get("username", None)
-    password = request.json.get("password", None)
+    data = request.get_json()
+
+    username = data["username"]
+    password = data["password"]
 
     response = {
         "registered": False,
-        "passwordCorrect": False,
+        "password_correct": False,
+        "access_token": ""
     }
 
-    if not db.user_exists(username, "db\\users.db"):
+    if not db.user_exists(username, "db/users.db"):
         return jsonify(response), 401
 
     response["registered"] = True
 
-    if not db.check_password(username, password, "db\\users.db"):
+    if not db.check_password(username, password, "db/users.db"):
        return jsonify(response), 401 
 
-    response["passwordCorrect"] = True
+    response["password_correct"] = True
 
-    access_token = create_access_token(identity=username)
-    return jsonify(response, access_token=access_token)
+    response["access_token"] = create_access_token(identity=username)
+
+    return jsonify(response), 200
 
 @api.route("/api/register", methods = ["POST"])
 def register():
@@ -81,3 +86,12 @@ def register():
     }
 
     """
+
+@api.route("/api/protected_test", methods = ["POST"])
+@jwt_required()
+def protected_test():
+     # Access the identity of the current user with get_jwt_identity
+    current_user = get_jwt_identity()
+    print(current_user)
+    return jsonify(logged_in_as=current_user), 200
+
