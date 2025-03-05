@@ -6,12 +6,7 @@ import os
 app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app)  # Allow frontend to communicate with backend
 
-@app.route("/api/echo", methods = ["POST"])
-def api_echo():
-    """Echo the received message back to client"""
-    msg = request.json
-    print(f"Echo: {msg}")
-    return jsonify(msg), 200
+import api
 
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
@@ -24,6 +19,7 @@ def serve_react(path: str):
             return send_from_directory(app.static_folder, path)
 
     return send_from_directory(app.static_folder, "index.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
