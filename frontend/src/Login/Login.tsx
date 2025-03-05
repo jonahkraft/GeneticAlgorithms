@@ -1,6 +1,7 @@
 import './Login.css'
 import ReactDOM from 'react-dom/client'
 import axios from 'axios'
+import Header from "../Header/Header.tsx"
 
 
 function Login() {
@@ -14,26 +15,30 @@ function Login() {
     }
 
     return (
-        <div className="center">
-            <h1>Login</h1>
-            <form action="" method="POST">
-                <div>
-                    <input id="username" type="text" name="text" required />
-                    <span></span>
-                    <label>Username</label>
-                </div>
-                <div>
-                    <input id="password" type="password" name="password" required />
-                    <span></span>
-                    <label>Password</label>
-                </div>
-                <div className="pass">Forget Password?</div>
-                <input name="submit" type="submit" value="Login" onClick={getUserdata} />
-                <div className="signup_link">
-                    Not a Member ? <a href="signup.php">Signup</a>
-                </div>
-            </form>
-        </div>
+        <>
+            <Header />
+            <div className="center">
+                <h1>Login</h1>
+                <form action="" method="POST">
+                    <div>
+                        <input id="username" type="text" name="text" required />
+                        <span></span>
+                        <label>Username</label>
+                    </div>
+                    <div>
+                        <input id="password" type="password" name="password" required />
+                        <span></span>
+                        <label>Password</label>
+                    </div>
+                    <div className="pass">Forget Password?</div>
+                    <input name="submit" type="submit" value="Login" onClick={getUserdata} />
+                    <div className="signup_link">
+                        Not a Member ? <a href="signup.php">Signup</a>
+                    </div>
+                </form>
+            </div>
+        </>
+
     );
 }
 
