@@ -6,7 +6,7 @@ user_connection = sqlite3.connect("backend\\db\\users.db")
 cur = user_connection.cursor()
 #cur.execute("""CREATE TABLE users(
 #            id INTEGER PRIMARY KEY,
-#            user_name text NOT NULL,
+#            user_name text NOT NULL UNIQUE,
 #            role text NOT NULL,
 #            hashed_password text NOT NULL)""")
 
@@ -49,10 +49,6 @@ def get_role(user_name:int, connection: sqlite3.Connection = user_connection)-> 
     """
 
     cur = connection.cursor()
-
-    if not user_exists(user_name,connection):
-        raise Exception((f"User {user_name} does not exist"))
-
     cur.execute("SELECT role FROM users WHERE ?=user_name",[user_name])
     return cur.fetchone()[0]
 
@@ -73,12 +69,8 @@ def check_password(user_name: str, password: str, connection: sqlite3.Connection
     cur = connection.cursor()
 
     cur.execute("SELECT hashed_password FROM users WHERE ?=user_name",[user_name])
-    res = cur.fetchall()
 
-    if len(res) > 1:
-        raise Exception((f"Cannot resolve query, because multiple users {user_name} exist"))
-
-    users_hashed_password = res[0][0]
+    users_hashed_password = cur.fetcone()[0]
     h = hashlib.sha256()
     h.update(str.encode(password))
     entered_hased_password = h.hexdigest()
@@ -107,4 +99,4 @@ if __name__ == "__main__":
     #add_user("Simon Lauberheimer", "Guest", "aab")
     #add_user("Thomas Kottenhahn", "Admin", "1234")
 
-    print(get_role("Simon Lauberheimer"))
+    print(get_role("Thomas Kottenhahn"))
