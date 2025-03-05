@@ -23,3 +23,18 @@ function echo(msg: any) {
 }
 
 echo("TEST")
+
+// Check for User
+function callUser(user: string, password: string){
+	axios.post('/api/echo', { user, password })
+		.then(response => {
+			console.log(response.data)
+		})
+		.catch(error => {
+			console.error(error)
+		})
+}
+
+callUser("Alfred", "1234")
+
+export default callUser
