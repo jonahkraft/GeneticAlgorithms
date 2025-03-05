@@ -72,7 +72,7 @@ def check_password(user_name: str, password: str, connection_path: str) -> bool:
 
     cur.execute("SELECT hashed_password FROM users WHERE ?=user_name",[user_name])
 
-    users_hashed_password = cur.fetcone()[0]
+    users_hashed_password = cur.fetchone()[0]
     h = hashlib.sha256()
     h.update(str.encode(password))
     entered_hased_password = h.hexdigest()
