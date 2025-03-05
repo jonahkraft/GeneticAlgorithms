@@ -47,7 +47,16 @@ function Login() {
 function callUser(username: string, password: string){
     axios.post('/api/login', { username, password })
         .then(response => {
-            console.log(response.data)
+			let token = response.data.access_token
+            console.log(token)
+            axios.post('/api/protected_test', {},
+  				{
+					headers: {
+      					"Authorization": `Bearer ${token}`,
+      					"Content-Type": "application/json"  // Ensure JSON data format
+    				}
+				}
+  			)
         })
         .catch(error => {
             console.error(error)
