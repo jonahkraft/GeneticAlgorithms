@@ -43,7 +43,6 @@ def login():
     }
 
     """
-    connection = sqlite3.connect("db\\users.db")
     
     username = request.json.get("username", None)
     password = request.json.get("password", None)
@@ -53,12 +52,12 @@ def login():
         "passwordCorrect": False,
     }
 
-    if not db.user_exists(username, connection):
+    if not db.user_exists(username, "db\\users.db"):
         return jsonify(response), 401
 
     response["registered"] = True
 
-    if not db.check_password(username, password, connection):
+    if not db.check_password(username, password, "db\\users.db"):
        return jsonify(response), 401 
 
     response["passwordCorrect"] = True
