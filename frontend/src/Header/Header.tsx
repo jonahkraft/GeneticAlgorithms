@@ -9,7 +9,7 @@ function Header() {
             </label>
             <a href="#home" className="logo">Logo</a>
             <ul id="navigation">
-                <li><a href="#home" className="btn active">Home</a>
+                <li><a href="../../login.html" className="btn active">Home</a>
                 </li>
                 <li><a href="#about" className="btn">Blank</a></li>
                 <li><a href="#menu" className="btn">Blank</a></li>
