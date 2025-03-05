@@ -8,13 +8,15 @@ CORS(app)  # Allow frontend to communicate with backend
 
 @app.route("/api/echo", methods = ["POST"])
 def api_echo():
+    """Echo the received message back to client"""
     msg = request.json
     print(f"Echo: {msg}")
     return jsonify(msg), 200
 
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
-def serve_react(path):
+def serve_react(path: str):
+    """Serve the react frontend (only called by flask)"""
     if path:
         absolute_path = os.path.join(app.static_folder, path)
 
