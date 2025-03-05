@@ -3,7 +3,7 @@ from flask_cors import CORS
 import json
 import os
 
-app = Flask(__name__, static_folder="static/build", template_folder="templates")
+app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app)  # Allow frontend to communicate with backend
 
 @app.route("/api/echo", methods = ["POST"])
