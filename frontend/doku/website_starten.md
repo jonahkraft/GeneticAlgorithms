@@ -5,6 +5,13 @@ da die Website über einen Node-Server läuft.
 
 Um die Website zu starten und sicherzustellen, dass Code über react korrekt gerendert wird, geht man folgendermaßen vor:
 
+Gegebenenfalls müssen zuerst dependencies installiert werden:
+
+```bash
+npm install
+```
+
+
 Stelle das working directory auf den frontend Ordner ein.
 Falls du dich grade in diesem Verzeichnis befindest, geht das so:
 ```bash
