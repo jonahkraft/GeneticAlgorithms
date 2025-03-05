@@ -1,0 +1,5 @@
+Meeting zwischen Frontend und Backend (Requirements) 05.03.25
+
+Wir haben mit dem Backened-Team Anforderungen verglichen und potentielle Schnittstellen definiert, 
+auf welche sie bei der Erstellung des Konzepts achten sollen. Dabei ging es um: Zugriff auf die Datenbank und
+Art der gespeicherten Daten (Prozesslogs,Simulationsdaten)
