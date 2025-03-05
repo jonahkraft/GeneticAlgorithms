@@ -1,6 +1,7 @@
 import './Login.css'
 import ReactDOM from 'react-dom/client'
-import callUser from '../main.tsx'
+import axios from 'axios'
+
 
 function Login() {
     function getUserdata(event: any) {
@@ -35,6 +36,21 @@ function Login() {
         </div>
     );
 }
+
+// Check for User
+function callUser(user: string, password: string){
+    console.log(password)
+    console.log(user)
+    axios.post('/api/echo', { user, password })
+        .then(response => {
+            console.log(response.data)
+        })
+        .catch(error => {
+            console.error(error)
+        })
+}
+
+
 
 ReactDOM.createRoot(document.getElementById('root_login')!).render(<Login></Login>);
 //export default Login
