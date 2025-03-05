@@ -1,17 +1,16 @@
-import './Login.css'
-import ReactDOM from 'react-dom/client'
-import axios from 'axios'
-import Header from "../Header/Header.tsx"
-
+import './Login.css';
+import ReactDOM from 'react-dom/client';
+import axios from 'axios';
+import Header from "../Header/Header.tsx";
+import { useState } from 'react';
 
 function Login() {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
     function getUserdata(event: any) {
-        event.preventDefault(); // Verhindert das automatische Absenden des Formulars
-        // @ts-ignore because it works
-        const username = document.getElementById("username").value;
-        // @ts-ignore because it works (if it works dont touch it!)
-        const password = document.getElementById("password").value;
-        callUser(username, password)
+        event.preventDefault(); // Prevents the form from auto-submitting
+        callUser(username, password);
     }
 
     return (
@@ -19,33 +18,46 @@ function Login() {
             <Header />
             <div className="center">
                 <h1>Login</h1>
-                <form action="" method="POST">
-                    <div>
-                        <input id="username" type="text" name="text" required />
-                        <span></span>
-                        <label>Username</label>
+                <form onSubmit={getUserdata}>
+                    <div className="input-container">
+                        <input
+                            id="username"
+                            type="text"
+                            name="username"
+                            required
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder=" "
+                        />
+                        <label htmlFor="username">Username</label>
                     </div>
-                    <div>
-                        <input id="password" type="password" name="password" required />
-                        <span></span>
-                        <label>Password</label>
+                    <div className="input-container">
+                        <input
+                            id="password"
+                            type="password"
+                            name="password"
+                            required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder=" "
+                        />
+                        <label htmlFor="password">Password</label>
                     </div>
                     <div className="pass">Forget Password?</div>
-                    <input name="submit" type="submit" value="Login" onClick={getUserdata} />
+                    <input name="submit" type="submit" value="Login" />
                     <div className="signup_link">
-                        Not a Member ? <a href="signup.php">Signup</a>
+                        Not a Member? <a href="signup.php">Signup</a>
                     </div>
-                    <a href="../../visualization.html" id="guest" >Continue as Simulator</a>
+                    <a href="../../visualization.html" id="guest">Continue as Simulator</a>
                 </form>
             </div>
         </>
-
     );
 }
 
 // Check for User
-function callUser(username: string, password: string){
-    axios.post('/api/login', { username, password })
+function callUser(user: string, password: string) {
+    axios.post('/api/login', { user, password })
         .then(response => {
 			let token = response.data.access_token
             console.log(token)
@@ -59,9 +71,8 @@ function callUser(username: string, password: string){
   			)
         })
         .catch(error => {
-            console.error(error)
-        })
+            console.error(error);
+        });
 }
 
-ReactDOM.createRoot(document.getElementById('root_login')!).render(<Login></Login>);
-//export default Login
+ReactDOM.createRoot(document.getElementById('root_login')!).render(<Login />);
