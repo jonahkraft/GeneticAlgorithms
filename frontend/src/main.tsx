@@ -14,7 +14,7 @@ createRoot(document.getElementById('root')!).render(
 )
 
 // Just a test :)
-function echo(msg) {
+function echo(msg: any) {
 	axios.post('/api/echo', { msg })
 		.then(response => {
 			console.log(response.data)
