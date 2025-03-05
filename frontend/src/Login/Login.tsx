@@ -1,4 +1,5 @@
 import './Login.css'
+import ReactDOM from 'react-dom/client'
 
 function Login() {
     return (
@@ -27,4 +28,5 @@ function Login() {
     )
 }
 
-export default Login
+ReactDOM.createRoot(document.getElementById('root_login')!).render(<Login></Login>);
+//export default Login
