@@ -60,20 +60,42 @@ def check_password(users_first_name: str, users_last_name: str, password: str, c
 
     cur = connection.cursor()
 
-    cur.execute(f"SELECT hashed_password FROM users WHERE ?=first_name AND ?=last_name",[users_first_name,users_last_name])
+    cur.execute("SELECT hashed_password FROM users WHERE ?=first_name AND ?=last_name",[users_first_name,users_last_name])
+    res = cur.fetchall()
 
-    users_hashed_password = cur.fetchone()[0]
+    if len(res) > 1:
+        raise Exception((f"Cannot resolve query, because multiple users {users_first_name} {users_last_name} exist"))
+
+    users_hashed_password = res[0][0]
     h = hashlib.sha256()
     h.update(str.encode(password))
     entered_hased_password = h.hexdigest()
 
     return users_hashed_password == entered_hased_password
 
+def user_exists(users_first_name: str, users_last_name: str, connection: sqlite3.Connection = user_connection) -> bool:
+    """
+    Checks if a user exists in the database
+
+    :param users_first_name: The first Name of the User
+    :type users_first_name: str
+
+    :param users_last_name: The last Name of the User
+    :type users_last_name: str
+
+    :param conn: connection to the database
+    :type conn: sqlite3.Connection
+    """
+
+    cur = connection.cursor()
+
+    cur.execute("SELECT * FROM users WHERE ?=first_name AND ?=last_name",[users_first_name,users_last_name])
+    return len(cur.fetchall()) == 1
 
 if __name__ == "__main__":
     con = sqlite3.connect("backend\\db\\users.db")
     
-    #add_user(con, "Simon", "Lauberheimer", "Guest", "password")
+    #add_user("Simon", "Lauberheimer", "Guest", "aab")
     #add_user(con, "Thomas", "Kottenhahn", "Admin", "1234")
 
-    print(check_password(con,"Thomas","Kottenhahn","1234"))
+    print(check_password("Simon","Lauberheimer", "aab"))
