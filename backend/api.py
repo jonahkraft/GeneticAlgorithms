@@ -9,6 +9,8 @@ from flask_jwt_extended import JWTManager
 
 from app import app as api
 
+import sqlite3
+
 import database as db
 
 api.config["JWT_SECRET_KEY"] = "please-remember-to-change-me"
@@ -41,6 +43,7 @@ def login():
     }
 
     """
+    connection = sqlite3.connect("db\\users.db")
     
     username = request.json.get("username", None)
     password = request.json.get("password", None)
@@ -50,12 +53,12 @@ def login():
         "passwordCorrect": False,
     }
 
-    if not db.user_exists(username):
+    if not db.user_exists(username, connection):
         return jsonify(response), 401
 
     response["registered"] = True
 
-    if not db.check_password(username, password):
+    if not db.check_password(username, password, connection):
        return jsonify(response), 401 
 
     response["passwordCorrect"] = True
