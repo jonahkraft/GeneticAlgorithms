@@ -45,9 +45,7 @@ function Login() {
                     </div>
                     <div className="pass">Forget Password?</div>
                     <input name="submit" type="submit" value="Login" />
-                    <div className="signup_link">
-                        Not a Member? <a href="signup.php">Signup</a>
-                    </div>
+                    <p><br/></p>
                     <a href="../../visualization.html" id="guest">Continue as Simulator</a>
                 </form>
             </div>
