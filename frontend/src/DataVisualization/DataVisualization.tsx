@@ -5,6 +5,9 @@ import axios from 'axios';
 // @ts-ignore
 import Papa from 'papaparse';
 import {useEffect, useState} from "react";
+import { Dropdown } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 
 function generateResultList(arr: any){
@@ -1398,24 +1401,41 @@ function toggleSidebar(side: any){
 
 
 function DataVisualization() {
-    readCSV()
+    readCSV();
     return (
         <>
-            <Header/>
+            <Header />
             <div className="toolbar">Toolbar</div>
             <div className="container">
                 <button className="toggle-btn left-btn" onClick={() => toggleSidebar('left')}>☰</button>
                 <div className="sidebar left" id="leftSidebar">Left Sidebar Content</div>
-                <div className="content">
-                    <h2>Diagramm wird hier angezeigt</h2>
-                </div>
-                <div className="sidebar right" id="rightSidebar">Right Sidebar Content</div>
-                <button className="toggle-btn right-btn" onClick={() => toggleSidebar('right')}>☰</button>
+
+                <Dropdown>
+                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                        Auswahl Generations
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                        <Dropdown.Item href="#/action-1">HTML</Dropdown.Item>
+                        <Dropdown.Item href="#/action-2">CSS</Dropdown.Item>
+                        <Dropdown.Item href="#/action-3">JavaScript</Dropdown.Item>
+                        <Dropdown.Divider />
+                        <Dropdown.Item href="#/action-4">About Us</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
             </div>
-            <Footer/>
+
+            <div className="content">
+                <h2>Diagramm wird hier angezeigt</h2>
+            </div>
+
+            <div className="sidebar right" id="rightSidebar">Right Sidebar Content</div>
+            <button className="toggle-btn right-btn" onClick={() => toggleSidebar('right')}>☰</button>
+            <Footer />
         </>
-    )
+    );
 }
+
 
 ReactDOM.createRoot(document.getElementById('root_data_visualization')!).render(
     <DataVisualization></DataVisualization>);
