@@ -55,7 +55,7 @@ def register(username: str, password: str, role: str):
     if response["invalid_role"] or response["already_registered"]:
         return jsonify(response), 400
 
-    add_user(username, password, role)
+    db.add_user(username, password, role)
 
     return jsonify(response), 200
 
