@@ -186,5 +186,5 @@ if __name__ == "__main__":
     #con.commit()
     
     #add_user("test", "password", connection_path="backend/db/users.db")
-    get_experiment_data("test.csv", ["generation","consumption","elasticity_4", "gear_3"], ["generation > 5", "gear_3 < 1.5"], connection_path="backend/db/simulation_data.db")
+    #get_experiment_data("test.csv", ["generation","consumption","elasticity_4", "gear_3"], ["generation > 5", "gear_3 < 1.5"], connection_path="backend/db/simulation_data.db")
     pass
