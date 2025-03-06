@@ -14,8 +14,8 @@ function getCookies(): CookieData {
             }
             return cookies;
         }, {
-            username: "Nutzername konnte nicht geladen werden",
-            role: "Rolle konnte nicht geladen werden"
+            username: "could not load username",
+            role: "could not load role"
         });
 }
 
