@@ -2,8 +2,8 @@ import sqlite3
 import csv
 import hashlib
 
-#user_connection = sqlite3.connect("db/users.db")
-#cur.cursor()
+#user_connection = sqlite3.connect("backend/db/users.db")
+#cur = user_connection.cursor()
 #cur.execute("""CREATE TABLE users(
 #            id INTEGER PRIMARY KEY,
 #            user_name text NOT NULL UNIQUE,
@@ -46,7 +46,6 @@ def add_user(user_name: str, password: str, role: str = "data_analyst", connecti
         connection.close()
         return user_added_successfully
 
-
 def get_role(user_name: str, connection_path: str = "db/users.db")-> str:
     """
     Returns the role of the entered user
@@ -56,14 +55,20 @@ def get_role(user_name: str, connection_path: str = "db/users.db")-> str:
 
     :param conn: path to the database
     :type conn: str
-    """
 
+    :returns: The role of the user if one exists, None otherwise
+    :rtype: str
+    """
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
     cur.execute("SELECT role FROM users WHERE ?=user_name",[user_name])
-    res = cur.fetchone()[0]
-    connection.close()
-    return res
+    try:
+        res = cur.fetchone()[0]
+    except TypeError:
+        res = None
+    finally:
+        connection.close()
+        return res
 
 def check_password(user_name: str, password: str, connection_path: str = "db/users.db") -> bool:
     """
@@ -200,6 +205,6 @@ if __name__ == "__main__":
     #
     #con.commit()
     
-    #print(add_user("test2", "password", connection_path="backend/db/users.db"))
+    print(add_user("admin", "admin", "admin", connection_path="backend/db/users.db"))
     #get_experiment_data("test.csv", ["generation","consumption","elasticity_4", "gear_3"], ["generation > 5", "gear_3 < 1.5"], connection_path="backend/db/simulation_data.db")
     pass
