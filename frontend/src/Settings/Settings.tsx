@@ -32,8 +32,8 @@ function ToggleSpeech() { {/*Togglesystem für den Spracheinstellung-> theoretis
         </div>
     );
 }
-
 function AccountButton() {
+    {/*Accountinformationen aufrufen: (mögliche addition Email)*/}
     const [isTextVisible, setIsTextVisible] = useState(false);
     const [data, setData] = useState({ username: '', role: '' });
 
@@ -55,11 +55,25 @@ function AccountButton() {
                     <p><b>Username:</b> {data.username}</p>
                     <p><b>Role:</b> {data.role}</p>
                     <br/>
+                    <p>Email:</p>
                 </div>
             )}
         </div>
     );
 }
+function LanguageButton() {
+    const [isActive, setIsActive] = useState(false);
+    const toggle: ()=>void = (): void => {
+        setIsActive((prev) => !prev);
+    };
+    return (
+        <div>
+            <button onClick={toggle} className="px-4 py-2 bg-gray-300 rounded">
+                {isActive ? "English" : "Deutsch"}</button>
+        </div>
+    );
+}
+
 // props sollte ein user-Objekt sein
 
 function Settings() {
@@ -72,11 +86,18 @@ function Settings() {
             <h1>Settings</h1>
             <h2>Account</h2>
             <AccountButton/>
+            <p>Change Password</p>
+            <p>...</p>
             <h2>color filter</h2>
             <ToggleFilter /> {/*Möglichkeit den Farbfilter an und auszuschalten*/}
             <h2>easy speech</h2>
             <ToggleSpeech /> {/* Togglen der einfachen Sprache*/}
+            <h2>language</h2>
+            <LanguageButton/> {}
+            <p>Datenschutz?</p>
             <Footer/>
+
+
         </>
 
     )
