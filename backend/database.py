@@ -139,7 +139,7 @@ def add_experiment_data_from_csv(file_path: str, connection_path: str = "db/simu
     connection.commit()
     connection.close()
 
-def get_experiment_data(file_path: str, columns: list[str] = [], constraints: list[str] = [], connection_path: str = "db/simulation_data.db") -> str:
+def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], constraints: list[str] = [], connection_path: str = "db/simulation_data.db") -> str:
     if columns == []:
         cols = "*"
     else:
