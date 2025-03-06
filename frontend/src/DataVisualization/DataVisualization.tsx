@@ -1,6 +1,7 @@
 import Header from "../Header/Header.tsx"
 import Footer from "../Footer/Footer.tsx"
 import ReactDOM from 'react-dom/client'
+import graph from "./graph.js"
 
 function toggleSidebar(side: any){
     document.getElementById(side + 'Sidebar')?.classList.toggle('open')
@@ -10,6 +11,7 @@ function printOutput(side: String) {
     const para = document.getElementById("output")
     para?.append("test")
 }
+
 
 function DataVisualization() {
     return (
@@ -25,6 +27,12 @@ function DataVisualization() {
                 <div className="sidebar right" id="rightSidebar">Right Sidebar Content</div>
                 <button type="button" className="toggle-btn right-btn" onClick={() => printOutput("test")}>☰</button>
                 <p id="output">Oh nein, wenn dass die Mama sieht.</p>
+
+                <div><canvas id="my_graph"></canvas></div>
+
+                graph()
+                //<script async src="graph.js" onLoad={() => console.log('script loaded')} />
+      
             </div>
             <Footer/>
         </>
