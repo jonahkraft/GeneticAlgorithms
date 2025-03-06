@@ -109,7 +109,7 @@ def add_experiment_data(
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
-    cur.execute("""INSERT INTO car_data (generation, final_drive, roll_radius, gear_3, gear_4, gear_5, consumtion, elasticity_3, elasticity_4, elasticity_5) VALUES (?,?,?,?,?,?,?,?,?,?)""", data)
+    cur.execute("""INSERT INTO car_data (generation, final_drive, roll_radius, gear_3, gear_4, gear_5, consumption, elasticity_3, elasticity_4, elasticity_5) VALUES (?,?,?,?,?,?,?,?,?,?)""", data)
 
     connection.commit()
 
@@ -117,18 +117,20 @@ def add_experiment_data_from_csv(file_path: str, connection_path: str = "db/simu
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
-    with open(file_path,'r') as data:
-        dr = csv.DictReader(data)
-        to_db = [(i["generation"], i["Final Drive"], i["Roll Radius"], i["Gear 3"], i["Gear 4"], i["Gear 5"], i["Consumption"], i["Elasticity 3"], i["Elasticity 4"], i["Elasticity 5"]) for i in dr]
+    with open(file_path,'r') as file:
+        reader = csv.reader(file)
+        
+        rows = [row[0].split(";") for row in reader]
+        to_db = [(int(i[0]),float(i[1]),float(i[2]),float(i[3]),float(i[4]),float(i[5]),float(i[6]),float(i[7]),float(i[8]),float(i[9])) for i in rows[1:]]
 
     cur.executemany("INSERT INTO car_data (generation, final_drive, roll_radius, gear_3, gear_4, gear_5, consumption, elasticity_3, elasticity_4, elasticity_5) VALUES (?,?,?,?,?,?,?,?,?,?);", to_db)
     connection.commit()
     connection.close()
 
 if __name__ == "__main__":
-    con = sqlite3.connect("db/simulation_data.db")
+    #con = sqlite3.connect("backend/db/simulation_data.db")
 
-    cur = con.cursor()
+    #cur = con.cursor()
 
     #cur.execute("""CREATE TABLE car_data(
     #            generation INT NOT NULL,
@@ -137,7 +139,7 @@ if __name__ == "__main__":
     #            gear_3 REAL NOT NULL,
     #            gear_4 REAL NOT NULL,
     #            gear_5 REAL NOT NULL,
-    #            consumtion REAL NOT NULL,
+    #            consumption REAL NOT NULL,
     #            elasticity_3 REAL NOT NULL,
     #            elasticity_4 REAL NOT NULL,
     #            elasticity_5 REAL NOT NULL
@@ -145,6 +147,4 @@ if __name__ == "__main__":
     #
     #con.commit()
     
-    #add_experiment_data([0,0.4,0.5,0.6,0.4,1.4,0.4,0.2,0.8,0.2])
-
-    print(user_exists("Simon Lauberheimer", "db/users.db"))
+    #add_experiment_data_from_csv("backend/results/generations.csv","backend/db/simulation_data.db")
