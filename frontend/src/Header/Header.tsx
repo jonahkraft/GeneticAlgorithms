@@ -13,6 +13,7 @@ function Header() {
                 <ul id="navigation">
                     <li><a href="../../index.html" className="btn active">Home</a></li>
                     <li><a href="../../visualization.html" className="btn">Datenvisualisierung</a></li>
+                    <li><a href="../../settings.html" className="btn">Settings</a></li>
                     <li><a href="../../login.html" className="btn">Login</a></li>
                 </ul>
             </nav>

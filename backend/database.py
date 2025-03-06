@@ -139,6 +139,32 @@ def add_experiment_data_from_csv(file_path: str, connection_path: str = "db/simu
     connection.commit()
     connection.close()
 
+def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], constraints: list[str] = [], connection_path: str = "db/simulation_data.db") -> str:
+    if columns == []:
+        cols = "*"
+    else:
+        cols = ", ".join(columns)
+
+    if constraints == []:
+        rows = ""
+    else:
+        rows = " WHERE " + " AND ".join(constraints)
+
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+
+    sql_query = f"SELECT {cols} FROM car_data{rows}"
+
+    cur.execute(sql_query)
+    results = cur.fetchall()
+
+    header = [i[0] for i in cur.description]
+
+    with open(file_path, "w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(header)
+        writer.writerows(results)
+
 if __name__ == "__main__":
     #con = sqlite3.connect("backend/db/simulation_data.db")
 
@@ -159,5 +185,6 @@ if __name__ == "__main__":
     #
     #con.commit()
     
-    #add_experiment_data_from_csv("backend/results/generations.csv","backend/db/simulation_data.db")
+    #add_user("test", "password", connection_path="backend/db/users.db")
+    #get_experiment_data("test.csv", ["generation","consumption","elasticity_4", "gear_3"], ["generation > 5", "gear_3 < 1.5"], connection_path="backend/db/simulation_data.db")
     pass
