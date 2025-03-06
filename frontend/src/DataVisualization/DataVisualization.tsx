@@ -9,7 +9,6 @@ import { Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-
 function generateResultList(arr: any){
     // Create Object that contains lists for every generation
     /*
@@ -1372,26 +1371,8 @@ function generateResultList(arr: any){
             }
         ]
     }
-
-    return testList
-}
-
-
-// rework because waiting for backend stuff, Annahme zum testen, CSV ist vorhanden
-const readCSV = () => {
-    const [data, setData] = useState<any[]>([]);
-
-    useEffect(() => {
-        axios.get("/api/csv") // Backend-API aufrufen
-            .then((response) => {
-                const result = Papa.parse(response.data, { header: true, skipEmptyLines: true });
-                setData(result.data);
-            })
-            .catch((error) => console.error("Fehler beim Laden der CSV:", error));
-    }, []);
-    //console.log(data);
-    //generateResultList(data)
-    console.log(generateResultList(data))
+    console.log(3)
+    return(testList)
 }
 
 
@@ -1401,7 +1382,65 @@ function toggleSidebar(side: any){
 
 
 function DataVisualization() {
-    readCSV();
+    const [data, setData] = useState<any[]>([]);
+    const [generations, setGenerations] = useState<string[]>([]);
+    const [selectedGeneration, setSelectedGeneration] = useState<string | null>(null);
+
+    // load CSV Files
+    useEffect(() => {
+        console.log('DataVisualization');
+        // call backend-API
+        axios.get("/api/get_generations")
+            .then((response) => {
+                console.log('DataVisualization');
+                const result = Papa.parse(response.data, { header: true, skipEmptyLines: true });
+                setData(result.data);
+                console.log(result);
+            })
+            .catch((error) => console.error("Fehler beim Laden der CSV:", error));
+    }, []);
+
+    // Verarbeitung der Daten (generateResultList & loadGenerations)
+    useEffect(() => {
+        if (data.length > 0) {
+            let generations = generateResultList(data);
+            loadGenerations(generations);
+        } else {
+            // do it anyway for testing
+            let generations = generateResultList(data);
+            loadGenerations(generations);
+        }
+    }, [data]);
+
+    // Show Generation Drop Down
+    function loadGenerations(arr: any) {
+        if (arr.length === 0) {
+            return
+        }
+
+        let newGenerations: string[] = [];
+        //console.log(arr);
+
+        for (let i = 0; i <= arr[0].length; i++) {
+            //console.log(arr[i]);
+            newGenerations.push(`Generation ${i}`);
+        }
+        setGenerations(newGenerations);
+    }
+
+    // Change Drop Down Element
+    function handleDropdownSelect(index: number) {
+        const selectedGen = generations[index];
+        // @ts-ignore
+        document.getElementById("dropdown-basic").innerHTML = selectedGen;
+
+        // Saves selected generation in state
+        setSelectedGeneration(selectedGen);
+        //console.log("Ausgewählte Generation:", selectedGen);
+
+        // Add Stuff like Update-UI
+    }
+
     return (
         <>
             <Header />
@@ -1410,23 +1449,28 @@ function DataVisualization() {
                 <button className="toggle-btn left-btn" onClick={() => toggleSidebar('left')}>☰</button>
                 <div className="sidebar left" id="leftSidebar">Left Sidebar Content</div>
 
-                <Dropdown>
+                <Dropdown id="dropdown-wrapper">
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
                         Auswahl Generations
                     </Dropdown.Toggle>
 
-                    <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">HTML</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">CSS</Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">JavaScript</Dropdown.Item>
-                        <Dropdown.Divider />
-                        <Dropdown.Item href="#/action-4">About Us</Dropdown.Item>
+                    <Dropdown.Menu id="dropdown-basic">
+                        {generations.length > 0 ? (
+                            generations.map((gen, index) => (
+                                <Dropdown.Item key={index} onClick={() => handleDropdownSelect(index)}>
+                                    {gen}
+                                </Dropdown.Item>
+                            ))
+                        ) : (
+                            <Dropdown.Item disabled>Lade Generationen...</Dropdown.Item>
+                        )}
                     </Dropdown.Menu>
                 </Dropdown>
             </div>
 
-            <div className="content">
-                <h2>Diagramm wird hier angezeigt</h2>
+            <div className="content" id="mainContent">
+                <h2>Blank</h2>
+                <h2>{selectedGeneration ? `Ausgewählte: ${selectedGeneration}` : "Diagramm wird hier angezeigt"}</h2>
             </div>
 
             <div className="sidebar right" id="rightSidebar">Right Sidebar Content</div>

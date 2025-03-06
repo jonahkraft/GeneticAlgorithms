@@ -99,10 +99,10 @@ def check_password(user_name: str, password: str, connection_path: str = "db/use
     users_hashed_password = cur.fetchone()[0]
     h = hashlib.sha256()
     h.update(str.encode(password))
-    entered_hased_password = h.hexdigest()
+    entered_hashed_password = h.hexdigest()
     connection.close()
 
-    return users_hashed_password == entered_hased_password
+    return users_hashed_password == entered_hashed_password
 
 def user_exists(user_name: str, connection_path: str = "db/users.db") -> bool:
     """
@@ -212,6 +212,7 @@ if __name__ == "__main__":
     #
     #con.commit()
     
-    print(add_user("admin", "admin", "admin", connection_path="backend/db/users.db"))
+    print(add_user("user", "password", "admin", connection_path="backend/db/users.db"))
+    print(check_password("user","password", connection_path="backend/db/users.db"))
     #get_experiment_data("test.csv", ["generation","consumption","elasticity_4", "gear_3"], ["generation > 5", "gear_3 < 1.5"], connection_path="backend/db/simulation_data.db")
     pass
