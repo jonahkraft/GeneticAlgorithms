@@ -98,8 +98,9 @@ def user_exists(user_name: str, connection_path: str = "db/users.db") -> bool:
     cur = connection.cursor()
 
     cur.execute("SELECT * FROM users WHERE ?=user_name",[user_name])
+    res = len(cur.fetchall()) == 1
     connection.close()
-    return len(cur.fetchall()) == 1
+    return res
 
 def add_experiment_data(
         data : list[float],
@@ -114,6 +115,16 @@ def add_experiment_data(
     connection.commit()
 
 def add_experiment_data_from_csv(file_path: str, connection_path: str = "db/simulation_data.db") -> None:
+    """
+    Adds the given csv data to the given connection
+
+    :param file_path: The path to the csv file
+    :type file_path: str 
+
+    :param connection_path: The path to the database
+    :type connection_path: str
+
+    """
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
@@ -148,3 +159,4 @@ if __name__ == "__main__":
     #con.commit()
     
     #add_experiment_data_from_csv("backend/results/generations.csv","backend/db/simulation_data.db")
+    pass
