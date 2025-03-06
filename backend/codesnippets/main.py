@@ -7,6 +7,8 @@ aep := Mutationrate, desto höher, desto geringer (deswegen 1-aep im Code), zwis
 population size := konstante Größe der Population
 seed := seed für die Erzeugung der ersten Population
 #generations := Anzahl der Generationen die erzeugt werden
+#elite := Anzahl der Top Individuellen die zur nächsten Generation behalten werden
+#alien := Anzahl der Individuellen die komplett neu generiert werden für die nächste Generation
 '''
 
 
@@ -33,7 +35,6 @@ class Schnittstelle(object):
         plot_generations(self.generation, name="generations", directory="backend/results/")
         export_generations_to_csv(self.generation, name="generations", directory="backend/results/")
 
-
-x = Schnittstelle()
-x.evolute(strategy=1, aep=0.2)
-x.results()
+# Example:
+# x = Schnittstelle()
+# x.evolute(strategy=1, aep=0.2)

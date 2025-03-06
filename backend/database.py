@@ -2,17 +2,17 @@ import sqlite3
 import csv
 import hashlib
 
-#user_connection = sqlite3.connect("db/users.db")
-#cur.cursor()
-#cur.execute("""CREATE TABLE users(
-#            id INTEGER PRIMARY KEY,
-#            user_name text NOT NULL UNIQUE,
-#            role text NOT NULL,
-#            hashed_password text NOT NULL)""")
+user_connection = sqlite3.connect("backend/db/users.db")
+cur = user_connection.cursor()
+cur.execute("""CREATE TABLE users(
+            id INTEGER PRIMARY KEY,
+            user_name text NOT NULL UNIQUE,
+            role text NOT NULL,
+            hashed_password text NOT NULL)""")
 
 def add_user(user_name: str, password: str, role: str = "data_analyst", connection_path: str = "db/users.db")-> None:
     """
-    Adds a user to the user database, does not check if a user with the same user name already exists
+    Adds a user to the user database
 
     :param user_name: The first Name of the User
     :type user_name: str
@@ -26,18 +26,26 @@ def add_user(user_name: str, password: str, role: str = "data_analyst", connecti
     :param conn: path to the database
     :type conn: str
 
+    :returns:
+        bool: returns True if user has been added successfully, False otherwise
+
     """
-    sql = ("INSERT INTO users(user_name,role,hashed_password) VALUES(?,?,?)")
-    
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
     h = hashlib.sha256()
     h.update(str.encode(password))
-    cur.execute(sql,(user_name,role,h.hexdigest()))
 
-    connection.commit()
-    connection.close()
+    user_added_successfully = True
+    try:
+        cur.execute("INSERT INTO users(user_name,role,hashed_password) VALUES(?,?,?)",(user_name,role,h.hexdigest()))
+        connection.commit()
+    except sqlite3.IntegrityError:
+        user_added_successfully = False
+    finally:
+        connection.close()
+        return user_added_successfully
+
 
 def get_role(user_name: str, connection_path: str = "db/users.db")-> str:
     """
@@ -140,6 +148,13 @@ def add_experiment_data_from_csv(file_path: str, connection_path: str = "db/simu
     connection.close()
 
 def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], constraints: list[str] = [], connection_path: str = "db/simulation_data.db") -> str:
+    """
+    Exports the data from the database to csv
+
+    :param file_path: The filepath of the resulting csv file
+    :type file_path
+
+    """
     if columns == []:
         cols = "*"
     else:
@@ -185,6 +200,6 @@ if __name__ == "__main__":
     #
     #con.commit()
     
-    #add_user("test", "password", connection_path="backend/db/users.db")
-    get_experiment_data("test.csv", ["generation","consumption","elasticity_4", "gear_3"], ["generation > 5", "gear_3 < 1.5"], connection_path="backend/db/simulation_data.db")
+    print(add_user("admin", "admin", "admin", connection_path="backend/db/users.db"))
+    #get_experiment_data("test.csv", ["generation","consumption","elasticity_4", "gear_3"], ["generation > 5", "gear_3 < 1.5"], connection_path="backend/db/simulation_data.db")
     pass
