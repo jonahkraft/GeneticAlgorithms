@@ -15,7 +15,7 @@ neededResult : list[dict[str, str]] = []
 for data in UserData:
     if not any(t["name"] == data["name"] and t["pass"] == data["pass"] and t["role"] == data["role"] for t in neededResult):
         neededResult.append(data);
-# Dopplungen erwünscht!
+# Dopplungen erwï¿½nscht!
 assert len(neededResult) < len(UserData);
 class UserDBGrenzwertAnalyse(UnitMeta):
     def __init__(this):
@@ -31,14 +31,14 @@ class UserDBGrenzwertAnalyse(UnitMeta):
             except:
                 return "add_user throws an exception where there shouldn\'t be an exception to be thrown!";
         if not all(database.user_exists(data["name"], testConnection) for data in neededResult):
-            return "Es wurde ein Nutzer zu wenig durchgeführt";
+            return "Es wurde ein Nutzer zu wenig durchgefï¿½hrt";
         if not all(database.check_password(data["name"], data["pass"], testConnection) for data in neededResult):
-            return "Es wurde ein Nutzer mit falschen Credentials eingefügt, irgendwas gecrashed";
-        # Jetzt checken ob Dopplungen hinzugefügt wurden
+            return "Es wurde ein Nutzer mit falschen Credentials eingefï¿½gt, irgendwas gecrashed";
+        # Jetzt checken ob Dopplungen hinzugefï¿½gt wurden
         con = sqlite3.connect(testConnection);
-        con.cursor();
-        con.execute("select * from users")
-        vals = con.fetchall()
+        cur : sqlite3.Cursor = con.cursor();
+        cur.execute("select * from users")
+        vals = cur.fetchall()
         if len(vals) != len(neededResult):
             return "add_user hat die Grenzwertanalyse nicht bestanden, es sind die zu viele Rows nach dem Add vorhanden.";
         # durch die vorherigen Invarianten wissen wir das die vals jetzt korrekt sind

@@ -121,7 +121,7 @@ def api_register():
     
     current_user = get_jwt_identity()
 
-    if db.get_role(current_user) != "Admin":
+    if db.get_role(current_user) != "admin":
         return jsonify({}), 401
 
     data = request.get_json()
