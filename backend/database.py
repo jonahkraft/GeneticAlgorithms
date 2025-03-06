@@ -139,16 +139,21 @@ def add_experiment_data_from_csv(file_path: str, connection_path: str = "db/simu
     connection.commit()
     connection.close()
 
-def get_experiment_data(file_path: str, columns: list[str] = [], connection_path: str = "db/simulation_data.db") -> str:
+def get_experiment_data(file_path: str, columns: list[str] = [], constraints: list[str] = [], connection_path: str = "db/simulation_data.db") -> str:
     if columns == []:
         cols = "*"
     else:
         cols = ", ".join(columns)
 
+    if constraints == []:
+        rows = ""
+    else:
+        rows = " WHERE " + " AND ".join(constraints)
+
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
-    sql_query = f"SELECT {cols} FROM car_data"
+    sql_query = f"SELECT {cols} FROM car_data{rows}"
 
     cur.execute(sql_query)
     results = cur.fetchall()
@@ -181,5 +186,5 @@ if __name__ == "__main__":
     #con.commit()
     
     #add_user("test", "password", connection_path="backend/db/users.db")
-    get_experiment_data("test.csv", ["generation","consumption","elasticity_4"], connection_path="backend/db/simulation_data.db")
+    get_experiment_data("test.csv", ["generation","consumption","elasticity_4", "gear_3"], ["generation > 5", "gear_3 < 1.5"], connection_path="backend/db/simulation_data.db")
     pass
