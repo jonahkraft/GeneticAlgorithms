@@ -23,7 +23,7 @@ class UserDatabaseTests(UnitMeta.UnitMeta):
 
     def ClearTestDataBase(this):
         con = sqlite3.connect(testConnection);
-        con.execute("delete from " + "users")
+        con.execute("delete from users")
         con.commit();
         con.close();
     def __init__(this, *args, **kwargs):
@@ -117,4 +117,5 @@ class UserDatabaseTests(UnitMeta.UnitMeta):
 
         return True;
 
-UserDatabaseTests()()
+if __name__ == "__main__":
+    UserDatabaseTests()()
