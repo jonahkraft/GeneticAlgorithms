@@ -58,7 +58,7 @@ function Login() {
 
 // Check for User
 function callUser(username: string, password: string) {
-    axios.post('/api/login', { username, password })
+    axios.post('/api/login', {"username": username,"password": password })
         .then(response => {
 			let token = response.data.access_token
             console.log(token)
