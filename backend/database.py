@@ -1,6 +1,12 @@
 import sqlite3
 import csv
 import hashlib
+import os
+from redis import Redis
+
+redis_host = os.getenv('REDIS_HOST', 'localhost')
+redis_client = Redis(host=redis_host)
+
 
 #user_connection = sqlite3.connect("backend/db/users.db")
 #cur = user_connection.cursor()
@@ -9,6 +15,7 @@ import hashlib
 #            user_name text NOT NULL UNIQUE,
 #            role text NOT NULL,
 #            hashed_password text NOT NULL)""")
+#
 
 def add_user(user_name: str, password: str, role: str = "data_analyst", connection_path: str = "db/users.db")-> None:
     """
