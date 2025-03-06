@@ -1388,11 +1388,14 @@ function DataVisualization() {
 
     // load CSV Files
     useEffect(() => {
+        console.log('DataVisualization');
         // call backend-API
-        axios.get("/api/csv")
+        axios.get("/api/get_generations")
             .then((response) => {
+                console.log('DataVisualization');
                 const result = Papa.parse(response.data, { header: true, skipEmptyLines: true });
                 setData(result.data);
+                console.log(result);
             })
             .catch((error) => console.error("Fehler beim Laden der CSV:", error));
     }, []);
@@ -1428,12 +1431,12 @@ function DataVisualization() {
     // Change Drop Down Element
     function handleDropdownSelect(index: number) {
         const selectedGen = generations[index];
+        // @ts-ignore
+        document.getElementById("dropdown-basic").innerHTML = selectedGen;
 
         // Saves selected generation in state
         setSelectedGeneration(selectedGen);
         //console.log("Ausgewählte Generation:", selectedGen);
-        // @ts-ignore
-        document.getElementById("dropdown-basic").innerHTML = selectedGen;
 
         // Add Stuff like Update-UI
     }
@@ -1465,7 +1468,7 @@ function DataVisualization() {
                 </Dropdown>
             </div>
 
-            <div className="content">
+            <div className="content" id="mainContent">
                 <h2>Blank</h2>
                 <h2>{selectedGeneration ? `Ausgewählte: ${selectedGeneration}` : "Diagramm wird hier angezeigt"}</h2>
             </div>
