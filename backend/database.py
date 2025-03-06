@@ -1,7 +1,8 @@
 import sqlite3
+import csv
 import hashlib
 
-#user_connection = sqlite3.connect("backend\\db\\users.db")
+#user_connection = sqlite3.connect("db/users.db")
 #cur.cursor()
 #cur.execute("""CREATE TABLE users(
 #            id INTEGER PRIMARY KEY,
@@ -9,9 +10,9 @@ import hashlib
 #            role text NOT NULL,
 #            hashed_password text NOT NULL)""")
 
-def add_user(user_name: str, role: str, password: str, connection_path: str = "backend\\db\\users.db")-> None:
+def add_user(user_name: str, password: str, role: str = "data_analyst", connection_path: str = "db/users.db")-> None:
     """
-    Adds a user to the user database
+    Adds a user to the user database, does not check if a user with the same user name already exists
 
     :param user_name: The first Name of the User
     :type user_name: str
@@ -36,8 +37,9 @@ def add_user(user_name: str, role: str, password: str, connection_path: str = "b
     cur.execute(sql,(user_name,role,h.hexdigest()))
 
     connection.commit()
+    connection.close()
 
-def get_role(user_name: str, connection_path: str = "backend\\db\\users.db")-> str:
+def get_role(user_name: str, connection_path: str = "db/users.db")-> str:
     """
     Returns the role of the entered user
 
@@ -51,9 +53,10 @@ def get_role(user_name: str, connection_path: str = "backend\\db\\users.db")-> s
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
     cur.execute("SELECT role FROM users WHERE ?=user_name",[user_name])
+    connection.close()
     return cur.fetchone()[0]
 
-def check_password(user_name: str, password: str, connection_path: str = "backend\\db\\users.db") -> bool:
+def check_password(user_name: str, password: str, connection_path: str = "db/users.db") -> bool:
     """
     Checks if an entered password is correct
 
@@ -76,10 +79,11 @@ def check_password(user_name: str, password: str, connection_path: str = "backen
     h = hashlib.sha256()
     h.update(str.encode(password))
     entered_hased_password = h.hexdigest()
+    connection.close()
 
     return users_hashed_password == entered_hased_password
 
-def user_exists(user_name: str, connection_path: str = "backend\\db\\users.db") -> bool:
+def user_exists(user_name: str, connection_path: str = "db/users.db") -> bool:
     """
     Checks if a user exists in the database
 
@@ -94,26 +98,40 @@ def user_exists(user_name: str, connection_path: str = "backend\\db\\users.db") 
     cur = connection.cursor()
 
     cur.execute("SELECT * FROM users WHERE ?=user_name",[user_name])
+    connection.close()
     return len(cur.fetchall()) == 1
 
 def add_experiment_data(
         data : list[float],
-        connection_path: str
+        connection_path: str = "db/simulation_data.db"
     ) -> None:
 
-    con = sqlite3.connect(connection_path)
-    cur = con.cursor()
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
 
-    cur.execute("""INSERT INTO car_data (final_drive, roll_radius, gear_3, gear_4, gear_5, consumtion, elasticity_3, elasticity_4, elasticity_5) VALUES (?,?,?,?,?,?,?,?,?)""", data)
+    cur.execute("""INSERT INTO car_data (generation, final_drive, roll_radius, gear_3, gear_4, gear_5, consumtion, elasticity_3, elasticity_4, elasticity_5) VALUES (?,?,?,?,?,?,?,?,?,?)""", data)
 
-    con.commit()
+    connection.commit()
+
+def add_experiment_data_from_csv(file_path: str, connection_path: str = "db/simulation_data.db") -> None:
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+
+    with open(file_path,'r') as data:
+        dr = csv.DictReader(data)
+        to_db = [(i["generation"], i["Final Drive"], i["Roll Radius"], i["Gear 3"], i["Gear 4"], i["Gear 5"], i["Consumption"], i["Elasticity 3"], i["Elasticity 4"], i["Elasticity 5"]) for i in dr]
+
+    cur.executemany("INSERT INTO car_data (generation, final_drive, roll_radius, gear_3, gear_4, gear_5, consumption, elasticity_3, elasticity_4, elasticity_5) VALUES (?,?,?,?,?,?,?,?,?,?);", to_db)
+    connection.commit()
+    connection.close()
 
 if __name__ == "__main__":
-    con = sqlite3.connect("backend\\db\\simulation_data.db")
+    con = sqlite3.connect("db/simulation_data.db")
 
     cur = con.cursor()
 
     #cur.execute("""CREATE TABLE car_data(
+    #            generation INT NOT NULL,
     #            final_drive REAL NOT NULL,
     #            roll_radius REAL NOT NULL,
     #            gear_3 REAL NOT NULL,
@@ -127,7 +145,6 @@ if __name__ == "__main__":
     #
     #con.commit()
     
-    #add_experiment_data([0.4,0.5,0.6,0.4,1.4,0.4,0.2,0.8,0.2],"backend\\db\\simulation_data.db")
+    #add_experiment_data([0,0.4,0.5,0.6,0.4,1.4,0.4,0.2,0.8,0.2])
 
-    #add_user("Simon Lauberheimer", "Guest", "aab")
-    #add_user("Thomas Kottenhahn", "Admin", "1234")
+    print(user_exists("Simon Lauberheimer", "db/users.db"))
