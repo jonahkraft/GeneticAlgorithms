@@ -1,16 +1,9 @@
 import sqlite3
 import hashlib
-
+import string
 import UnitMeta
 from backend import database
 from typing import *
-# Test Connection
-testConnection = "..\\TestUserDataBase.db"
-# Allgemeine Nutzer Sample Daten
-TestData : list[dict[str, str]] = [{ "name": "Max", "role": "Admin", "pass": "password0" },
-                                   {"name": "Peter", "role": "Guest", "pass": "lustig"},
-                                   {"name": "Tester U", "role": "Datenanalyst", "pass": "a!!9487w5793" }
-                                   ]
 
 class UserDatabaseTests(UnitMeta.UnitMeta):
     def CheckConnectionPropertlyClosed(this, func : Callable, **args) -> bool:
@@ -23,7 +16,7 @@ class UserDatabaseTests(UnitMeta.UnitMeta):
 
     def ClearTestDataBase(this):
         con = sqlite3.connect(testConnection);
-        con.execute("delete from " + "users")
+        con.execute("delete from users")
         con.commit();
         con.close();
     def __init__(this, *args, **kwargs):
@@ -33,7 +26,8 @@ class UserDatabaseTests(UnitMeta.UnitMeta):
 
     def checkAddUsersUsersExist(this) -> bool | str:
         for data in TestData:
-            database.add_user(data["name"], data["pass"], data["role"], testConnection);
+            if not database.add_user(data["name"], data["pass"], data["role"], testConnection):
+                return "Nutzer konnte nicht korrekt hinzugefügt werden";
 
         # Checked if added correctly
         # First Check Names
@@ -52,6 +46,12 @@ class UserDatabaseTests(UnitMeta.UnitMeta):
         this.createdUsers = True;
         return True;
     def __call__(this, *args, **kwargs):
+        def HashFunction(input : str) -> str:
+            hash_object = hashlib.sha256();
+            hash_object.update(input.encode("utf-8"));
+            return hash_object.hexdigest();
+        # First Clear all Data
+        this.ClearTestDataBase();
         # Connection Checks first
         """if not this.CheckConnectionPropertlyClosed(database.add_user, user_name = "__user", password = "__pass",  role  = "__role", connection_path = testConnection):
             return "add_user schließt die Connection nicht korrekt";
@@ -69,7 +69,8 @@ class UserDatabaseTests(UnitMeta.UnitMeta):
         sec : str | bool | None = None;
         if not isinstance(first, str):
             print("Passed checkAddUsersUsersExist")
-            sec = this.hashingCheck(hashlib.sha256) # Hashing Function
+
+            sec = this.hashingCheck(HashFunction) # Hashing Function
             if isinstance(sec, str):
                 print("Errors bei hashPasses" + str(sec));
                 return;
@@ -109,4 +110,13 @@ class UserDatabaseTests(UnitMeta.UnitMeta):
 
         return True;
 
-UserDatabaseTests()()
+if __name__ == "__main__":
+    # Test Connection
+    testConnection = "..\\TestUserDataBase.db"
+    # Allgemeine Nutzer Sample Daten
+    TestData : list[dict[str, str]] = [{ "name": "Max", "role": "Admin", "pass": "password0" },
+                                   {"name": "Peter", "role": "Guest", "pass": "lustig"},
+                                   {"name": "Tester U", "role": "Datenanalyst", "pass": "a!!9487w5793" }
+                                   ]
+
+    UserDatabaseTests()()
