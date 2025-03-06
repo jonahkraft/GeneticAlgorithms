@@ -45,7 +45,7 @@ function Login() {
                     </div>
                     <div className="pass">Forget Password?</div>
 
-                    <button className="button">Login</button>
+                    <button className="button" type="submit" onClick={_ => callUser(username, password)}>Login</button>
                     <p><br/></p>
                     <div className="signup_link" onClick={() => window.location.href = '../../visualization.html'}>
                         Continue as Simulator
@@ -58,7 +58,7 @@ function Login() {
 
 // Check for User
 function callUser(username: string, password: string) {
-    axios.post('/api/login', {"username": username,"password": password })
+    axios.post('/api/login', {"username": username, "password": password })
         .then(response => {
 			let token = response.data.access_token
             console.log(token)
