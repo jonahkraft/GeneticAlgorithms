@@ -14,7 +14,7 @@ class Schnittstelle(object):
     def __init__(self, population_size=10, given_seed=42):
         self.generation = evo.Population(Car, population_size, seed=given_seed)
 
-    def evolute(self, generation_count=10, strategy=1, aep=0.2, elite_count = 2, alien_count = 2):
+    def evolute(self, generation_count=10, strategy=1, aep=0.2, elite_count=2, alien_count=0):
         def STRAT_C(population, _, __):
             return population.next_generation(
                 aep=1-min(max(aep, 0), 1),
