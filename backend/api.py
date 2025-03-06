@@ -57,6 +57,8 @@ def register(username: str, password: str, role: str):
 
     db.add_user(username, password, role)
 
+    response["success"] = True
+
     return jsonify(response), 200
 
 
@@ -97,6 +99,7 @@ def api_login():
     return login(username, password)
 
 @api.route("/api/register", methods = ["POST"])
+@jwt_required()
 def api_register():
     """Handles register request
     
@@ -115,7 +118,12 @@ def api_register():
     }
 
     """
-   
+    
+    current_user = get_jwt_identity()
+
+    if db.get_role(current_user) != "Admin":
+        return jsonify({}), 401
+
     data = request.get_json()
 
     username = data["username"]
@@ -123,6 +131,24 @@ def api_register():
     role = data["role"]
 
     return register(username, password, role) 
+
+
+@api.route("/api/get_generations", methods = ["GET"])
+@jwt_required()
+def api_get_generations():
+    current_user = get_jwt_identity()
+    
+    role = db.get_role(current_user)
+
+    allowed_roles = { "data_analyst", "administrator" }
+
+    if role not in allowed_roles:
+        return jsonify({}), 401
+
+    with open("./results/generations.csv", "r") as file:
+        return jsonify({ "content": file.read() }), 200
+
+    return jsonify({}), 404 
 
 
 @api.route("/api/protected_test", methods = ["POST"])

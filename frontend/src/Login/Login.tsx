@@ -47,9 +47,9 @@ function Login() {
 
                     <button className="button">Login</button>
                     <p><br/></p>
-                    <button className="button" onClick={() => window.location.href = '../../visualization.html'}>
+                    <div className="signup_link" onClick={() => window.location.href = '../../visualization.html'}>
                         Continue as Simulator
-                    </button>
+                    </div>
                 </form>
             </div>
         </>
