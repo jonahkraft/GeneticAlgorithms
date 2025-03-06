@@ -2,13 +2,13 @@ import sqlite3
 import csv
 import hashlib
 
-#user_connection = sqlite3.connect("db/users.db")
-#cur.cursor()
-#cur.execute("""CREATE TABLE users(
-#            id INTEGER PRIMARY KEY,
-#            user_name text NOT NULL UNIQUE,
-#            role text NOT NULL,
-#            hashed_password text NOT NULL)""")
+user_connection = sqlite3.connect("backend/db/users.db")
+cur = user_connection.cursor()
+cur.execute("""CREATE TABLE users(
+            id INTEGER PRIMARY KEY,
+            user_name text NOT NULL UNIQUE,
+            role text NOT NULL,
+            hashed_password text NOT NULL)""")
 
 def add_user(user_name: str, password: str, role: str = "data_analyst", connection_path: str = "db/users.db")-> None:
     """
@@ -200,6 +200,6 @@ if __name__ == "__main__":
     #
     #con.commit()
     
-    #print(add_user("test2", "password", connection_path="backend/db/users.db"))
+    print(add_user("admin", "admin", "admin", connection_path="backend/db/users.db"))
     #get_experiment_data("test.csv", ["generation","consumption","elasticity_4", "gear_3"], ["generation > 5", "gear_3 < 1.5"], connection_path="backend/db/simulation_data.db")
     pass
