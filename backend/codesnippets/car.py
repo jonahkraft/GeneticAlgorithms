@@ -53,24 +53,3 @@ class Car(Individual):
 
         # return the repaired genotype
         self._genotype = final_drive_ratio, roll_radius, gear3, gear4, gear5
-
-
-a = FinalDrive()
-b = RollRadius()
-c = Gear()
-d = Gear()
-e = Gear()
-
-x = Car(a, b, c, d, e)
-initial_population = evo.Population(Car, 10, seed=42)
-second_generation = initial_population.next_generation(
-    aep=.2,
-    eval_funct=evo.EVAL_FITNESS,
-    recombination_funct=evo.REC_CROSS_ARITHMETIC,
-    elite=2,
-    # ... other parameters can be passed here
-)
-generations = initial_population.evolve(10)
-
-plot_generations(generations, name="generations", directory="backend/results/")
-export_generations_to_csv(generations, name="generations", directory="backend/results/")
