@@ -1,7 +1,8 @@
 import Header from "../Header/Header.tsx"
 import Footer from "../Footer/Footer.tsx"
 import ReactDOM from 'react-dom/client'
-import graph from "./graph.js"
+import React, {useEffect} from "react";
+import graph from "./graph.tsx";
 
 function toggleSidebar(side: any){
     document.getElementById(side + 'Sidebar')?.classList.toggle('open')
@@ -12,8 +13,12 @@ function printOutput(side: String) {
     para?.append("test")
 }
 
-
 function DataVisualization() {
+
+    useEffect(() => {
+        graph();
+    }, []);
+
     return (
         <>
             <Header/>
@@ -25,14 +30,12 @@ function DataVisualization() {
                     <h2>Diagramm wird hier angezeigt</h2>
                 </div>
                 <div className="sidebar right" id="rightSidebar">Right Sidebar Content</div>
-                <button type="button" className="toggle-btn right-btn" onClick={() => printOutput("test")}>☰</button>
+                <button type="button" className="toggle-btn right-btn" onClick={() => printOutput("-test")}>☰</button>
+                
                 <p id="output">Oh nein, wenn dass die Mama sieht.</p>
 
                 <div><canvas id="my_graph"></canvas></div>
 
-                graph()
-                //<script async src="graph.js" onLoad={() => console.log('script loaded')} />
-      
             </div>
             <Footer/>
         </>

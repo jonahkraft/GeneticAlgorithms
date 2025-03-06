@@ -1,7 +1,7 @@
 import Chart from 'chart.js/auto'
  
  
-(async function() {
+const graph = () => {
   const data = [
     { year: 2010, count: 10 },
     { year: 2011, count: 20 },
@@ -11,10 +11,13 @@ import Chart from 'chart.js/auto'
     { year: 2015, count: 30 },
     { year: 2016, count: 28 },
   ];
- 
+  
+  const ctx = document.getElementById("my_graph") as HTMLCanvasElement;
+  if (!ctx) return;
+
   new Chart(
     // @ts-ignore
-    document.getElementById('my_graph'),
+    ctx,
     {
       type: 'bar',
       data: {
@@ -28,5 +31,6 @@ import Chart from 'chart.js/auto'
       }
     }
   );
-})();
- 
+};
+
+export default graph;
