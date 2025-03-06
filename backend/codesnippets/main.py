@@ -14,18 +14,20 @@ class Schnittstelle(object):
     def __init__(self, population_size=10, given_seed=42):
         self.generation = evo.Population(Car, population_size, seed=given_seed)
 
-    def evolute(self, times=10, strategy=1, aep=0.2):
+    def evolute(self, generation_count=10, strategy=1, aep=0.2, elite_count = 2, alien_count = 2):
         def STRAT_C(population, _, __):
             return population.next_generation(
                 aep=1-min(max(aep, 0), 1),
                 eval_funct=evo.EVAL_PARETO,
                 recombination_funct=evo.REC_CROSS_POINT,
+                elite=elite_count,
+                alien=alien_count
             )
 
         if strategy == 2:
-            self.generation = self.generation.evolve(times, STRAT_C)
+            self.generation = self.generation.evolve(generation_count, STRAT_C)
         else:
-            self.generation = self.generation.evolve(times, evo.STRAT_B)
+            self.generation = self.generation.evolve(generation_count, evo.STRAT_B)
 
     def results(self):
         plot_generations(self.generation, name="generations", directory="backend/results/")
@@ -34,3 +36,4 @@ class Schnittstelle(object):
 
 x = Schnittstelle()
 x.evolute(strategy=1, aep=0.2)
+x.results()
