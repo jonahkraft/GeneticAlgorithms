@@ -1384,6 +1384,7 @@ function toggleSidebar(side: any){
 function DataVisualization() {
     const [data, setData] = useState<any[]>([]);
     const [generations, setGenerations] = useState<string[]>([]);
+    const [selectedGeneration, setSelectedGeneration] = useState<string | null>(null);
 
     // load CSV Files
     useEffect(() => {
@@ -1408,21 +1409,33 @@ function DataVisualization() {
         }
     }, [data]);
 
-
+    // Show Generation Drop Down
     function loadGenerations(arr: any) {
         if (arr.length === 0) {
             return
         }
 
         let newGenerations: string[] = [];
-        console.log(arr);
+        //console.log(arr);
 
-        for (let i = 0; i < arr[0].length; i++) {
-            console.log(arr[i]);
-            newGenerations.push(`Generation ${i + 1}`);
+        for (let i = 0; i <= arr[0].length; i++) {
+            //console.log(arr[i]);
+            newGenerations.push(`Generation ${i}`);
         }
-
         setGenerations(newGenerations);
+    }
+
+    // Change Drop Down Element
+    function handleDropdownSelect(index: number) {
+        const selectedGen = generations[index];
+
+        // Saves selected generation in state
+        setSelectedGeneration(selectedGen);
+        //console.log("Ausgewählte Generation:", selectedGen);
+        // @ts-ignore
+        document.getElementById("dropdown-basic").innerHTML = selectedGen;
+
+        // Add Stuff like Update-UI
     }
 
     return (
@@ -1441,7 +1454,7 @@ function DataVisualization() {
                     <Dropdown.Menu id="dropdown-basic">
                         {generations.length > 0 ? (
                             generations.map((gen, index) => (
-                                <Dropdown.Item key={index} href={`#/generation-${index + 1}`}>
+                                <Dropdown.Item key={index} onClick={() => handleDropdownSelect(index)}>
                                     {gen}
                                 </Dropdown.Item>
                             ))
@@ -1453,7 +1466,8 @@ function DataVisualization() {
             </div>
 
             <div className="content">
-                <h2>Diagramm wird hier angezeigt</h2>
+                <h2>Blank</h2>
+                <h2>{selectedGeneration ? `Ausgewählte: ${selectedGeneration}` : "Diagramm wird hier angezeigt"}</h2>
             </div>
 
             <div className="sidebar right" id="rightSidebar">Right Sidebar Content</div>
