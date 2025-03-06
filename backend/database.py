@@ -53,8 +53,9 @@ def get_role(user_name: str, connection_path: str = "db/users.db")-> str:
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
     cur.execute("SELECT role FROM users WHERE ?=user_name",[user_name])
+    res = cur.fetchone()[0]
     connection.close()
-    return cur.fetchone()[0]
+    return res
 
 def check_password(user_name: str, password: str, connection_path: str = "db/users.db") -> bool:
     """
