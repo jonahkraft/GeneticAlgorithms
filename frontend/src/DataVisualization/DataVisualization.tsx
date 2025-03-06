@@ -15,7 +15,7 @@ function generateResultList(arr: any){
         // get Generation
         const generation = entry.generation;
 
-        // if groupData doesent contain a list for a generation, add it
+        // if groupData doesnt contain a list for a generation, add it
         if (!groupedData[generation]) {
             groupedData[generation] = [];
         }
@@ -41,6 +41,7 @@ const readCSV = () => {
             .catch((error) => console.error("Fehler beim Laden der CSV:", error));
     }, []);
     console.log(data);
+    generateResultList(data)
 }
 
 
