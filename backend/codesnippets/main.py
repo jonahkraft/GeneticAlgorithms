@@ -28,7 +28,7 @@ class Schnittstelle(object):
             self.generation = self.generation.evolve(times, evo.STRAT_B)
 
     def results(self):
-        plot_generations(self.generationenerations, name="generations", directory="backend/results/")
+        plot_generations(self.generation, name="generations", directory="backend/results/")
         export_generations_to_csv(self.generation, name="generations", directory="backend/results/")
 
 
