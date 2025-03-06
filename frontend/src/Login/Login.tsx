@@ -44,11 +44,12 @@ function Login() {
                         <label htmlFor="password">Password</label>
                     </div>
                     <div className="pass">Forget Password?</div>
-                    <input name="submit" type="submit" value="Login" />
-                    <div className="signup_link">
-                        Not a Member? <a href="signup.php">Signup</a>
-                    </div>
-                    <a href="../../visualization.html" id="guest">Continue as Simulator</a>
+
+                    <button className="button">Login</button>
+                    <p><br/></p>
+                    <button className="button" onClick={() => window.location.href = '../../visualization.html'}>
+                        Continue as Simulator
+                    </button>
                 </form>
             </div>
         </>
@@ -56,8 +57,8 @@ function Login() {
 }
 
 // Check for User
-function callUser(user: string, password: string) {
-    axios.post('/api/login', { user, password })
+function callUser(username: string, password: string) {
+    axios.post('/api/login', { username, password })
         .then(response => {
 			let token = response.data.access_token
             console.log(token)
