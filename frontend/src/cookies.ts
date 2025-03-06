@@ -1,9 +1,17 @@
-function getCookies() {
+interface CookieData {
+    username: string;
+    role: string;
+    [key: string]: string;
+}
+
+function getCookies(): CookieData {
     return document.cookie
         .split('; ')
-        .reduce((cookies, cookie) => {
+        .reduce<CookieData>((cookies, cookie) => {
             const [key, value] = cookie.split('=');
-            cookies[key] = decodeURIComponent(value);
+            if (key && value) {
+                cookies[key] = decodeURIComponent(value);
+            }
             return cookies;
         }, {
             username: "Nutzername konnte nicht geladen werden",
@@ -11,7 +19,7 @@ function getCookies() {
         });
 }
 
-function saveCookies(obj, days = 7) {
+function saveCookies(obj: CookieData, days = 7) {
     const expires = new Date();
     expires.setDate(expires.getDate() + days);
 
