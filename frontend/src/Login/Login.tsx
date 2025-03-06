@@ -44,9 +44,12 @@ function Login() {
                         <label htmlFor="password">Password</label>
                     </div>
                     <div className="pass">Forget Password?</div>
-                    <input name="submit" type="submit" value="Login" />
+
+                    <button className="button">Login</button>
                     <p><br/></p>
-                    <a href="../../visualization.html" id="guest">Continue as Simulator</a>
+                    <button className="button" onClick={() => window.location.href = '../../visualization.html'}>
+                        Continue as Simulator
+                    </button>
                 </form>
             </div>
         </>
