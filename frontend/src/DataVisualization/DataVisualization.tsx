@@ -1,20 +1,46 @@
 import Header from "../Header/Header.tsx"
 import Footer from "../Footer/Footer.tsx"
 import ReactDOM from 'react-dom/client'
-import * as fs from 'fs';
+import axios from 'axios';
 // @ts-ignore
 import Papa from 'papaparse';
+import {useEffect, useState} from "react";
 
 
-function readCSV(){
-    const filePath = 'generations.csv';
-    const fileContent = fs.readFileSync(filePath, 'utf8');
+function generateResultList(arr: any){
+    // Create Object that contains lists for every generation
+    const groupedData: Record<string, any[]> = {};
 
-    const result = Papa.parse(fileContent, {
-        header: true, // Falls die erste Zeile Spaltennamen enthält
-        skipEmptyLines: true
+    arr.data.forEach((entry: { generation: any; }) => {
+        // get Generation
+        const generation = entry.generation;
+
+        // if groupData doesent contain a list for a generation, add it
+        if (!groupedData[generation]) {
+            groupedData[generation] = [];
+        }
+
+        // Add specific entry to specific generation list
+        groupedData[generation].push(entry);
     });
-    console.log(result);
+
+    return groupedData;
+}
+
+
+// rework because waiting for backend stuff, Annahme zum testen, CSV ist vorhanden
+const readCSV = () => {
+    const [data, setData] = useState<any[]>([]);
+
+    useEffect(() => {
+        axios.get("/api/csv") // Backend-API aufrufen
+            .then((response) => {
+                const result = Papa.parse(response.data, { header: true, skipEmptyLines: true });
+                setData(result.data);
+            })
+            .catch((error) => console.error("Fehler beim Laden der CSV:", error));
+    }, []);
+    console.log(data);
 }
 
 
