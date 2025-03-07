@@ -1,38 +1,58 @@
-from typing import Callable
-
-from backend.Test.Integrationstest.IntegrationMeta import IntegrationMeta
-import backend.api as server
-from flask_jwt_extended import jwt_required
+import backend.api as interface
+import backend.app as app
 from flask import request
 import backend.database as database
+from flask import Flask
+from backend.Test.Integrationstest import IntegrationMeta
 
-class ServerIntegrationTest:
+class ServerIntegrationTest(IntegrationMeta):
 
-    def connect(self, users : dict, responses : list):
+    """
+    This class implements the server integration tests.
+    Integration only complete if all the tests return true realised by the call function
+    """
 
-        returnList = []
-        if request.method == "GET":
+    def __init__(self):
+        super().__init__()
 
-            for i in range(len(users)):
+    def connect(self, **kwargs):
 
-                username = users[i][0]
-                password = users[i][1]
+        """
+        Test for the correct implementation of server initialization.
+        Possible keyword arguments: server
+        :param kwargs: a sequence of required variable-value pairs for the function
+        :type kwargs: dict
+        :return: returns true if server is correctly initialized
+        :type: bool
+        """
 
-                if database.user_exists(username, "TEST DATENBANK"):
-                    pass
+        assert kwargs['server'] is Flask, "Failure, Server not correctly initialized"
 
-                _, response = server.login(username, password)
+        return True
 
-                returnList.append(response == responses[i])
+    def serverToDatabase(self, **kwargs):
+        pass
 
-        return returnList
+    def serverToServer(self, **kwargs):
+        pass
+
+    def integrationInDocker(self, **kwargs):
+        pass
+
+
+
 
 
 if __name__ == '__main__':
 
+    # app.app.config['TESTING'] = True
+    # app.app.run(debug=True)
 
-    server = ServerIntegrationTest()
-    server.connect({
-        "username": "",
-        "password": ""
+    interface = ServerIntegrationTest()
+    returnList = interface.connect({
+        "username": "Etwas",
+        "password": "Etwas"
     }, [True])
+
+    print(returnList)
+

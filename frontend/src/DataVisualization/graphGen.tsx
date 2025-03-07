@@ -1346,11 +1346,9 @@ const graphGen = () => {
             }
         ]
     }
-
     const generation = "0"
 
     type ObjectKey = keyof typeof testList;
-    let list: { gear3: string, ela3: string }[] = [];
 
     for (var i = 0; i < Object.keys(testList).length; i++) {
 
@@ -1362,7 +1360,6 @@ const graphGen = () => {
                 const g3 = testList[generationIndex][j]['Gear 3']
                 const e3 = testList[generationIndex][j]['Elasticity 3']
 
-                list.push({ gear3: g3, ela3: e3 })
             }
         }
     }
@@ -1374,15 +1371,12 @@ const graphGen = () => {
         // @ts-ignore
         ctx,
         {
-            type: 'scatter',
             data: {
                 labels: list.map(row => row.gear3),
                 datasets: [
                     {
-                        label: 'Gear -> Ela',
                         data: list.map(row => row.ela3),
                         borderColor: 'rgb(255, 0, 221)',
-                    }
                 ]
             }
         }
