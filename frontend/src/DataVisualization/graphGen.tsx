@@ -1,35 +1,8 @@
-import Header from "../Header/Header.tsx"
-import Footer from "../Footer/Footer.tsx"
-import ReactDOM from 'react-dom/client'
-import axios from 'axios';
-// @ts-ignore
-import Papa from 'papaparse';
-import {useEffect, useState} from "react";
-import { Dropdown } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import graph from "./graph.tsx";
-import graphGen from "./graphGen.tsx";
+import Chart from 'chart.js/auto'
 
-
-function generateResultList(arr: any){
-    // Create Object that contains lists for every generation
-    /*
-    const groupedData: Record<string, any[]> = {};
-
-    arr.data.forEach((entry: { generation: any; }) => {
-        // get Generation
-        const generation = entry.generation;
-
-        // if groupData doesnt contain a list for a generation, add it
-        if (!groupedData[generation]) {
-            groupedData[generation] = [];
-        }
-
-        // Add specific entry to specific generation list
-        groupedData[generation].push(entry);
-    });
-    */
-    const testList = {
+const graphGen = () => {
+    
+    let testList = {
         '0': [
             {
                 generation: '0',
@@ -1373,141 +1346,41 @@ function generateResultList(arr: any){
             }
         ]
     }
-    console.log(arr)
-    return(testList)
-}
 
+    type ObjectKey = keyof typeof testList;
+    let list : {gen: string, consumption: string}[] = [];
 
-function toggleSidebar(side: any){
-    document.getElementById(side + 'Sidebar')?.classList.toggle('open')
-}
+    for (var i=0; i< Object.keys(testList).length; i++) {
+        
+        const generationIndex = i.toString() as ObjectKey;
 
+        for (var j=0; j< testList[generationIndex].length; j++) {
 
-function DataVisualization() {
-    // data speichert Datensatz vom backend Server, funktioniert aktell noch nicht, daher ist data Null
-    const [data, setData] = useState<any[]>([]);
-
-    // generations erstellt eine Liste aller Generations von 0 - x (in Test Liste 0-10)
-    const [generations, setGenerations] = useState<string[]>([]);
-
-    // selectedGeneration speichert die ausgewählte Generation und zeigt diese auf der Website an
-    const [selectedGeneration, setSelectedGeneration] = useState<string | null>(null);
-
-    // ändert den Main Content der Seite
-    // @ts-ignore
-    const [generatedElement, setGeneratedElement] = useState<JSX.Element | null>(null);
-
-    // load CSV Files
-    useEffect(() => {
-        console.log('DataVisualization');
-        // call backend-API
-        axios.get("/api/get_generations")
-            .then((response) => {
-                console.log('DataVisualization');
-                const result = Papa.parse(response.data, { header: true, skipEmptyLines: true });
-                setData(result.data);
-                console.log(result);
-            })
-            .catch((error) => console.error("Fehler beim Laden der CSV:", error));
-    }, []);
-
-    // Verarbeitung der Daten (generateResultList & loadGenerations)
-    useEffect(() => {
-        if (data.length > 0) {
-            const generations = generateResultList(data);
-            loadGenerations(generations);
-        } else {
-            // do it anyway for testing
-            const generations = generateResultList(data);
-            loadGenerations(generations);
+            const verbrauch = testList[generationIndex][j].Consumption
+            
+            list.push({gen: generationIndex, consumption: verbrauch})
         }
-    }, [data]);
-
-    useEffect(() => {
-        graph();
-    }, []);
-
-    useEffect(() => {
-        graphGen();
-    }, []);
-
-    // Show Generation Drop Down
-    function loadGenerations(arr: any) {
-        if (arr.length === 0) {
-            return
-        }
-
-        const newGenerations: string[] = [];
-        //console.log(arr);
-
-        for (let i = 0; i <= arr[0].length; i++) {
-            //console.log(arr[i]);
-            newGenerations.push(`Generation ${i}`);
-        }
-        setGenerations(newGenerations);
     }
 
-    // Change Drop Down Element
-    function handleDropdownSelect(index: number) {
-        const selectedGen = generations[index];
+    const ctx = document.getElementById("my_graph_gen") as HTMLCanvasElement;
+    if (!ctx) return;
+
+    new Chart(
         // @ts-ignore
-        document.getElementById("dropdown-basic").innerHTML = selectedGen;
-
-        // Saves selected generation in state
-        setSelectedGeneration(selectedGen);
-        //console.log("Ausgewählte Generation:", selectedGen);
-
-        // Add Stuff like Update-UI
-        setGeneratedElement(
-            <div key={index} className="generation-canvas">
-                <p>Hier könnte eine Visualisierung für {selectedGen} stehen.</p>
-            </div>
-        );
-    }
-
-    return (
-        <>
-            <Header />
-            <div className="toolbar">Toolbar</div>
-            <div className="container">
-                <button className="toggle-btn left-btn" onClick={() => toggleSidebar('left')}>☰</button>
-                <div className="sidebar left" id="leftSidebar">Left Sidebar Content</div>
-
-                <Dropdown id="dropdown-wrapper">
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">
-                        Auswahl Generations
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu id="dropdown-basic">
-                        {generations.length > 0 ? (
-                            generations.map((gen, index) => (
-                                <Dropdown.Item key={index} onClick={() => handleDropdownSelect(index)}>
-                                    {gen}
-                                </Dropdown.Item>
-                            ))
-                        ) : (
-                            <Dropdown.Item disabled>Lade Generationen...</Dropdown.Item>
-                        )}
-                    </Dropdown.Menu>
-                </Dropdown>
-            </div>
-
-            <div style={{width:"800px"}}><canvas id="my_graph"></canvas></div>
-
-            <div style={{width:"800px"}}><canvas id="my_graph_gen"></canvas></div>
-
-            <div className="content" id="mainContent">
-                <h2>{selectedGeneration ? `Ausgewählte Generation: ${selectedGeneration}` : "Diagramm wird hier angezeigt"}</h2>
-                {generatedElement}
-            </div>
-
-            <div className="sidebar right" id="rightSidebar">Right Sidebar Content</div>
-            <button className="toggle-btn right-btn" onClick={() => toggleSidebar('right')}>☰</button>
-            <Footer />
-        </>
+        ctx,
+        {
+            type: 'scatter',
+            data: {
+                labels: list.map(row => row.gen),
+                datasets: [
+                    {
+                        label: 'Verbrauch',
+                        data: list.map(row => row.consumption)
+                    }
+                ]
+            }
+        }
     );
-}
+};
 
-
-ReactDOM.createRoot(document.getElementById('root_data_visualization')!).render(
-    <DataVisualization></DataVisualization>);
+export default graphGen;
