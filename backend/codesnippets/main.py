@@ -1,4 +1,4 @@
-from car import *
+from codesnippets.car import *
 
 '''
 Übergebbare Parameter:

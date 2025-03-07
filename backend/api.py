@@ -200,42 +200,42 @@ def api_start_simulation():
     return jsonify({}), 200
 
 
-@api.route("/api/get_simulation_data", methods = ["GET"])
-@jwt_required
-def api_get_simulation_data():
-    """Requests historic simulation data for further analysis
-    
-    :param JSON
-    {
-        "columns": list[str],
-        "row_constraints": list[str]
-    }
-
-    :returns JSON
-    {
-        "content" : csv file
-    }
-
-    """
-    current_user = get_jwt_identity()
-
-    role = db.get_role(current_user)
-    allowed_roles = { "data_analyst", "administrator"}
-
-    if role not in allowed_roles:
-        return jsonify({}), 401
-    
-    data = request.get_json()
-
-    columns = data["columns"]
-    row_constraints = data["row_constraints"]
-
-    db.export_experiment_data_to_csv("./results/export_data.csv", columns, row_constraints)
-
-    with open("./results/export_data.csv", "r") as file:
-        return jsonify({ "content": file.read() }), 200
-
-    return jsonify({}), 404
+#@api.route("/api/get_simulation_data", methods = ["GET"])
+#@jwt_required
+#def api_get_simulation_data():
+#    """Requests historic simulation data for further analysis
+#    
+#    :param JSON
+#    {
+#        "columns": list[str],
+#        "row_constraints": list[str]
+#    }
+#
+#    :returns JSON
+#    {
+#        "content" : csv file
+#    }
+#
+#    """
+#    current_user = get_jwt_identity()
+#
+#    role = db.get_role(current_user)
+#    allowed_roles = { "data_analyst", "administrator"}
+#
+#    if role not in allowed_roles:
+#        return jsonify({}), 401
+#    
+#    data = request.get_json()
+#
+#    columns = data["columns"]
+#    row_constraints = data["row_constraints"]
+#
+#    db.export_experiment_data_to_csv("./results/export_data.csv", columns, row_constraints)
+#
+#    with open("./results/export_data.csv", "r") as file:
+#        return jsonify({ "content": file.read() }), 200
+#
+#    return jsonify({}), 404
 
 
 @api.route("/api/protected_test", methods = ["POST"])
