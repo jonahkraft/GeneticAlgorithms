@@ -1428,9 +1428,10 @@ function DataVisualization() {
         graph();
     }, []);
 
+
     useEffect(() => {
         graphGen();
-    }, []);
+    }, [selectedGeneration]);
 
     // Show Generation Drop Down
     function loadGenerations(arr: any) {
@@ -1461,9 +1462,10 @@ function DataVisualization() {
         // Add Stuff like Update-UI
         setGeneratedElement(
             <div key={index} className="generation-canvas">
-                <p>Hier könnte eine Visualisierung für {selectedGen} stehen.</p>
+                <div style={{width:"800px"}}><canvas id="my_graph_gen"></canvas></div>
             </div>
         );
+        graphGen()
     }
 
     return (
@@ -1500,7 +1502,6 @@ function DataVisualization() {
 
             <div style={{width:"800px"}}><canvas id="my_graph"></canvas></div>  
 
-            <div style={{width:"800px"}}><canvas id="my_graph_gen"></canvas></div>  
 
             <div className="content" id="mainContent">
                 <h2>{selectedGeneration ? `Ausgewählte Generation: ${selectedGeneration}` : "Diagramm wird hier angezeigt"}</h2>
