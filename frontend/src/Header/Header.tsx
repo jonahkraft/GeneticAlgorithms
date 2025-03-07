@@ -6,8 +6,6 @@ function Header() {
 
     const signed_in = cookies.getCookies()["signed_in"]
 
-    console.log(signed_in)
-
     if (!signed_in) {
         return (
             <header>

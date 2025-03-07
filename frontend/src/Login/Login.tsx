@@ -4,14 +4,43 @@ import axios from 'axios';
 import Header from "../Header/Header.tsx";
 import { useState } from 'react';
 import cookies from '../cookies.ts'
+import displayWarning from "./displayWarninig.tsx";
+import WarningComponent from "./warning.tsx";
 
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [text, setText] = useState('')
+    const [displaysWarning, setDisplaysWarning] = useState(false);
 
     function getUserdata(event: any) {
         event.preventDefault(); // Prevents the form from auto-submitting
         callUser(username, password);
+    }
+
+    function triggerWarning() {
+        displayWarning(setText, "username or password is wrong")
+        setDisplaysWarning(true)
+    }
+
+    function disableWarning() {
+        displayWarning(setText, "")
+        setDisplaysWarning(false)
+    }
+
+    function onTextInput(event: any) {
+        console.log(displaysWarning)
+        setUsername(event.target.value)
+        if (displaysWarning) {
+            disableWarning()
+        }
+    }
+
+    function onPasswordInput(event: any) {
+        setPassword(event.target.value)
+        if (displaysWarning) {
+            disableWarning()
+        }
     }
 
     return (
@@ -27,7 +56,7 @@ function Login() {
                             name="username"
                             required
                             value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            onChange={(event) => onTextInput(event)}
                             placeholder=" "
                         />
                         <label htmlFor="username">Username</label>
@@ -39,11 +68,13 @@ function Login() {
                             name="password"
                             required
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(event) => onPasswordInput(event)}
                             placeholder=" "
                         />
                         <label htmlFor="password">Password</label>
                     </div>
+                    <WarningComponent text={text}/>
+
                     <div className="pass">Forget Password?</div>
 
                     <button className="button" type="submit" onClick={_ => logIn(username)}>Login</button>
@@ -67,6 +98,7 @@ function logIn(username: string = "placeholder_username") {
         role = "placeholder_role"
 
         // TODO: Fehlermeldung, wenn Name oder Passwort falsch
+        // Funktion triggerWarning dafür nutzen
 
     }
     else {
