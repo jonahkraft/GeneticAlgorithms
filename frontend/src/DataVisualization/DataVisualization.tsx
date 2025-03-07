@@ -1461,13 +1461,11 @@ function DataVisualization() {
         //console.log("Ausgewählte Generation:", selectedGen);
 
         // Add Stuff like Update-UI
-        // TODO: Error: Canvas is already in use. Chart with ID '1' must be destroyed before the canvas with ID 'my_graph_gen' can be reused.
         setGeneratedElement(
             <div key={index} className="generation-canvas">
                 <div style={{width:"800px"}}><canvas id="my_graph_gen"></canvas></div>
             </div>
         );
-        graphGen()
     }
 
     // For Debugging Purpose
