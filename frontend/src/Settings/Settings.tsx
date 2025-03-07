@@ -79,7 +79,7 @@ function Settings() {
                             <button className="language-btn">ENG</button>
                             <button className="language-btn">DE</button>
                         </div>
-                        <p className="datenschutz">Datenschutz</p>
+
                     </div>
 
                     <div className="rightbox">
