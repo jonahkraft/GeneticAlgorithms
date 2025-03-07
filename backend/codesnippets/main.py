@@ -97,6 +97,6 @@ class Schnittstelle(object):
 
 
 # Example
-x = Schnittstelle()
-x.evolute(generation_count=10, strategy=1)
-x.results()
+#x = Schnittstelle()
+#x.evolute(generation_count=10, strategy=1)
+#x.results()
