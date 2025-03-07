@@ -96,7 +96,6 @@ function Settings() {
                 <div className="rightbox">
                     {selectedTab === "account" && (
                         <>
-                            <h2>Account</h2>
                             <AccountButton />
                             <p>Change Password</p>
                         </>
