@@ -1,13 +1,22 @@
 body {
   font-family: Arial, sans-serif;
-  background: linear-gradient(to right, #A7C8FF, #A0D7FF); 
-  box-sizing: border-box;
+  background: linear-gradient(to right, #A7C8FF, #A0D7FF);
+  background-size: 400% 400%;
+  margin: 0;
+  padding: 20;
+}
+
+.settings-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 10px;
 }
 /* right side */
 .settings-container {
   display: flex;
   width: 80%;
-  margin: 5% auto;
   background: #fff;
   box-shadow: 2px 5px 20px rgba(119, 119, 119, 0.5);
   padding: 20px;
@@ -23,7 +32,6 @@ body {
 
 .leftbox nav {
   flex-direction: column;
-
 }
 
 .leftbox nav a {
@@ -68,7 +76,7 @@ body {
 .rightbox {
   width: 80%;
   padding: 20px;
-  text-align: left; /* Элементы будут выравниваться по левому краю */
+  text-align: left;
 }
 
 h1, h2 {
@@ -77,7 +85,7 @@ h1, h2 {
 
 h2 {
   font-size: 1em;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .rightbox p {
@@ -105,3 +113,4 @@ h2 {
   border-radius: 5px;
   margin-top: 10px;
 }
+
