@@ -1,4 +1,8 @@
-from codesnippets.car import *
+from codesnippets.car import Car
+from codesnippets.evolution.interfaces.population import Population
+from codesnippets.evolution.operators import EVAL_PARETO, REC_CROSS_POINT
+from codesnippets.evolution.strategies import STRAT_B
+from codesnippets.utilities.helper import import_generations_from_csv,plot_generations,export_generations_to_csv
 
 '''
 Übergebbare Parameter:
@@ -29,7 +33,7 @@ class Schnittstelle(object):
         welche allerdings nicht kleiner oder gleich der Anzahl der Elite (Standardmäßig 2) + der
         Anzahl der Aliens (Standardmäßig 0) sein darf.
         '''
-        self.generation = evo.Population(Car, population_size, seed=given_seed)
+        self.generation = Population(Car, population_size, seed=given_seed)
 
     def evolute(self, generation_count=10, strategy=1, aep=0.2, elite_count=2, alien_count=0):
         ''''
@@ -48,8 +52,8 @@ class Schnittstelle(object):
             '''
             return population.next_generation(
                 aep=1-min(max(aep, 0), 1),
-                eval_funct=evo.EVAL_PARETO,
-                recombination_funct=evo.REC_CROSS_POINT,
+                eval_funct=EVAL_PARETO,
+                recombination_funct=REC_CROSS_POINT,
                 elite=elite_count,
                 alien=alien_count
             )
@@ -57,7 +61,7 @@ class Schnittstelle(object):
         if strategy == 2:
             self.generation = self.generation.evolve(generation_count, STRAT_C)
         else:
-            self.generation = self.generation.evolve(generation_count, evo.STRAT_B)
+            self.generation = self.generation.evolve(generation_count, STRAT_B)
 
     def results(self):
         '''
@@ -93,6 +97,6 @@ class Schnittstelle(object):
 
 
 # Example
-# x = Schnittstelle()
-# x.evolute(generation_count=10, strategy=1)
-# x.results()
+x = Schnittstelle()
+x.evolute(generation_count=10, strategy=1)
+x.results()

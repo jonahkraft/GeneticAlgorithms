@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 import codesnippets.evolution as evo
 
 
-def export_generations_to_csv(generations, name="generations", directory=None, header=True, delimiter=";"):
+def export_generations_to_csv(generations, name="generations", directory=None, header=True, delimiter=","):
     """
     Exports the given generations to a csv file.
     
