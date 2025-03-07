@@ -1444,14 +1444,15 @@ function DataVisualization() {
 
         for (let i = 0; i <= arr[0].length; i++) {
             //console.log(arr[i]);
-            newGenerations.push(`Generation ${i}`);
+            //newGenerations.push(`Generation ${i}`);
+            newGenerations.push(String(i));
         }
         setGenerations(newGenerations);
     }
 
     // Change Drop Down Element
     function handleDropdownSelect(index: number) {
-        const selectedGen = generations[index];
+        const selectedGen = 'Generation ' + generations[index];
         // @ts-ignore
         document.getElementById("dropdown-basic").innerHTML = selectedGen;
 
@@ -1460,6 +1461,7 @@ function DataVisualization() {
         //console.log("Ausgewählte Generation:", selectedGen);
 
         // Add Stuff like Update-UI
+        // TODO: Error: Canvas is already in use. Chart with ID '1' must be destroyed before the canvas with ID 'my_graph_gen' can be reused.
         setGeneratedElement(
             <div key={index} className="generation-canvas">
                 <div style={{width:"800px"}}><canvas id="my_graph_gen"></canvas></div>
@@ -1467,6 +1469,12 @@ function DataVisualization() {
         );
         graphGen()
     }
+
+    // For Debugging Purpose
+    console.log('Data: ', data)
+    console.log('Generations: ', generations)
+    console.log('SelectedGeneration: ', selectedGeneration)
+    console.log('GeneratedElement: ', generatedElement)
 
     return (
         <>
@@ -1489,7 +1497,7 @@ function DataVisualization() {
                         {generations.length > 0 ? (
                             generations.map((gen, index) => (
                                 <Dropdown.Item key={index} onClick={() => handleDropdownSelect(index)}>
-                                    {gen}
+                                    {'Generation '+gen}
                                 </Dropdown.Item>
                             ))
                         ) : (
