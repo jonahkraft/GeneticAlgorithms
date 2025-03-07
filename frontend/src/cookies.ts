@@ -1,7 +1,14 @@
+const standardValue = {
+    username: "could not load username",
+    role: "could not load role",
+    signed_in: false,
+}
+
 interface CookieData {
     username: string;
     role: string;
-    [key: string]: string;
+    signed_in: boolean
+    [key: string]: string | boolean;
 }
 
 function getCookies(): CookieData {
@@ -13,10 +20,7 @@ function getCookies(): CookieData {
                 cookies[key] = decodeURIComponent(value);
             }
             return cookies;
-        }, {
-            username: "could not load username",
-            role: "could not load role"
-        });
+        }, standardValue);
 }
 
 function saveCookies(obj: CookieData, days = 7) {
@@ -24,8 +28,16 @@ function saveCookies(obj: CookieData, days = 7) {
     expires.setDate(expires.getDate() + days);
 
     for (const [key, value] of Object.entries(obj)) {
-        document.cookie = `${encodeURIComponent(key)}=${encodeURIComponent(value)}; expires=${expires.toUTCString()}; path=/`;
+        document.cookie = `${encodeURIComponent(key)}=${encodeURIComponent(value)}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
     }
 }
 
-export default { getCookies, saveCookies };
+function deleteCookies() {
+    const expires = new Date(0);
+
+    for (const key in standardValue) {
+        document.cookie = `${encodeURIComponent(key)}=; expires=${expires.toUTCString()}; path=/`;
+    }
+}
+
+export default { getCookies, saveCookies, deleteCookies };
