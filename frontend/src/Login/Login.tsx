@@ -57,13 +57,25 @@ function Login() {
     );
 }
 
-function logIn(username: string) {
-    // TODO: sollte callUser aufrufen und davon die Rolle des Benutzers erhalten
-    // dafür zusätzlich password als Argument nehmen
-    // TODO: Fehlermeldung, wenn Name oder Passwort falsch
-    const role = "placeholder_role"
+function logIn(username: string = "placeholder_username") {
+    let role
+
+    if (username !== "placeholder_username") {
+        // dann wurde es über login aufgerufen
+        // TODO: sollte callUser aufrufen und davon die Rolle des Benutzers erhalten
+        // dafür zusätzlich password als Argument nehmen
+        role = "placeholder_role"
+
+        // TODO: Fehlermeldung, wenn Name oder Passwort falsch
+
+    }
+    else {
+        role = "placeholder_role"
+    }
+
     cookies.saveCookies({"username": username, "role": role, "signed_in": true})
     window.location.reload()
+    window.location.href = "../../visualization.html"
 }
 
 // Check for User
