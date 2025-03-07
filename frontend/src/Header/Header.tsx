@@ -38,7 +38,7 @@ function Header() {
                     </a>
                     <ul id="navigation">
                         <li><a href="../../index.html" className="btn active">Home</a></li>
-                        <li><a href="../../visualization.html" className="btn">Datenvisualisierung</a></li>
+                        <li><a href="../../visualization.html" className="btn">Data Visualization</a></li>
                         <li><a href="../../settings.html" className="btn">Settings</a></li>
                         <li><a onClick={() => logOut()} className="btn">Logout</a></li>
                     </ul>
