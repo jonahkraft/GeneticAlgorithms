@@ -55,6 +55,67 @@ def add_user(user_name: str, password: str, role: str = "data_analyst", connecti
         connection.close()
         return user_added_successfully
 
+def delete_user(user_name:str, connection_path: str = "db/users.db") -> bool:
+    """
+    Deletes the given user.
+
+    :param user_name: The name of the user
+    :type user_name: str
+
+    :param conn: path to the database
+    :type conn: str
+
+    :returns: Returns true if deletion successful
+    :retype: bool
+    """
+
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+
+    if not user_exists(user_name, connection_path):
+        connection.close()
+        return False
+    cur.execute("DELETE FROM users WHERE user_name=?",[user_name])
+    connection.commit()
+    connection.close()
+
+def change_password(user_name: str, new_password: str, connection_path: str = "db/users.db"):
+    """
+    Changes a users password in the user database
+
+    :param user_name: The name of the User
+    :type user_name: str
+
+    :param new_password: The users new_password
+    :type new_password: str
+
+    :param conn: path to the database
+    :type conn: str
+
+    :returns:
+        bool: returns True if the password has been changed successfully, False otherwise
+
+    """
+
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+
+    h = hashlib.sha256()
+    h.update(str.encode(new_password))
+
+    if user_exists(user_name,connection_path):
+        cur.execute("""UPDATE users
+                    SET hashed_password = ?
+                    WHERE user_name=?""",[h.hexdigest,user_name])
+
+        connection.commit()
+        connection.close()
+        return True
+    
+    connection.commit()
+    connection.close()
+    return False
+
 def get_role(user_name: str, connection_path: str = "db/users.db")-> str:
     """
     Returns the role of the entered user

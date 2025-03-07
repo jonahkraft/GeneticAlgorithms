@@ -64,7 +64,6 @@ def register(username: str, password: str, role: str):
 
     return jsonify(response), 200
 
-
 @api.route("/api/echo", methods = ["POST"])
 @jwt_required()
 def api_echo():
@@ -135,6 +134,61 @@ def api_register():
 
     return register(username, password, role) 
 
+@api.route("/api/delete_user", methods = ["POST"])
+@jwt_required()
+def api_register():
+    """Handles register request
+    
+    :param JSON
+    {
+        "username": "<username>"
+    }
+
+    :returns JSON
+    {
+        "success": bool
+    }
+
+    """
+
+    current_user = get_jwt_identity()
+
+    if db.get_role(current_user) != "administrator":
+        return jsonify({}), 401
+
+    data = request.get_json()
+    username = data["username"]
+
+    if db.delete_user(username):
+        return jsonify({}), 200
+    
+    return jsonify({}), 404
+
+@api.route("/api/change_password", methods = ["POST"])
+@jwt_required()
+def api_register():
+    """Changes the users password 
+    
+    :param JSON
+    {
+        "new_password": "<new password>"
+    }
+
+    :returns JSON
+    {
+        "success": bool
+    }
+
+    """
+
+    current_user = get_jwt_identity()
+    data = request.get_json()
+
+    new_password = data["new_password"]
+
+    if db.change_password(current_user, new_password):
+        return jsonify({},200)
+    return jsonify({},404)
 
 @api.route("/api/get_generations", methods = ["GET"])
 @jwt_required()
