@@ -1346,11 +1346,16 @@ const graphGen = () => {
             }
         ]
     }
-
     const generation = "0"
+    console.log(typeof(generation))
+    console.log(generation)
 
     type ObjectKey = keyof typeof testList;
-    let list: { gear3: string, ela3: string }[] = [];
+    let list: { 
+        gear3: string, ela3: string,
+        gear4: string, ela4: string,
+        gear5: string, ela5: string,
+    }[] = [];
 
     for (var i = 0; i < Object.keys(testList).length; i++) {
 
@@ -1361,8 +1366,12 @@ const graphGen = () => {
 
                 const g3 = testList[generationIndex][j]['Gear 3']
                 const e3 = testList[generationIndex][j]['Elasticity 3']
+                const g4 = testList[generationIndex][j]['Gear 4']
+                const e4 = testList[generationIndex][j]['Elasticity 4']
+                const g5 = testList[generationIndex][j]['Gear 5']
+                const e5 = testList[generationIndex][j]['Elasticity 5']
 
-                list.push({ gear3: g3, ela3: e3 })
+                list.push({ gear3: g3, ela3: e3, gear4: g4, ela4: e4, gear5: g5, ela5: e5 })
             }
         }
     }
@@ -1374,15 +1383,25 @@ const graphGen = () => {
         // @ts-ignore
         ctx,
         {
-            type: 'scatter',
+            type: 'bar',
             data: {
                 labels: list.map(row => row.gear3),
                 datasets: [
                     {
-                        label: 'Gear -> Ela',
+                        label: 'Gear -> Ela 3',
                         data: list.map(row => row.ela3),
                         borderColor: 'rgb(255, 0, 221)',
-                    }
+                    },
+                    {
+                        label: 'Gear -> Ela 4',
+                        data: list.map(row => row.ela4),
+                        borderColor: 'rgb(0, 143, 221)',
+                    },
+                    {
+                        label: 'Gear -> Ela 5',
+                        data: list.map(row => row.ela5),
+                        borderColor: 'rgb(21, 210, 132)',
+                    },
                 ]
             }
         }
