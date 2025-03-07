@@ -17,14 +17,21 @@ body {
 
 .leftbox {
   width: 20%;
+  text-align: left;
   background: #A7C8FF; 
   padding: 20px;
   box-shadow: 3px 3px 10px rgba(119, 119, 119, 0.5);
 }
 
-nav a {
+.leftbox nav {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.leftbox nav a {
   display: block;
-  padding: 15px;
+  padding: 10px;
   color: white;
   font-size: 1.1em;
   transition: all 0.3s ease-in-out;
@@ -32,8 +39,8 @@ nav a {
   cursor: pointer;
 }
 
-nav a:hover {
-  color: #3f75b6; 
+.leftbox nav a:hover {
+  color: #3f75b6;
   transform: scale(1.1);
 }
 
@@ -63,6 +70,7 @@ nav a:hover {
 .rightbox {
   width: 80%;
   padding: 20px;
+  text-align: left; /* Элементы будут выравниваться по левому краю */
 }
 
 h1, h2 {
@@ -75,7 +83,7 @@ h2 {
   margin-top: 20px;
 }
 
-p {
+.rightbox p {
   font-family: "Roboto", sans-serif;
   font-size: 0.9em;
   padding: 10px 0;
@@ -100,10 +108,4 @@ p {
   padding: 10px;
   border-radius: 5px;
   margin-top: 10px;
-}
-
-footer {
-  text-align: right;
-  padding: 20px;
-  font-size: 0.8em;
 }
