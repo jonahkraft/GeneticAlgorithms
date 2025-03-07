@@ -3,13 +3,13 @@ from codesnippets.car import *
 '''
 Übergebbare Parameter:
 
-aep := Mutationrate, desto höher, desto geringer (deswegen 1-aep im Code), zwischen 0 und 1
+aep := Mutatiosnrate, je höher, desto geringere Mutation (deswegen 1-aep im Code), zwischen 0 und 1
 generation_count := Anzahl der Generationen die berrechnet werden
-strategy := die Strategie die angewandt wird bei der Generierung neuer Generationen
+strategy := die Strategie, die angewandt wird bei der Generierung neuer Generationen
 population_size := konstante Größe der Population
 given_seed := seed für die Erzeugung der ersten Population
-elite_count := Anzahl der Top Individuellen die zur nächsten Generation behalten werden
-alien_count := Anzahl der Individuellen die komplett neu generiert werden für die nächste Generation
+elite_count := Anzahl der Top Individuen, die für die nächste Generation behalten werden
+alien_count := Anzahl der Individuen, die komplett neu generiert werden für die nächste Generation
 '''
 
 PATH = "backend/results/"
@@ -17,10 +17,10 @@ PATH = "backend/results/"
 
 class Schnittstelle(object):
     '''
-    Erzeugt ein Objekt welches sich um ein Experiment kümmert, sprich eine Reihe von Generationen
+    Erzeugt ein Objekt, welches sich um ein Experiment kümmert, sprich eine Reihe von Generationen
     bis ein gewünschtes Ziel erreicht wurde.
     Danach kann ein neues Objekt erzeugt werden um ein neues Experiment zu starten und beide
-    Objekte sollten erhaltbar/ nutzbar sein für vergleiche.
+    Objekte sollten erhaltbar/nutzbar sein für Vergleiche.
     '''
 
     def __init__(self, population_size=10, given_seed=42):
@@ -41,9 +41,9 @@ class Schnittstelle(object):
         '''
         def STRAT_C(population, _, __):
             '''
-            Eine Custom Strategie welche keine Besserung des Ergebnis verspricht, allerdings es
-            ermöglicht die automatische Anpassung des aep im Laufe der Generationen zu umgehen, sowie
-            die Einstellungen für weiterer Parameter welche teilweise ungenutzt waren und nützlich
+            Eine Custom Strategie welche keine Besserung des Ergebnis verspricht, es allerdings
+            ermöglicht, die automatische Anpassung des aep im Laufe der Generationen zu umgehen, sowie
+            die Einstellungen für weitere Parameter, welche teilweise ungenutzt waren und nützlich
             erschienen.
             '''
             return population.next_generation(
@@ -61,22 +61,22 @@ class Schnittstelle(object):
 
     def results(self):
         '''
-        Gibt alle Individuen aller Generationen des aktuellen Experiments in einer csv aus samt Eingaben
-        und Ausgaben der Simulation in der Form:
+        Gibt alle Individuen aller Generationen des aktuellen Experiments in einer csv aus, samt Eingaben
+        und Ausgaben der Simulation in folgender Form:
         [Generation] [Final Drive] [Roll Radius] [Gear 3] [Gear 4] [Gear 5] (Eingaben)
         [Consumption] [Elasticity 3] [Elasticity 4] [Elasticity 5] (Ausgaben)
 
         Zusätzlich werden noch 5 png erzeugt um die Entwicklung zu visualisieren.
-        3 davon stellen die Population jeweils im Anfangszustand, in der Mitte der Entwicklungsdauer
+        Drei davon stellen die Population jeweils im Anfangszustand, in der Mitte der Entwicklungsdauer
         und am Ende der Entwicklung dar.
-        Die anderen beiden visualisieren den Phenotyp sowie die Qualität.
+        Die anderen beiden visualisieren den Phänotyp, sowie die Qualität.
         '''
         plot_generations(self.generation, name="generations", directory=PATH)
         export_generations_to_csv(self.generation, name="generations", directory=PATH)
 
     def import_from_csv(self, file):
         '''
-        Importiert eine csv als Generation als Alternative zu einem zufälligen Startzustand.
+        Importiert eine csv als Generation. Alternativ zu einem zufälligen Startzustand.
         '''
         self.generation = import_generations_from_csv(
             Car,
@@ -86,13 +86,13 @@ class Schnittstelle(object):
 
     def clear(self):
         '''
-        Entfernt alle Instanen der Klasse und lehrt den Cache um zu garantieren dass unterschiedliche
+        Entfernt alle Instanzen der Klasse und leert den Cache, um zu garantieren, dass unterschiedliche
         Experimente sich untereinander nicht beeinflussen.
         '''
         Car.reset()
 
 
-# Example:
+# Example
 # x = Schnittstelle()
 # x.evolute(generation_count=10, strategy=1)
 # x.results()
