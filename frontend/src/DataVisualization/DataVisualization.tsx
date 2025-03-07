@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client'
 import axios from 'axios';
 // @ts-ignore
 import Papa from 'papaparse';
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import graph from "./graph.tsx";
@@ -12,7 +12,7 @@ import graphGen from "./graphGen.tsx";
 import './DataVisualization.css';
 
 
-function generateResultList(arr: any){
+function generateResultList(arr: any) {
     // Create Object that contains lists for every generation
     /*
     const groupedData: Record<string, any[]> = {};
@@ -1375,11 +1375,11 @@ function generateResultList(arr: any){
         ]
     }
     console.log(arr)
-    return(testList)
+    return (testList)
 }
 
 
-function toggleSidebar(side: any){
+function toggleSidebar(side: any) {
     document.getElementById(side + 'Sidebar')?.classList.toggle('open')
 }
 
@@ -1469,33 +1469,38 @@ function DataVisualization() {
     return (
         <>
             <Header />
-             <div className="toolbar">Toolbar</div>
-<div className="container">
-    <button className="toggle-btn left-btn" onClick={() => toggleSidebar('left')}>☰</button>
+            <div className="toolbar">Toolbar</div>
+            <div className="container">
+                <button className="toggle-btn left-btn" onClick={() => toggleSidebar('left')}>☰</button>
 
-    <div className="sidebar left" id="leftSidebar">
-        <button className="close-btn" onClick={() => toggleSidebar('left')}>✖</button>
-        Left Sidebar Content
-    </div>
+                <div className="sidebar left" id="leftSidebar">
+                    <button className="close-btn" onClick={() => toggleSidebar('left')}>✖</button>
+                    Left Sidebar Content
+                </div>
 
-    <Dropdown id="dropdown-wrapper">
-        <Dropdown.Toggle variant="success" id="dropdown-basic">
-            Auswahl Generations
-        </Dropdown.Toggle>
+                <Dropdown id="dropdown-wrapper">
+                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                        Auswahl Generations
+                    </Dropdown.Toggle>
 
-        <Dropdown.Menu id="dropdown-basic">
-            {generations.length > 0 ? (
-                generations.map((gen, index) => (
-                    <Dropdown.Item key={index} onClick={() => handleDropdownSelect(index)}>
-                        {gen}
-                    </Dropdown.Item>
-                ))
-            ) : (
-                <Dropdown.Item disabled>Lade Generationen...</Dropdown.Item>
-            )}
-        </Dropdown.Menu>
-    </Dropdown>
-</div>
+                    <Dropdown.Menu id="dropdown-basic">
+                        {generations.length > 0 ? (
+                            generations.map((gen, index) => (
+                                <Dropdown.Item key={index} onClick={() => handleDropdownSelect(index)}>
+                                    {gen}
+                                </Dropdown.Item>
+                            ))
+                        ) : (
+                            <Dropdown.Item disabled>Lade Generationen...</Dropdown.Item>
+                        )}
+                    </Dropdown.Menu>
+                </Dropdown>
+
+            </div>
+
+            <div style={{width:"800px"}}><canvas id="my_graph"></canvas></div>  
+
+            <div style={{width:"800px"}}><canvas id="my_graph_gen"></canvas></div>  
 
             <div className="content" id="mainContent">
                 <h2>{selectedGeneration ? `Ausgewählte Generation: ${selectedGeneration}` : "Diagramm wird hier angezeigt"}</h2>

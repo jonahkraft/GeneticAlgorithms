@@ -1,7 +1,7 @@
 import Chart from 'chart.js/auto'
 
 const graphGen = () => {
-    
+
     let testList = {
         '0': [
             {
@@ -1347,18 +1347,23 @@ const graphGen = () => {
         ]
     }
 
-    type ObjectKey = keyof typeof testList;
-    let list : {gen: string, consumption: string}[] = [];
+    const generation = "0"
 
-    for (var i=0; i< Object.keys(testList).length; i++) {
-        
+    type ObjectKey = keyof typeof testList;
+    let list: { gear3: string, ela3: string }[] = [];
+
+    for (var i = 0; i < Object.keys(testList).length; i++) {
+
         const generationIndex = i.toString() as ObjectKey;
 
-        for (var j=0; j< testList[generationIndex].length; j++) {
+        if (generationIndex == generation) {
+            for (var j = 0; j < testList[generationIndex].length; j++) {
 
-            const verbrauch = testList[generationIndex][j].Consumption
-            
-            list.push({gen: generationIndex, consumption: verbrauch})
+                const g3 = testList[generationIndex][j]['Gear 3']
+                const e3 = testList[generationIndex][j]['Elasticity 3']
+
+                list.push({ gear3: g3, ela3: e3 })
+            }
         }
     }
 
@@ -1371,11 +1376,12 @@ const graphGen = () => {
         {
             type: 'scatter',
             data: {
-                labels: list.map(row => row.gen),
+                labels: list.map(row => row.gear3),
                 datasets: [
                     {
-                        label: 'Verbrauch',
-                        data: list.map(row => row.consumption)
+                        label: 'Gear -> Ela',
+                        data: list.map(row => row.ela3),
+                        borderColor: 'rgb(255, 0, 221)',
                     }
                 ]
             }
