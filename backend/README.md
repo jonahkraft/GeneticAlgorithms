@@ -29,3 +29,12 @@ On Linux/Unix systems docker commands require root privileges by default.
 :rtype: list
 """
 ```
+
+
+For persistent storage, use the following command:
+```bash
+docker compose build
+```
+```bash
+docker compose up
+```

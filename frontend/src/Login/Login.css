@@ -56,9 +56,9 @@ h1 {
     color: #333;
 }
 
-div {
+.input-container {
     position: relative;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
 }
 
 input {
@@ -95,11 +95,6 @@ input:valid + label {
     color: #007BFF;
 }
 
-input:focus {
-    border-color: #007BFF;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
-}
-
 input[type="password"] {
     width: 100%;
     padding: 12px;
@@ -115,18 +110,26 @@ input[type="password"]:focus {
     box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
 }
 
-input[type="submit"] {
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.button {
+    width: 50%;
     background: linear-gradient(135deg, #007BFF, #0056b3);
     color: white;
     font-size: 16px;
     border: none;
     cursor: pointer;
-    padding: 12px;
+    padding: 15px;
     border-radius: 8px;
     transition: 0.3s;
 }
 
-input[type="submit"]:hover {
+.button:hover {
     background: linear-gradient(135deg, #0056b3, #003f7f);
 }
 
@@ -136,6 +139,11 @@ input[type="submit"]:hover {
     color: #007BFF;
     cursor: pointer;
     transition: 0.3s;
+    padding-top: 5px;  /* немного отступа сверху */
+    padding-bottom: 15px;
+    margin-left: auto;
+    display: block;
+    width: 100%;
 }
 
 .pass:hover {
@@ -144,17 +152,14 @@ input[type="submit"]:hover {
 }
 
 .signup_link {
-    margin-top: 15px;
-    font-size: 14px;
-}
-
-.signup_link a {
+    margin-top: 12px;
+    font-size: 16px;
+    text-align: center;
     color: #007BFF;
-    text-decoration: none;
-    transition: 0.3s;
+    cursor: pointer;
 }
 
-.signup_link a:hover {
-    text-decoration: underline;
+.signup_link:hover {
     color: #0056b3;
+    text-decoration: underline;
 }

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import axios from 'axios';
 import Header from "../Header/Header.tsx";
 import { useState } from 'react';
+import cookies from '../cookies.ts'
 
 function Login() {
     const [username, setUsername] = useState('');
@@ -44,35 +45,58 @@ function Login() {
                         <label htmlFor="password">Password</label>
                     </div>
                     <div className="pass">Forget Password?</div>
-                    <input name="submit" type="submit" value="Login" />
-                    <div className="signup_link">
-                        Not a Member? <a href="signup.php">Signup</a>
+
+                    <button className="button" type="submit" onClick={_ => logIn(username)}>Login</button>
+                    <p><br/></p>
+                    <div className="signup_link" onClick={() => window.location.href = '../../visualization.html'}>
+                        Continue as Simulator
                     </div>
-                    <a href="../../visualization.html" id="guest">Continue as Simulator</a>
                 </form>
             </div>
         </>
     );
 }
 
+function logIn(username: string = "placeholder_username") {
+    let role
+
+    if (username !== "placeholder_username") {
+        // dann wurde es über login aufgerufen
+        // TODO: sollte callUser aufrufen und davon die Rolle des Benutzers erhalten
+        // dafür zusätzlich password als Argument nehmen
+        role = "placeholder_role"
+
+        // TODO: Fehlermeldung, wenn Name oder Passwort falsch
+
+    }
+    else {
+        role = "placeholder_role"
+    }
+
+    cookies.saveCookies({"username": username, "role": role, "signed_in": true})
+    window.location.reload()
+    window.location.href = "../../visualization.html"
+}
+
 // Check for User
-function callUser(user: string, password: string) {
-    axios.post('/api/login', { user, password })
+function callUser(username: string, password: string) {
+    axios.post('/api/login', {"username": username, "password": password })
         .then(response => {
-			let token = response.data.access_token
+            let token = response.data.access_token
             console.log(token)
             axios.post('/api/protected_test', {},
-  				{
-					headers: {
-      					"Authorization": `Bearer ${token}`,
-      					"Content-Type": "application/json"  // Ensure JSON data format
-    				}
-				}
-  			)
+                {
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"  // Ensure JSON data format
+                    }
+                }
+            )
         })
         .catch(error => {
             console.error(error);
         });
 }
+
 
 ReactDOM.createRoot(document.getElementById('root_login')!).render(<Login />);
