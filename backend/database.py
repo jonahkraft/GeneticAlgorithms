@@ -213,6 +213,6 @@ if __name__ == "__main__":
     #con.commit()
     
     print(add_user("user", "password", "admin", connection_path="backend/db/users.db"))
-    print(check_password("user","password", connection_path="backend/db/users.db"))
+    #print(check_password("user","password", connection_path="backend/db/users.db"))
     #get_experiment_data("test.csv", ["generation","consumption","elasticity_4", "gear_3"], ["generation > 5", "gear_3 < 1.5"], connection_path="backend/db/simulation_data.db")
     pass
