@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&family=Nunito:wght@400;900&family=Roboto:wght@400;900&display=swap");
 
 body {
-  background: linear-gradient(to right, #A7C8FF, #A0D7FF); /* Легкий голубой градиент */
+  background: linear-gradient(to right, #A7C8FF, #A0D7FF);
   box-sizing: border-box;
 }
 
@@ -17,7 +17,7 @@ body {
 
 .leftbox {
   width: 20%;
-  background: #A7C8FF; /* Легкий голубой фон для левой панели */
+  background: #A7C8FF;
   padding: 20px;
   box-shadow: 3px 3px 10px rgba(119, 119, 119, 0.5);
 }
@@ -32,12 +32,12 @@ nav a {
 }
 
 nav a:hover {
-  color: #3f75b6; /* Голубой цвет для подсветки */
+  color: #3f75b6;
   transform: scale(1.1);
 }
 
 .active {
-  color: #3f75b6; /* Голубой цвет для активной ссылки */
+  color: #3f75b6;
   font-weight: bold;
 }
 
@@ -48,7 +48,7 @@ nav a:hover {
 
 h1, h2 {
   font-family: "Montserrat", sans-serif;
-  color: #3f75b6; /* Голубой цвет для заголовков */
+  color: #3f75b6;
 }
 
 h2 {
@@ -79,7 +79,7 @@ p {
 }
 
 .toggle-btn.active {
-  background: #70d9ff; /* Голубой цвет для активной кнопки */
+  background: #70d9ff;
   color: white;
 }
 
@@ -88,7 +88,7 @@ p {
 }
 
 .account-btn {
-  background: #3f75b6; /* Голубой фон для кнопки */
+  background: #3f75b6;
   border: none;
   color: white;
   padding: 10px;
