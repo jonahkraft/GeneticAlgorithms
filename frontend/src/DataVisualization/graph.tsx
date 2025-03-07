@@ -1,15 +1,7 @@
 import Chart from 'chart.js/auto'
 
 const graph = () => {
-    const dat1 = [
-        { year: 2010, count: 10 },
-        { year: 2011, count: 20 },
-        { year: 2012, count: 15 },
-        { year: 2013, count: 25 },
-        { year: 2014, count: 22 },
-        { year: 2015, count: 30 },
-        { year: 2016, count: 28 },
-    ];
+    
     let testList = {
         '0': [
             {
@@ -1356,17 +1348,11 @@ const graph = () => {
     }
 
     type ObjectKey = keyof typeof testList;
-
     let list : {gen: string, consumption: string}[] = [];
-
 
     for (var i=0; i< Object.keys(testList).length; i++) {
         
         const generationIndex = i.toString() as ObjectKey;
-        // console.log(testList[generationIndex])
-
-        const test = testList[generationIndex]
-        console.log(test)
 
         for (var j=0; j< testList[generationIndex].length; j++) {
 
@@ -1375,16 +1361,6 @@ const graph = () => {
             list.push({gen: generationIndex, consumption: verbrauch})
         }
     }
-    console.log("yay")
-    console.log(list)
-
-    
-
-    for( const element in Object.keys(testList)) {
-        // testList[element.toString()]
-    }
-    
-    console.log("testData " + Object.keys(testList))
 
     const ctx = document.getElementById("my_graph") as HTMLCanvasElement;
     if (!ctx) return;
