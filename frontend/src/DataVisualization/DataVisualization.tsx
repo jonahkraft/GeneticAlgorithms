@@ -7,6 +7,7 @@ import Papa from 'papaparse';
 import {useEffect, useState} from "react";
 import { Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import graph from "./graph.tsx";
 
 
 function generateResultList(arr: any){
@@ -1421,6 +1422,10 @@ function DataVisualization() {
         }
     }, [data]);
 
+    useEffect(() => {
+        graph();
+    }, []);
+
     // Show Generation Drop Down
     function loadGenerations(arr: any) {
         if (arr.length === 0) {
@@ -1481,6 +1486,8 @@ function DataVisualization() {
                     </Dropdown.Menu>
                 </Dropdown>
             </div>
+
+            <div style={{width:"800px"}}><canvas id="my_graph"></canvas></div>
 
             <div className="content" id="mainContent">
                 <h2>{selectedGeneration ? `Ausgewählte Generation: ${selectedGeneration}` : "Diagramm wird hier angezeigt"}</h2>
