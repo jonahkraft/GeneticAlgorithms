@@ -34,7 +34,7 @@ def is_wine_installed():
 def run_simulation(final_drive_ratio, roll_radius, gear3, gear4, gear5):
     """
     Runs the simulation with the given parameters and returns the results.
-
+    
     :param final_drive_ratio: The final drive ratio.
     :type final_drive_ratio: float or int
     :param roll_radius: The roll radius.
@@ -56,7 +56,7 @@ def run_simulation(final_drive_ratio, roll_radius, gear3, gear4, gear5):
     os_name = platform.system()
     if os_name == "Windows":
         pass  # nothing to do here
-    elif os_name == "Linux":  # Mac OS
+    elif os_name == "Darwin":  # Mac OS
         # try to run using wine64
         if is_wine_installed():
             command.append("wine64")

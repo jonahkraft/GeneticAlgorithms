@@ -8,6 +8,8 @@ WORKDIR /backend
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
+RUN apk add wine 
+
 COPY . .
 
 #CMD [ "python3", "-m" , "flask", "run", "--cert=adhoc", "--host=0.0.0.0"]
