@@ -22,7 +22,8 @@ def login(username: str, password: str):
     response = {
         "registered": False,
         "password_correct": False,
-        "access_token": ""
+        "access_token": "",
+        "role": None
     }
 
     if not db.user_exists(username):
@@ -36,6 +37,7 @@ def login(username: str, password: str):
     response["password_correct"] = True
 
     response["access_token"] = create_access_token(identity=username)
+    response["role"] = db.get_role(username)
 
     return jsonify(response), 200
 

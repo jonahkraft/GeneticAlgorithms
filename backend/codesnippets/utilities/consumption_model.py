@@ -56,7 +56,7 @@ def run_simulation(final_drive_ratio, roll_radius, gear3, gear4, gear5):
     os_name = platform.system()
     if os_name == "Windows":
         pass  # nothing to do here
-    elif os_name == "Darwin":  # Mac OS
+    elif os_name == "Darwin" or os_name == "Linux":  # Mac OS or Linux
         # try to run using wine64
         if is_wine_installed():
             command.append("wine64")
