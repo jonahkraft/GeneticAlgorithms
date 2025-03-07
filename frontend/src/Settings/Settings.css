@@ -1,10 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&family=Nunito:wght@400;900&family=Roboto:wght@400;900&display=swap");
-
 body {
+  font-family: Arial, sans-serif;
   background: linear-gradient(to right, #A7C8FF, #A0D7FF); 
   box-sizing: border-box;
 }
-
+/* right side */
 .settings-container {
   display: flex;
   width: 80%;
@@ -17,26 +16,25 @@ body {
 
 .leftbox {
   width: 20%;
-  text-align: left;
   background: #A7C8FF; 
   padding: 20px;
   box-shadow: 3px 3px 10px rgba(119, 119, 119, 0.5);
 }
 
 .leftbox nav {
-  display: flex;
   flex-direction: column;
-  gap: 15px;
+
 }
 
 .leftbox nav a {
-  display: block;
+  align-items: left;
   padding: 10px;
   color: white;
   font-size: 1.1em;
   transition: all 0.3s ease-in-out;
   text-decoration: none;
   cursor: pointer;
+  margin-right: auto;
 }
 
 .leftbox nav a:hover {
@@ -74,7 +72,6 @@ body {
 }
 
 h1, h2 {
-  font-family: "Montserrat", sans-serif;
   color: #3f75b6; 
 }
 
@@ -84,7 +81,6 @@ h2 {
 }
 
 .rightbox p {
-  font-family: "Roboto", sans-serif;
   font-size: 0.9em;
   padding: 10px 0;
   color: #333;
