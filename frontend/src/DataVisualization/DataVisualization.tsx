@@ -1468,33 +1468,33 @@ function DataVisualization() {
     return (
         <>
             <Header />
-            <div className="toolbar">Toolbar</div>
-            <div className="container">
-                <button className="toggle-btn left-btn" onClick={() => toggleSidebar('left')}>☰</button>
-                <div className="sidebar left" id="leftSidebar">Left Sidebar Content</div>
+             <div className="toolbar">Toolbar</div>
+<div className="container">
+    <button className="toggle-btn left-btn" onClick={() => toggleSidebar('left')}>☰</button>
 
-                <Dropdown id="dropdown-wrapper">
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">
-                        Auswahl Generations
-                    </Dropdown.Toggle>
+    <div className="sidebar left" id="leftSidebar">
+        <button className="close-btn" onClick={() => toggleSidebar('left')}>✖</button>
+        Left Sidebar Content
+    </div>
 
-                    <Dropdown.Menu id="dropdown-basic">
-                        {generations.length > 0 ? (
-                            generations.map((gen, index) => (
-                                <Dropdown.Item key={index} onClick={() => handleDropdownSelect(index)}>
-                                    {gen}
-                                </Dropdown.Item>
-                            ))
-                        ) : (
-                            <Dropdown.Item disabled>Lade Generationen...</Dropdown.Item>
-                        )}
-                    </Dropdown.Menu>
-                </Dropdown>
-            </div>
+    <Dropdown id="dropdown-wrapper">
+        <Dropdown.Toggle variant="success" id="dropdown-basic">
+            Auswahl Generations
+        </Dropdown.Toggle>
 
-            <div style={{width:"800px"}}><canvas id="my_graph"></canvas></div>
-
-            <div style={{width:"800px"}}><canvas id="my_graph_gen"></canvas></div>
+        <Dropdown.Menu id="dropdown-basic">
+            {generations.length > 0 ? (
+                generations.map((gen, index) => (
+                    <Dropdown.Item key={index} onClick={() => handleDropdownSelect(index)}>
+                        {gen}
+                    </Dropdown.Item>
+                ))
+            ) : (
+                <Dropdown.Item disabled>Lade Generationen...</Dropdown.Item>
+            )}
+        </Dropdown.Menu>
+    </Dropdown>
+</div>
 
             <div className="content" id="mainContent">
                 <h2>{selectedGeneration ? `Ausgewählte Generation: ${selectedGeneration}` : "Diagramm wird hier angezeigt"}</h2>
