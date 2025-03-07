@@ -22,4 +22,5 @@ def serve_react(path: str):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(ssl_context=('cert.pem', 'key.pem'))
+    #app.run(debug=True)
