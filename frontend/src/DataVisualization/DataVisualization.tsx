@@ -1457,7 +1457,7 @@ function DataVisualization() {
         document.getElementById("dropdown-basic").innerHTML = selectedGen;
 
         // Saves selected generation in state
-        setSelectedGeneration(selectedGen);
+        setSelectedGeneration(generations[index]);
         //console.log("Ausgewählte Generation:", selectedGen);
 
         // Add Stuff like Update-UI
