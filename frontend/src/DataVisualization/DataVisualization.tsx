@@ -34,7 +34,7 @@ function DataVisualization() {
                 
                 <p id="output">Oh nein, wenn dass die Mama sieht.</p>
 
-                <div><canvas id="my_graph"></canvas></div>
+                <div style={{width:"800px"}}><canvas id="my_graph"></canvas></div>
 
             </div>
             <Footer/>
