@@ -1382,9 +1382,17 @@ function toggleSidebar(side: any){
 
 
 function DataVisualization() {
+    // data speichert Datensatz vom backend Server, funktioniert aktell noch nicht, daher ist data Null
     const [data, setData] = useState<any[]>([]);
+
+    // generations erstellt eine Liste aller Generations von 0 - x (in Test Liste 0-10)
     const [generations, setGenerations] = useState<string[]>([]);
+
+    // selectedGeneration speichert die ausgewählte Generation und zeigt diese auf der Website an
     const [selectedGeneration, setSelectedGeneration] = useState<string | null>(null);
+
+    // ändert den Main Content der Seite
+    const [generatedElement, setGeneratedElement] = useState<JSX.Element | null>(null);
 
     // load CSV Files
     useEffect(() => {
@@ -1439,6 +1447,11 @@ function DataVisualization() {
         //console.log("Ausgewählte Generation:", selectedGen);
 
         // Add Stuff like Update-UI
+        setGeneratedElement(
+            <div key={index} className="generation-canvas">
+                <p>Hier könnte eine Visualisierung für {selectedGen} stehen.</p>
+            </div>
+        );
     }
 
     return (
@@ -1469,8 +1482,8 @@ function DataVisualization() {
             </div>
 
             <div className="content" id="mainContent">
-                <h2>Blank</h2>
-                <h2>{selectedGeneration ? `Ausgewählte: ${selectedGeneration}` : "Diagramm wird hier angezeigt"}</h2>
+                <h2>{selectedGeneration ? `Ausgewählte Generation: ${selectedGeneration}` : "Diagramm wird hier angezeigt"}</h2>
+                {generatedElement}
             </div>
 
             <div className="sidebar right" id="rightSidebar">Right Sidebar Content</div>
