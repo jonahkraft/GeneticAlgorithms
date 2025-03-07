@@ -3,7 +3,7 @@ import Footer from "../Footer/Footer.tsx";
 import ReactDOM from "react-dom/client";
 import cookies from "../cookies.ts";
 import { useState } from "react";
-import "./Settings.css"; // Подключаем CSS
+import "./Settings.css";
 
 function ToggleButton({ label }: { label: string }) {
     const [isActive, setIsActive] = useState(false);
