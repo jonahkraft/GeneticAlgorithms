@@ -1,0 +1,37 @@
+footer {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    text-align: center;
+    padding: 30px 0;
+    font-family: 'Nunito', sans-serif;
+}
+
+footer p {
+    font-size: 1.1em;
+    margin: 0;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+footer hr {
+    border: 0;
+    border-top: 1px solid #34495e;
+    width: 80%;
+    margin: 20px auto;
+}
+
+footer a {
+    color: #ecf0f1;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+
+footer a:hover {
+    color: #3498db;
+}
+
+footer .footer-note {
+    font-size: 0.9em;
+    margin-top: 10px;
+    color: #7f8c8d;
+}
