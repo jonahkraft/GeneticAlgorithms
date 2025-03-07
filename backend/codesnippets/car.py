@@ -1,7 +1,5 @@
-from evolution.interfaces import Allele, Individual
-from utilities import consumption_model as cm
-from utilities import plot_generations, export_generations_to_csv, import_generations_from_csv
-import evolution as evo
+from codesnippets.evolution.interfaces import Allele, Individual
+from codesnippets.utilities import consumption_model as cm
 
 
 class FinalDrive(Allele):

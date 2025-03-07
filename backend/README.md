@@ -1,21 +1,39 @@
-# How to use the docker image
+# How to use docker
 
-Navigate to the ```/backend``` directory,
-then run the following command:
+1. Download Docker Desktop and start it
+2. Navigate to the ```/backend``` directory
+3. Run the following command:
+```bash
+docker compose build
+```
+4. Run the following command:
+```bash
+docker compose up
+```
+Docker should run the backend service for now. 
 
+# How to start the frontend 
+1. go to the frontend directory and run the following command: (only once!)
+```bash
+npm install vite 
+``` 
+2. Now you can start the frontend dev server with the following command: 
+```bash
+npm run dev
+```
+3. Open your browser and navigate to ```http://localhost:3000/```
+4. You should see the frontend running with backend functionality.
+
+
+
+# Notizen der der alten Vorgehensweise: 
 ```bash
 docker build --tag genetic-algorithms .
 ```
-
 To run the docker image use:
-
 ```bash
 docker run -p 5000:5000 genetic-algorithms
 ```
-
-On Linux/Unix systems docker commands require root privileges by default.
-
-# Docstrings:
 
 ```python
 """Gets and prints the spreadsheet's header columns

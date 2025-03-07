@@ -34,6 +34,7 @@ def is_wine_installed():
 def run_simulation(final_drive_ratio, roll_radius, gear3, gear4, gear5):
     """
     Runs the simulation with the given parameters and returns the results.
+    
     :param final_drive_ratio: The final drive ratio.
     :type final_drive_ratio: float or int
     :param roll_radius: The roll radius.

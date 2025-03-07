@@ -12,6 +12,7 @@ from app import app as api
 import sqlite3
 
 import database as db
+from codesnippets import main as sim
 
 api.config["JWT_SECRET_KEY"] = "please-remember-to-change-me"
 jwt = JWTManager(api)
@@ -121,7 +122,7 @@ def api_register():
     
     current_user = get_jwt_identity()
 
-    if db.get_role(current_user) != "admin":
+    if db.get_role(current_user) != "administrator":
         return jsonify({}), 401
 
     data = request.get_json()
@@ -148,7 +149,93 @@ def api_get_generations():
     with open("./results/generations.csv", "r") as file:
         return jsonify({ "content": file.read() }), 200
 
-    return jsonify({}), 404 
+    return jsonify({}), 404
+
+@api.route("/api/start_simulation", methods = ["POST"])
+@jwt_required()
+def api_start_simulation():
+    """Starts a simulation with the given parameters
+    
+    :param JSON
+    {
+        "population_size": int,
+        "simulation_seed": int,
+        "generation_count": int,
+        "strategy": int,
+        "aep": float,
+        "elite_count": int,
+        "alien_count" int
+    }
+
+    :returns JSON
+    {
+        
+    }
+
+    """
+    current_user = get_jwt_identity()
+
+    role = db.get_role(current_user)
+    allowed_roles = { "data_analyst", "administrator", "simulator" }
+
+    if role not in allowed_roles:
+        return jsonify({}), 401
+    
+    data = request.get_json()
+
+    population_size = data["population_size"]
+    simulation_seed = data["simulation_seed"]
+    generation_count = data["generation_count"]
+    strategy = data["strategy"]
+    aep = data["aep"]
+    elite_count = data["elite_count"]
+    alien_count = data["alien_count"]
+    
+    simulation_interface = sim.Schnittstelle(population_size,simulation_seed)
+
+    simulation_interface.evolute(generation_count,strategy,aep,elite_count,alien_count)
+
+    simulation_interface.results()
+
+    return jsonify({}), 200
+
+
+@api.route("/api/get_simulation_data", methods = ["GET"])
+@jwt_required()
+def api_get_simulation_data():
+    """Requests historic simulation data for further analysis
+    
+    :param JSON
+    {
+        "columns": list[str],
+        "row_constraints": list[str]
+    }
+
+    :returns JSON
+    {
+        "content" : csv file
+    }
+
+    """
+    current_user = get_jwt_identity()
+
+    role = db.get_role(current_user)
+    allowed_roles = { "data_analyst", "administrator"}
+
+    if role not in allowed_roles:
+        return jsonify({}), 401
+    
+    data = request.get_json()
+
+    columns = data["columns"]
+    row_constraints = data["row_constraints"]
+
+    db.export_experiment_data_to_csv("./results/export_data.csv", columns, row_constraints)
+
+    with open("./results/export_data.csv", "r") as file:
+        return jsonify({ "content": file.read() }), 200
+
+    return jsonify({}), 404
 
 
 @api.route("/api/protected_test", methods = ["POST"])

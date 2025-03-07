@@ -4,13 +4,6 @@ import string
 import UnitMeta
 from backend import database
 from typing import *
-# Test Connection
-testConnection = "..\\TestUserDataBase.db"
-# Allgemeine Nutzer Sample Daten
-TestData : list[dict[str, str]] = [{ "name": "Max", "role": "Admin", "pass": "password0" },
-                                   {"name": "Peter", "role": "Guest", "pass": "lustig"},
-                                   {"name": "Tester U", "role": "Datenanalyst", "pass": "a!!9487w5793" }
-                                   ]
 
 class UserDatabaseTests(UnitMeta.UnitMeta):
     def CheckConnectionPropertlyClosed(this, func : Callable, **args) -> bool:
@@ -118,4 +111,12 @@ class UserDatabaseTests(UnitMeta.UnitMeta):
         return True;
 
 if __name__ == "__main__":
+    # Test Connection
+    testConnection = "..\\TestUserDataBase.db"
+    # Allgemeine Nutzer Sample Daten
+    TestData : list[dict[str, str]] = [{ "name": "Max", "role": "Admin", "pass": "password0" },
+                                   {"name": "Peter", "role": "Guest", "pass": "lustig"},
+                                   {"name": "Tester U", "role": "Datenanalyst", "pass": "a!!9487w5793" }
+                                   ]
+
     UserDatabaseTests()()

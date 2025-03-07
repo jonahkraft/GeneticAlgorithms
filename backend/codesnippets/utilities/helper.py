@@ -5,12 +5,13 @@ import os
 
 from matplotlib import pyplot as plt
 
-import evolution as evo
+import codesnippets.evolution as evo
 
 
-def export_generations_to_csv(generations, name="generations", directory=None, header=True, delimiter=";"):
+def export_generations_to_csv(generations, name="generations", directory=None, header=True, delimiter=","):
     """
     Exports the given generations to a csv file.
+    
     :param generations: The generations to export.
     :type generations: list[Population]
     :param name: The name of the file.
@@ -79,6 +80,7 @@ def export_generations_to_csv(generations, name="generations", directory=None, h
 def import_generations_from_csv(cls, name="generations", directory=None, header=True, delimiter=";"):
     """
     Imports the generations from a csv file.
+
     :param cls: The class of the individuals.
     :type cls: Individual
     :param name: The name of the file.

@@ -1,107 +1,121 @@
-import Header from "../Header/Header.tsx"
-import Footer from "../Footer/Footer.tsx"
-import ReactDOM from 'react-dom/client';
+import Header from "../Header/Header.tsx";
+import Footer from "../Footer/Footer.tsx";
+import ReactDOM from "react-dom/client";
+import { useState } from 'react';
 import cookies from "../cookies.ts";
-import { useState } from "react";
+import "./Settings.css";
 
-function ToggleFilter() { {/*Togglesystem für den Filter*/}
-    const [isActive, setIsActive] = useState(false);
-    const toggle = () => {
-        setIsActive((prev) => !prev);
-    };
-    return (
-        <div>
-            <button onClick={toggle} className="px-4 py-2 bg-gray-300 rounded">
-                {isActive ? "On" : "Off"}
-            </button>
-            {isActive && <p>The toggle is ON!</p>} {/*Connection zu wirklichem Filter fehlt noch*/}
-        </div>
-    );
+interface AccountData {
+    username: string;
+    role: string;
+    email: string;
 }
-function ToggleSpeech() { {/*Togglesystem für den Spracheinstellung-> theoretischer Plan: Nach togglen ist all der text ein leichten Sätzen geschrieben.*/}
-    const [isActive, setIsActive] = useState(false);
-    const toggle = () => {
-        setIsActive((prev) => !prev);
-    };
-    return (
-        <div>
-            <button onClick={toggle} className="px-4 py-2 bg-gray-300 rounded">
-                {isActive ? "On" : "Off"}
-            </button>
-            {isActive && <p>The toggle is ON!</p>} {/*wie genau kann man das machen?*/}
-        </div>
-    );
-}
+
 function AccountButton() {
-    {/*Accountinformationen aufrufen: (mögliche addition Email)*/}
-    const [isTextVisible, setIsTextVisible] = useState(false);
-    const [data, setData] = useState({ username: '', role: '' });
+    const [isTextVisible, setIsTextVisible] = useState<boolean>(false);
+    const [data, setData] = useState<AccountData>({
+        username: "",
+        role: "",
+        email: "",
+    });
 
     const toggleTextVisibility = () => {
         setIsTextVisible((prev) => !prev);
-        const cookiesData = cookies.getCookies(); // Hier solltest du die Cookies korrekt lesen
-        setData(cookiesData); // Die Cookie-Daten setzen (nur ein Beispiel)
-        console.log(cookiesData); // Ausgabe der Cookie-Daten zum Debuggen
+        const cookiesData = cookies.getCookies();
+        setData({
+            ...cookiesData,
+            email: cookiesData.email || "Not provided",
+        });
     };
+
     return (
-        <div>
-            <button onClick={toggleTextVisibility} className="px-4 py-2 bg-gray-300 rounded">
+        <div className="account-container">
+            <button onClick={toggleTextVisibility} className="account-btn">
                 Account Information
             </button>
 
             {isTextVisible && (
-                <div>
-                    <br/>
+                <div className="account-info">
                     <p><b>Username:</b> {data.username}</p>
                     <p><b>Role:</b> {data.role}</p>
-                    <br/>
-                    <p>Email:</p>
+                    <p><b>Email:</b> {data.email}</p>
                 </div>
             )}
         </div>
     );
 }
-function LanguageButton() {
-    const [isActive, setIsActive] = useState(false);
-    const toggle: ()=>void = (): void => {
-        setIsActive((prev) => !prev);
+
+function Settings() {
+    const [selectedTab, setSelectedTab] = useState<string>("account");
+
+    const handleTabClick = (tab: string) => {
+        setSelectedTab(tab);
     };
+
     return (
-        <div>
-            <button onClick={toggle} className="px-4 py-2 bg-gray-300 rounded">
-                {isActive ? "English" : "Deutsch"}</button>
-        </div>
+        <>
+            <Header />
+            <div className="settings-page">
+                <div className="settings-container">
+                    <div className="leftbox">
+                        <div id="logo">
+                            <h1 className="logo">Settings</h1>
+                        </div>
+                        <nav>
+                            <a className={selectedTab === "account" ? "active" : ""} onClick={() => handleTabClick("account")}>
+                                <i className="fa fa-user"></i> Account
+                            </a>
+                            <a className={selectedTab === "color" ? "active" : ""} onClick={() => handleTabClick("color")}>
+                                <i className="fa fa-palette"></i> Color Filter
+                            </a>
+                            <a className={selectedTab === "speech" ? "active" : ""} onClick={() => handleTabClick("speech")}>
+                                <i className="fa fa-volume-up"></i> Easy Speech
+                            </a>
+                            <a className={selectedTab === "language" ? "active" : ""} onClick={() => handleTabClick("language")}>
+                                <i className="fa fa-language"></i> Language
+                            </a>
+                        </nav>
+                        <div className="language-switch">
+                            <button className="language-btn">ENG</button>
+                            <button className="language-btn">DE</button>
+                        </div>
+
+                    </div>
+
+                    <div className="rightbox">
+                        {selectedTab === "account" && (
+                            <>
+                                <AccountButton />
+                                <p>Change Password</p>
+                            </>
+                        )}
+
+                        {selectedTab === "color" && (
+                            <>
+                                <h2>Color Filter</h2>
+                                <p>Enable/Disable color filter</p>
+                            </>
+                        )}
+
+                        {selectedTab === "speech" && (
+                            <>
+                                <h2>Easy Speech</h2>
+                                <p>Enable/Disable speech mode</p>
+                            </>
+                        )}
+
+                        {selectedTab === "language" && (
+                            <>
+                                <h2>Language</h2>
+                                <p>Switch between English and German</p>
+                            </>
+                        )}
+                    </div>
+                </div>
+            </div>
+            <Footer />
+        </>
     );
 }
 
-// props sollte ein user-Objekt sein
-
-function Settings() {
-
-    const data = cookies.getCookies()
-    console.log(data)
-    return(
-        <>
-            <Header/>
-            <h1>Settings</h1>
-            <h2>Account</h2>
-            <AccountButton/>
-            <p>Change Password</p>
-            <p>...</p>
-            <h2>color filter</h2>
-            <ToggleFilter /> {/*Möglichkeit den Farbfilter an und auszuschalten*/}
-            <h2>easy speech</h2>
-            <ToggleSpeech /> {/* Togglen der einfachen Sprache*/}
-            <h2>language</h2>
-            <LanguageButton/> {}
-            <p>Datenschutz?</p>
-            <Footer/>
-
-
-        </>
-
-    )
-}
-
-ReactDOM.createRoot(document.getElementById('root_settings')!).render(<Settings />);
-
+ReactDOM.createRoot(document.getElementById("root_settings")!).render(<Settings />);

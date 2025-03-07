@@ -1,6 +1,12 @@
 import sqlite3
 import csv
 import hashlib
+import os
+from redis import Redis
+
+redis_host = os.getenv('REDIS_HOST', 'localhost')
+redis_client = Redis(host=redis_host)
+
 
 #user_connection = sqlite3.connect("backend/db/users.db")
 #cur = user_connection.cursor()
@@ -9,6 +15,9 @@ import hashlib
 #            user_name text NOT NULL UNIQUE,
 #            role text NOT NULL,
 #            hashed_password text NOT NULL)""")
+#
+#user_connection.commit()
+
 
 def add_user(user_name: str, password: str, role: str = "data_analyst", connection_path: str = "db/users.db")-> None:
     """
@@ -145,7 +154,7 @@ def add_experiment_data_from_csv(file_path: str, connection_path: str = "db/simu
     with open(file_path,'r') as file:
         reader = csv.reader(file)
         
-        rows = [row[0].split(";") for row in reader]
+        rows = [row[0].split(",") for row in reader]
         to_db = [(int(i[0]),float(i[1]),float(i[2]),float(i[3]),float(i[4]),float(i[5]),float(i[6]),float(i[7]),float(i[8]),float(i[9])) for i in rows[1:]]
 
     cur.executemany("INSERT INTO car_data (generation, final_drive, roll_radius, gear_3, gear_4, gear_5, consumption, elasticity_3, elasticity_4, elasticity_5) VALUES (?,?,?,?,?,?,?,?,?,?);", to_db)
@@ -205,7 +214,7 @@ if __name__ == "__main__":
     #
     #con.commit()
     
-    print(add_user("user", "password", "admin", connection_path="backend/db/users.db"))
-    print(check_password("user","password", connection_path="backend/db/users.db"))
+    print(add_user("user", "password", "administrator", connection_path="backend/db/users.db"))
+    #print(check_password("user","password", connection_path="backend/db/users.db"))
     #get_experiment_data("test.csv", ["generation","consumption","elasticity_4", "gear_3"], ["generation > 5", "gear_3 < 1.5"], connection_path="backend/db/simulation_data.db")
     pass

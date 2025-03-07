@@ -4,12 +4,15 @@ import ReactDOM from 'react-dom/client'
 import axios from 'axios';
 // @ts-ignore
 import Papa from 'papaparse';
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import graph from "./graph.tsx";
+import graphGen from "./graphGen.tsx";
+import './DataVisualization.css';
 
 
-function generateResultList(arr: any){
+function generateResultList(arr: any) {
     // Create Object that contains lists for every generation
     /*
     const groupedData: Record<string, any[]> = {};
@@ -27,7 +30,7 @@ function generateResultList(arr: any){
         groupedData[generation].push(entry);
     });
     */
-    let testList = {
+    const testList = {
         '0': [
             {
                 generation: '0',
@@ -1371,20 +1374,29 @@ function generateResultList(arr: any){
             }
         ]
     }
-    console.log(3)
-    return(testList)
+    console.log(arr)
+    return (testList)
 }
 
 
-function toggleSidebar(side: any){
+function toggleSidebar(side: any) {
     document.getElementById(side + 'Sidebar')?.classList.toggle('open')
 }
 
 
 function DataVisualization() {
+    // data speichert Datensatz vom backend Server, funktioniert aktell noch nicht, daher ist data Null
     const [data, setData] = useState<any[]>([]);
+
+    // generations erstellt eine Liste aller Generations von 0 - x (in Test Liste 0-10)
     const [generations, setGenerations] = useState<string[]>([]);
+
+    // selectedGeneration speichert die ausgewählte Generation und zeigt diese auf der Website an
     const [selectedGeneration, setSelectedGeneration] = useState<string | null>(null);
+
+    // ändert den Main Content der Seite
+    // @ts-ignore
+    const [generatedElement, setGeneratedElement] = useState<JSX.Element | null>(null);
 
     // load CSV Files
     useEffect(() => {
@@ -1403,14 +1415,23 @@ function DataVisualization() {
     // Verarbeitung der Daten (generateResultList & loadGenerations)
     useEffect(() => {
         if (data.length > 0) {
-            let generations = generateResultList(data);
+            const generations = generateResultList(data);
             loadGenerations(generations);
         } else {
             // do it anyway for testing
-            let generations = generateResultList(data);
+            const generations = generateResultList(data);
             loadGenerations(generations);
         }
     }, [data]);
+
+    useEffect(() => {
+        graph();
+    }, []);
+
+
+    useEffect(() => {
+        graphGen();
+    }, [selectedGeneration]);
 
     // Show Generation Drop Down
     function loadGenerations(arr: any) {
@@ -1418,19 +1439,20 @@ function DataVisualization() {
             return
         }
 
-        let newGenerations: string[] = [];
+        const newGenerations: string[] = [];
         //console.log(arr);
 
         for (let i = 0; i <= arr[0].length; i++) {
             //console.log(arr[i]);
-            newGenerations.push(`Generation ${i}`);
+            //newGenerations.push(`Generation ${i}`);
+            newGenerations.push(String(i));
         }
         setGenerations(newGenerations);
     }
 
     // Change Drop Down Element
     function handleDropdownSelect(index: number) {
-        const selectedGen = generations[index];
+        const selectedGen = 'Generation ' + generations[index];
         // @ts-ignore
         document.getElementById("dropdown-basic").innerHTML = selectedGen;
 
@@ -1439,7 +1461,18 @@ function DataVisualization() {
         //console.log("Ausgewählte Generation:", selectedGen);
 
         // Add Stuff like Update-UI
+        setGeneratedElement(
+            <div key={index} className="generation-canvas">
+                <div style={{width:"800px"}}><canvas id="my_graph_gen"></canvas></div>
+            </div>
+        );
     }
+
+    // For Debugging Purpose
+    console.log('Data: ', data)
+    console.log('Generations: ', generations)
+    console.log('SelectedGeneration: ', selectedGeneration)
+    console.log('GeneratedElement: ', generatedElement)
 
     return (
         <>
@@ -1447,7 +1480,11 @@ function DataVisualization() {
             <div className="toolbar">Toolbar</div>
             <div className="container">
                 <button className="toggle-btn left-btn" onClick={() => toggleSidebar('left')}>☰</button>
-                <div className="sidebar left" id="leftSidebar">Left Sidebar Content</div>
+
+                <div className="sidebar left" id="leftSidebar">
+                    <button className="close-btn" onClick={() => toggleSidebar('left')}>✖</button>
+                    Left Sidebar Content
+                </div>
 
                 <Dropdown id="dropdown-wrapper">
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -1458,7 +1495,7 @@ function DataVisualization() {
                         {generations.length > 0 ? (
                             generations.map((gen, index) => (
                                 <Dropdown.Item key={index} onClick={() => handleDropdownSelect(index)}>
-                                    {gen}
+                                    {'Generation '+gen}
                                 </Dropdown.Item>
                             ))
                         ) : (
@@ -1466,11 +1503,15 @@ function DataVisualization() {
                         )}
                     </Dropdown.Menu>
                 </Dropdown>
+
             </div>
 
+            <div style={{width:"800px"}}><canvas id="my_graph"></canvas></div>  
+
+
             <div className="content" id="mainContent">
-                <h2>Blank</h2>
-                <h2>{selectedGeneration ? `Ausgewählte: ${selectedGeneration}` : "Diagramm wird hier angezeigt"}</h2>
+                <h2>{selectedGeneration ? `Ausgewählte Generation: ${selectedGeneration}` : "Diagramm wird hier angezeigt"}</h2>
+                {generatedElement}
             </div>
 
             <div className="sidebar right" id="rightSidebar">Right Sidebar Content</div>
