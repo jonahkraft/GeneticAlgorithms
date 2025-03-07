@@ -1,7 +1,6 @@
 import Header from "../Header/Header.tsx"
 import Footer from "../Footer/Footer.tsx"
 import ReactDOM from 'react-dom/client'
-import graph from "./graph.tsx";
 import axios from 'axios';
 // @ts-ignore
 import Papa from 'papaparse';
@@ -1376,16 +1375,13 @@ function generateResultList(arr: any){
     return(testList)
 }
 
+
 function toggleSidebar(side: any){
     document.getElementById(side + 'Sidebar')?.classList.toggle('open')
 }
 
+
 function DataVisualization() {
-
-    useEffect(() => {
-        graph();
-    }, []);
-
     const [data, setData] = useState<any[]>([]);
     const [generations, setGenerations] = useState<string[]>([]);
     const [selectedGeneration, setSelectedGeneration] = useState<string | null>(null);
@@ -1452,10 +1448,6 @@ function DataVisualization() {
             <div className="container">
                 <button className="toggle-btn left-btn" onClick={() => toggleSidebar('left')}>☰</button>
                 <div className="sidebar left" id="leftSidebar">Left Sidebar Content</div>
-
-
-                <div style={{width:"800px"}}><canvas id="my_graph"></canvas></div>
-
 
                 <Dropdown id="dropdown-wrapper">
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
