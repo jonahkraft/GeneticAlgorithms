@@ -1,107 +1,87 @@
-import Header from "../Header/Header.tsx"
-import Footer from "../Footer/Footer.tsx"
-import ReactDOM from 'react-dom/client';
+import Header from "../Header/Header.tsx";
+import Footer from "../Footer/Footer.tsx";
+import ReactDOM from "react-dom/client";
 import cookies from "../cookies.ts";
 import { useState } from "react";
+import "./Settings.css"; // Подключаем CSS
 
-function ToggleFilter() { {/*Togglesystem für den Filter*/}
+function ToggleButton({ label }: { label: string }) {
     const [isActive, setIsActive] = useState(false);
-    const toggle = () => {
-        setIsActive((prev) => !prev);
-    };
+    const toggle = () => setIsActive((prev) => !prev);
+
     return (
-        <div>
-            <button onClick={toggle} className="px-4 py-2 bg-gray-300 rounded">
+        <div className="toggle-container">
+            <button onClick={toggle} className={`toggle-btn ${isActive ? "active" : ""}`}>
                 {isActive ? "On" : "Off"}
             </button>
-            {isActive && <p>The toggle is ON!</p>} {/*Connection zu wirklichem Filter fehlt noch*/}
+            <span>{label}</span>
         </div>
     );
 }
-function ToggleSpeech() { {/*Togglesystem für den Spracheinstellung-> theoretischer Plan: Nach togglen ist all der text ein leichten Sätzen geschrieben.*/}
-    const [isActive, setIsActive] = useState(false);
-    const toggle = () => {
-        setIsActive((prev) => !prev);
-    };
-    return (
-        <div>
-            <button onClick={toggle} className="px-4 py-2 bg-gray-300 rounded">
-                {isActive ? "On" : "Off"}
-            </button>
-            {isActive && <p>The toggle is ON!</p>} {/*wie genau kann man das machen?*/}
-        </div>
-    );
-}
+
 function AccountButton() {
-    {/*Accountinformationen aufrufen: (mögliche addition Email)*/}
     const [isTextVisible, setIsTextVisible] = useState(false);
-    const [data, setData] = useState({ username: '', role: '' });
+    const [data, setData] = useState({ username: "", role: "", email: "" });
 
     const toggleTextVisibility = () => {
         setIsTextVisible((prev) => !prev);
-        const cookiesData = cookies.getCookies(); // Hier solltest du die Cookies korrekt lesen
-        setData(cookiesData); // Die Cookie-Daten setzen (nur ein Beispiel)
-        console.log(cookiesData); // Ausgabe der Cookie-Daten zum Debuggen
+        const cookiesData = cookies.getCookies();
+        setData({ ...cookiesData, email: cookiesData.email || "Not provided" }); 
+        console.log(cookiesData);
     };
+
     return (
-        <div>
-            <button onClick={toggleTextVisibility} className="px-4 py-2 bg-gray-300 rounded">
+        <div className="account-container">
+            <button onClick={toggleTextVisibility} className="account-btn">
                 Account Information
             </button>
 
             {isTextVisible && (
-                <div>
-                    <br/>
+                <div className="account-info">
                     <p><b>Username:</b> {data.username}</p>
                     <p><b>Role:</b> {data.role}</p>
-                    <br/>
-                    <p>Email:</p>
+                    <p><b>Email:</b> {data.email}</p>
                 </div>
             )}
         </div>
     );
 }
-function LanguageButton() {
-    const [isActive, setIsActive] = useState(false);
-    const toggle: ()=>void = (): void => {
-        setIsActive((prev) => !prev);
-    };
+
+function Settings() {
     return (
-        <div>
-            <button onClick={toggle} className="px-4 py-2 bg-gray-300 rounded">
-                {isActive ? "English" : "Deutsch"}</button>
-        </div>
+        <>
+            <Header />
+            <div className="settings-container">
+                <div className="leftbox">
+                    <nav>
+                        <a className="active">Account</a>
+                        <a>Color Filter</a>
+                        <a>Easy Speech</a>
+                        <a>Language</a>
+                    </nav>
+                </div>
+                <div className="rightbox">
+                    <h1>Settings</h1>
+
+                    <h2>Account</h2>
+                    <AccountButton />
+                    <p>Change Password</p>
+
+                    <h2>Color Filter</h2>
+                    <ToggleButton label="Enable color filter" />
+
+                    <h2>Easy Speech</h2>
+                    <ToggleButton label="Enable easy speech mode" />
+
+                    <h2>Language</h2>
+                    <ToggleButton label="Switch to English/German" />
+
+                    <p>Datenschutz?</p>
+                </div>
+            </div>
+            <Footer />
+        </>
     );
 }
 
-// props sollte ein user-Objekt sein
-
-function Settings() {
-
-    const data = cookies.getCookies()
-    console.log(data)
-    return(
-        <>
-            <Header/>
-            <h1>Settings</h1>
-            <h2>Account</h2>
-            <AccountButton/>
-            <p>Change Password</p>
-            <p>...</p>
-            <h2>color filter</h2>
-            <ToggleFilter /> {/*Möglichkeit den Farbfilter an und auszuschalten*/}
-            <h2>easy speech</h2>
-            <ToggleSpeech /> {/* Togglen der einfachen Sprache*/}
-            <h2>language</h2>
-            <LanguageButton/> {}
-            <p>Datenschutz?</p>
-            <Footer/>
-
-
-        </>
-
-    )
-}
-
-ReactDOM.createRoot(document.getElementById('root_settings')!).render(<Settings />);
-
+ReactDOM.createRoot(document.getElementById("root_settings")!).render(<Settings />);
