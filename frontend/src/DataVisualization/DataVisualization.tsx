@@ -27,7 +27,7 @@ function generateResultList(arr: any){
         groupedData[generation].push(entry);
     });
     */
-    let testList = {
+    const testList = {
         '0': [
             {
                 generation: '0',
@@ -1371,7 +1371,7 @@ function generateResultList(arr: any){
             }
         ]
     }
-    console.log(3)
+    console.log(arr)
     return(testList)
 }
 
@@ -1392,6 +1392,7 @@ function DataVisualization() {
     const [selectedGeneration, setSelectedGeneration] = useState<string | null>(null);
 
     // ändert den Main Content der Seite
+    // @ts-ignore
     const [generatedElement, setGeneratedElement] = useState<JSX.Element | null>(null);
 
     // load CSV Files
@@ -1411,11 +1412,11 @@ function DataVisualization() {
     // Verarbeitung der Daten (generateResultList & loadGenerations)
     useEffect(() => {
         if (data.length > 0) {
-            let generations = generateResultList(data);
+            const generations = generateResultList(data);
             loadGenerations(generations);
         } else {
             // do it anyway for testing
-            let generations = generateResultList(data);
+            const generations = generateResultList(data);
             loadGenerations(generations);
         }
     }, [data]);
@@ -1426,7 +1427,7 @@ function DataVisualization() {
             return
         }
 
-        let newGenerations: string[] = [];
+        const newGenerations: string[] = [];
         //console.log(arr);
 
         for (let i = 0; i <= arr[0].length; i++) {
