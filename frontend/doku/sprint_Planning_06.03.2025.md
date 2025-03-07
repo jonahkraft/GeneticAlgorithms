@@ -3,28 +3,34 @@
 
 #### wichtige Ziele Heute:
 
-prototyp
+- prototyp
 
-admin braucht liste mit allen usern
-rollen implementieren
-visualisierung (können wir bilden visualisieren?) chartjs
 
-CSS schöner machen
-design von viualisierungspage, main page
+- admin braucht liste mit allen usern
+- rollen implementieren
+- visualisierung (können wir bilden visualisieren?) chartjs
 
-user story(Anna)/product backlog (Nora)
-koffer (06.03.25, Nachmittag)
-bachelorarbeit, ki- anforderungen(Anna)
-raci matrix (nora)
-was brauchen wir für den horizontalen prototypen?(alle)
 
-Testfälle?
+- CSS schöner machen
+- design von viualisierungspage, main page
 
-projektbeschreibung
+
+- user story/product backlog 
+- koffer (06.03.25, Nachmittag)
+- bachelorarbeit, ki- anforderungen
+- raci matrix 
+- was brauchen wir für den horizontalen prototypen?
+
+
+- Testfälle?
+
+
+- projektbeschreibung
 
 
 #### wie erreichen wir unsere ziele?
-aufgaben verteilen
-priorisierfen?
+- aufgaben verteilen
+- priorisierfen?
 
-heute funktionalititäten für prototyp heute, feinschliff morgen
+
+- heute funktionalititäten für prototyp heute, feinschliff morgen
