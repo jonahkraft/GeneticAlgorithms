@@ -9,6 +9,7 @@ import { Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import graph from "./graph.tsx";
 import graphGen from "./graphGen.tsx";
+import './DataVisualization.css';
 
 
 function generateResultList(arr: any){
