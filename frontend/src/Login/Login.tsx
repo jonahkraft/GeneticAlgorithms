@@ -79,7 +79,7 @@ function Login() {
 
                     <button className="button" type="submit" onClick={_ => logIn(username)}>Login</button>
                     <p><br/></p>
-                    <div className="signup_link" onClick={() => window.location.href = '../../visualization.html'}>
+                    <div className="signup_link" onClick={_ => logIn("placeholder")}>
                         Continue as Simulator
                     </div>
                 </form>
@@ -88,10 +88,10 @@ function Login() {
     );
 }
 
-function logIn(username: string = "placeholder_username") {
+function logIn(username: string) {
     let role
 
-    if (username !== "placeholder_username") {
+    if (username !== "placeholder") {
         // dann wurde es über login aufgerufen
         // TODO: sollte callUser aufrufen und davon die Rolle des Benutzers erhalten
         // dafür zusätzlich password als Argument nehmen
@@ -102,6 +102,7 @@ function logIn(username: string = "placeholder_username") {
 
     }
     else {
+        // dann wurde es über "continue as simulator" aufgerufen
         role = "placeholder_role"
     }
 
