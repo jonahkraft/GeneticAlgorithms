@@ -155,7 +155,11 @@ class ExperiementalDataTests(UnitMeta.UnitMeta):
        with ThreadPoolExecutor() as executor:
           for _ in executor.map(pApplied, [ToList(ToDict(data)) for data in TestData]):
               pass
-
+    def __call__(self, *args, **kwargs):
+        self.TestAddData()
+        self.StressTestAddTestData()
+        self.TestExportData()
+        self.TestAddExperiementDataFromCSV()
     def StressTestAdd(self):
         self.ClearTestDB()
         self.StressTestAddTestData()
