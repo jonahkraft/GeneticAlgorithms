@@ -3,7 +3,7 @@ body {
   background: linear-gradient(to right, #A7C8FF, #A0D7FF);
   background-size: 400% 400%;
   margin: 0;
-  padding: 20;
+  padding: 20px;
 }
 
 .settings-page {
@@ -13,7 +13,7 @@ body {
   min-height: 100vh;
   padding: 10px;
 }
-/* right side */
+
 .settings-container {
   display: flex;
   width: 80%;
@@ -25,17 +25,21 @@ body {
 
 .leftbox {
   width: 20%;
-  background: #A7C8FF; 
+  background: #A7C8FF;
   padding: 20px;
   box-shadow: 3px 3px 10px rgba(119, 119, 119, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .leftbox nav {
+  display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
 .leftbox nav a {
-  align-items: left;
   padding: 10px;
   color: white;
   font-size: 1.1em;
@@ -51,12 +55,14 @@ body {
 }
 
 .active {
-  color: #3f75b6; 
+  color: #3f75b6;
   font-weight: bold;
 }
 
 .language-switch {
   margin-top: 20px;
+  display: flex;
+  gap: 10px;
 }
 
 .language-btn {
@@ -65,7 +71,7 @@ body {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-right: 10px;
+  transition: background-color 0.3s ease;
 }
 
 .language-btn:hover {
@@ -77,10 +83,13 @@ body {
   width: 80%;
   padding: 20px;
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 h1, h2 {
-  color: #3f75b6; 
+  color: #3f75b6;
 }
 
 h2 {
@@ -99,7 +108,7 @@ h2 {
 }
 
 .account-btn {
-  background: #3f75b6; 
+  background: #3f75b6;
   border: none;
   color: white;
   padding: 10px;
@@ -114,3 +123,18 @@ h2 {
   margin-top: 10px;
 }
 
+@media (max-width: 768px) {
+  .settings-container {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .leftbox, .rightbox {
+    width: 100%;
+  }
+
+  .language-switch {
+    flex-direction: column;
+    align-items: center;
+  }
+}
