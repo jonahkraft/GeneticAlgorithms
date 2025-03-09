@@ -1348,18 +1348,28 @@ const graph = () => {
     }
 
     type ObjectKey = keyof typeof testList;
+    // List with all consumptions of all generations
     let list : {gen: string, consumption: string}[] = [];
+    // List with the average consumption for all generationsa
+    let avg : {gen: string, genAvg: string}[] = [];
 
     for (var i=0; i< Object.keys(testList).length; i++) {
         
-        const generationIndex = i.toString() as ObjectKey;
+        const generationIndex = String(i) as ObjectKey;
+        let sum = 0;
+        let count = 0;
 
         for (var j=0; j< testList[generationIndex].length; j++) {
 
-            const verbrauch = testList[generationIndex][j].Consumption
+            const verbrauch = testList[generationIndex][j].Consumption;
+
+            sum += Number(verbrauch);
+            count += 1;
             
             list.push({gen: generationIndex, consumption: verbrauch})
         }
+        
+        avg.push({gen: String(i), genAvg: String((sum / count))});
     }
 
     const ctx = document.getElementById("my_graph") as HTMLCanvasElement;
@@ -1371,11 +1381,18 @@ const graph = () => {
         {
             type: 'scatter',
             data: {
-                labels: list.map(row => row.gen),
                 datasets: [
                     {
+                        type: 'scatter',
                         label: 'Verbrauch',
-                        data: list.map(row => row.consumption)
+                        data: list.map(row => ({x: row.gen, y: row.consumption})),
+                        borderColor: 'rgb(0, 35, 224)',
+                    },
+                    {
+                        type: 'line',
+                        label: 'Durchschnitt',
+                        data: avg.map(row => ({x: row.gen, y: row.genAvg})),
+                        borderColor: 'rgb(0, 0, 0)'
                     }
                 ]
             }
