@@ -1488,7 +1488,7 @@ function DataVisualization() {
 
                 <Dropdown id="dropdown-wrapper">
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
-                        Auswahl Generations
+                        Selection Generations
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu id="dropdown-basic">
@@ -1499,7 +1499,7 @@ function DataVisualization() {
                                 </Dropdown.Item>
                             ))
                         ) : (
-                            <Dropdown.Item disabled>Lade Generationen...</Dropdown.Item>
+                            <Dropdown.Item disabled>Load generations...</Dropdown.Item>
                         )}
                     </Dropdown.Menu>
                 </Dropdown>
@@ -1507,10 +1507,10 @@ function DataVisualization() {
             </div>
 
             <div className="content" id="mainContent">
-                <h2>{selectedGeneration ? `Ausgewählte Generation: ${selectedGeneration}` : "Bitte Generation auswählen"}</h2>
+                <h2>{selectedGeneration ? `Selected generation: ${selectedGeneration}` : "Please select generation"}</h2>
                 {generatedElement}
 
-                <h2>{'Übersicht über alle Generationen'}</h2>
+                <h2>{'Overview of all generations'}</h2>
                 <div style={{width:"800px"}}><canvas id="my_graph"></canvas></div> 
             </div>
 
