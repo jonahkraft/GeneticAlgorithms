@@ -23,7 +23,7 @@ def login(username: str, password: str):
         "registered": False,
         "password_correct": False,
         "access_token": "",
-        "role": None
+        "role": "simulator"
     }
 
     if not db.user_exists(username):
@@ -88,7 +88,8 @@ def api_login():
     {
         "registered": bool,
         "password_correct": bool,
-        "access_token": "<token>"
+        "access_token": "<token>",
+        "role": "data_analyst | simulation_expert | administrator"
     }
 
     """
@@ -136,7 +137,7 @@ def api_register():
 
 @api.route("/api/delete_user", methods = ["POST"])
 @jwt_required()
-def api_register():
+def api_delete_user():
     """Handles register request
     
     :param JSON
@@ -166,7 +167,7 @@ def api_register():
 
 @api.route("/api/change_password", methods = ["POST"])
 @jwt_required()
-def api_register():
+def api_change_password():
     """Changes the users password 
     
     :param JSON
