@@ -1,6 +1,5 @@
 import './Login.css';
 import ReactDOM from 'react-dom/client';
-import axios from 'axios';
 import Header from "../Header/Header.tsx";
 import { useState } from 'react';
 import cookies from '../cookies.ts'
@@ -14,8 +13,7 @@ function Login() {
     const [displaysWarning, setDisplaysWarning] = useState(false);
 
     function getUserdata(event: any) {
-        event.preventDefault(); // Prevents the form from auto-submitting
-        callUser(username, password);
+        event.preventDefault();
     }
 
     function triggerWarning() {
@@ -112,24 +110,24 @@ function logIn(username: string) {
 }
 
 // Check for User
-function callUser(username: string, password: string) {
-    axios.post('/api/login', {"username": username, "password": password })
-        .then(response => {
-            let token = response.data.access_token
-            console.log(token)
-            axios.post('/api/protected_test', {},
-                {
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json"  // Ensure JSON data format
-                    }
-                }
-            )
-        })
-        .catch(error => {
-            console.error(error);
-        });
-}
+// function callUser(username: string, password: string) {
+//     axios.post('/api/login', {"username": username, "password": password })
+//         .then(response => {
+//             let token = response.data.access_token
+//             console.log(token)
+//             axios.post('/api/protected_test', {},
+//                 {
+//                     headers: {
+//                         "Authorization": `Bearer ${token}`,
+//                         "Content-Type": "application/json"  // Ensure JSON data format
+//                     }
+//                 }
+//             )
+//         })
+//         .catch(error => {
+//             console.error(error);
+//         });
+// }
 
 
 ReactDOM.createRoot(document.getElementById('root_login')!).render(<Login />);
