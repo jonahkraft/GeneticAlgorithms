@@ -10,13 +10,13 @@ function HomePage() {
             <div className="main-content">
                 <h2>Welcome to the Simulation</h2>
                 <p className="intro-text">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus euismod felis a nisi fermentum, ut suscipit ante varius. Ut convallis orci vel risus convallis, id tempor libero volutpat.
+                Evolution: The driving force for diversity and adaptation on our planet. Natural selection ensures that only the strongest survive and pass on the secret of their success to their children.
                 </p>
                 <p className="intro-text">
-                    Curabitur posuere dolor non interdum blandit. Integer tincidunt, arcu sit amet fringilla venenatis, magna tortor gravida erat, ut fringilla purus orci non ipsum. Phasellus vel malesuada ligula.
+                Our simulation uses these same principles in the form of genetic algorithms to find the optimal balance between performance and consumption in vehicles.
                 </p>
                 <p className="intro-text">
-                    Sed ac ipsum nec leo vehicula dapibus. Etiam viverra lectus vitae est consectetur, ac lobortis purus egestas. Vivamus a nibh sit amet justo tincidunt sollicitudin. Duis auctor metus id augue vulputate fermentum.
+                For each configuration of parameters, the program returns the Pareto front, a collection of solutions where no value can be improved without worsening another.
                 </p>
                 
                 <div className="button-container">
