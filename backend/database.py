@@ -214,8 +214,7 @@ def add_experiment_data_from_csv(file_path: str, connection_path: str = "db/simu
 
     with open(file_path,'r') as file:
         reader = csv.reader(file)
-        
-        rows = [row[0].split(",") for row in reader]
+        rows = [row for row in reader]
         to_db = [(int(i[0]),float(i[1]),float(i[2]),float(i[3]),float(i[4]),float(i[5]),float(i[6]),float(i[7]),float(i[8]),float(i[9])) for i in rows[1:]]
 
     cur.executemany("INSERT INTO car_data (generation, final_drive, roll_radius, gear_3, gear_4, gear_5, consumption, elasticity_3, elasticity_4, elasticity_5) VALUES (?,?,?,?,?,?,?,?,?,?);", to_db)

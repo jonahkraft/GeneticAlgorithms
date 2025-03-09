@@ -8,6 +8,14 @@ import asyncio
 from backend import database
 import copy
 import random;
+def GetRandomPartition(vals : list) -> list[list]:
+    actPartition = []
+    while len(vals) > 0:
+        k =  random.randint(1, len(vals))
+        choice = random.choices(vals, k = k)
+        actPartition.append(choice)
+        vals = [val for val in vals if not (val in choice)]
+    return actPartition
 def CSVDataEquals(leftCSV : list[str], right : list[dict]) -> bool:
     leftStr = str(leftCSV)
     rCopy = copy.deepcopy(right)
@@ -94,8 +102,46 @@ class ExperiementalDataTests(UnitMeta.UnitMeta):
 
 
         return True
+    def TestAddExperiementDataFromCSV(self):
+
+        TestPartitionCount : int = 10
+        for _ in range(TestPartitionCount):
+            partition = GetRandomPartition(TestData)
+            self.ClearTestDB()
+            i = 0
+            for data in partition:
+                self.ClearTestDB()
+                for val in data:
+                    database.add_experiment_data(val, testConnection)
+                database.export_experiment_data_to_csv("test" + str(i) + ".csv", ALL_COLS, [], testConnection)
+                self.ClearTestDB()
+                # first isolated test
+                database.add_experiment_data_from_csv("test" + str(i) + ".csv", testConnection)
+
+                datas = self.GetDataFromSQL()
 
 
+                if len(datas) != len(data) or set(datas) != set(data):
+                    return "Isolated Test von add_exp. Data fehlgeschlagen"
+                i += 1
+            # nun nicht isoliert
+            actData = []
+            self.ClearTestDB()
+            for i in range(len(partition)):
+                actData.extend(partition[i])
+                database.add_experiment_data_from_csv("test" + str(i) + ".csv", testConnection)
+                datas = self.GetDataFromSQL()
+                if len(datas) != len(actData) or set(actData) != set(datas):
+                    return "Kombinierter Test von add_exp. Data fehlgeschlagen"
+        return True
+    @staticmethod
+    def GetDataFromSQL():
+        con = sqlite3.connect(testConnection)
+        cur = con.cursor()
+        cur.execute("select * from car_data")
+        vals = cur.fetchall()
+        con.close()
+        return vals
     @staticmethod
     def ClearTestDB():
         con = sqlite3.connect(testConnection)
@@ -152,3 +198,4 @@ if __name__ == "__main__":
     print(inst.TestAddData())
     print(inst.StressTestAdd())
     print(inst.TestExportData())
+    print(inst.TestAddExperiementDataFromCSV())
