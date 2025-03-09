@@ -1506,7 +1506,7 @@ function DataVisualization() {
             </div>
 
             <div className="content" id="mainContent">
-                <h2>{selectedGeneration ? `Selected generation: ${selectedGeneration}` : "Please select generation"}</h2>
+                <h2>{selectedGeneration ? `Selected generation: ${selectedGeneration}` : "Please select a generation"}</h2>
                 {generatedElement}
 
                 <h2>{'Overview of all generations'}</h2>
