@@ -1374,7 +1374,7 @@ const graph = () => {
                 labels: list.map(row => row.gen),
                 datasets: [
                     {
-                        label: 'Verbrauch',
+                        label: 'Consumption',
                         data: list.map(row => row.consumption)
                     }
                 ]
