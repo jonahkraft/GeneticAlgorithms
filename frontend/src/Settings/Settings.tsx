@@ -2,48 +2,9 @@ import Header from "../Header/Header.tsx";
 import Footer from "../Footer/Footer.tsx";
 import ReactDOM from "react-dom/client";
 import { useState } from 'react';
-import cookies from "../cookies.ts";
+import AccountButton from "./AccountButton.tsx";
 import "./Settings.css";
 
-interface AccountData {
-    username: string;
-    role: string;
-    email: string;
-}
-
-function AccountButton() {
-    const [isTextVisible, setIsTextVisible] = useState<boolean>(false);
-    const [data, setData] = useState<AccountData>({
-        username: "",
-        role: "",
-        email: "",
-    });
-
-    const toggleTextVisibility = () => {
-        setIsTextVisible((prev) => !prev);
-        const cookiesData = cookies.getCookies();
-        setData({
-            ...cookiesData,
-            email: cookiesData.email || "Not provided",
-        });
-    };
-
-    return (
-        <div className="account-container">
-            <button onClick={toggleTextVisibility} className="account-btn">
-                Account Information
-            </button>
-
-            {isTextVisible && (
-                <div className="account-info">
-                    <p><b>Username:</b> {data.username}</p>
-                    <p><b>Role:</b> {data.role}</p>
-                    <p><b>Email:</b> {data.email}</p>
-                </div>
-            )}
-        </div>
-    );
-}
 
 function Settings() {
     const [selectedTab, setSelectedTab] = useState<string>("account");
