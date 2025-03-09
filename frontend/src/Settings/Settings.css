@@ -88,14 +88,15 @@ body {
   gap: 20px;
 }
 
-h1, h2 {
+h1, h2, h3 {
   color: #3f75b6;
-}
-
-h2 {
-  font-size: 1em;
   margin-top: 10px;
 }
+
+/*h2 {*/
+/*  font-size: 1em;*/
+/*  margin-top: 10px;*/
+/*}*/
 
 .rightbox p {
   font-size: 0.9em;
@@ -123,18 +124,78 @@ h2 {
   margin-top: 10px;
 }
 
-@media (max-width: 768px) {
-  .settings-container {
-    flex-direction: column;
-    width: 100%;
-  }
+.user-form input, .user-form select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1em;
+  background-color: #f8f8f8;
+  color: #333;
+}
 
-  .leftbox, .rightbox {
-    width: 100%;
-  }
+.user-form button {
+  background: #3f75b6;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+  font-size: 1.1em;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
 
-  .language-switch {
-    flex-direction: column;
-    align-items: center;
-  }
+.user-form button:hover {
+  background: #357ab7;
+}
+
+.user-list {
+  margin-top: 30px;
+}
+
+.user-list table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.user-list th, .user-list td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.user-list th {
+  background: #3f75b6;
+  color: white;
+  font-size: 1.1em;
+}
+
+.user-list td {
+  background-color: #ffffff; /* Weißer Hintergrund für die Zeilen */
+  color: #333; /* Dunkle Schriftfarbe */
+}
+
+.user-list td button {
+  padding: 8px 15px;
+  background: #ffcc00;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.user-list td button:hover {
+  background: #ffb300;
+}
+
+.user-list td button:last-child {
+  background: #e74c3c;
+}
+
+.user-list td button:last-child:hover {
+  background: #c0392b;
 }

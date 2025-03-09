@@ -89,7 +89,12 @@ function Login() {
 function logIn(username: string) {
     let role
 
-    if (username !== "placeholder") {
+    if (username === "admin") {
+        // TODO: Nur für die Präsentation!!
+        role = "admin"
+    }
+
+    else if (username !== "placeholder") {
         // dann wurde es über login aufgerufen
         // TODO: sollte callUser aufrufen und davon die Rolle des Benutzers erhalten
         // dafür zusätzlich password als Argument nehmen
