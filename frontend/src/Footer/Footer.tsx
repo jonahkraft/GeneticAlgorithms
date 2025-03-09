@@ -1,16 +1,17 @@
-import './Footer.css';
+import styles from './Footer.module.css';
+
 function Footer() {
     return (
-        <footer>
-            <hr/>
-            <p><b>Website Information</b></p>
+        <footer className={styles.footer}>
+            <hr className={styles.footerLine}/>
+            <p className={styles.footerText}><b>Website Information</b></p>
 
-            <div className="footer-links">
-                <ul>
-                    <li>Privacy Policy</li>
-                    <li>Legal Notice</li>
-                    <li>Terms of Use</li>
-                    <li>Cookies</li>
+            <div>
+                <ul className={styles.footerLinks}>
+                    <li className={styles.footerLinksItem}>Privacy Policy</li>
+                    <li className={styles.footerLinksItem}>Legal Notice</li>
+                    <li className={styles.footerLinksItem}>Terms of Use</li>
+                    <li className={styles.footerLinksItem}>Cookies</li>
                 </ul>
             </div>
 

@@ -1,58 +1,55 @@
-import './Header.module.css'
+import styles from './Header.module.css'
 import cookies from '../cookies.ts'
 
 
 function Header() {
+    const signed_in = cookies.getCookies()["signed_in"];
 
-    const signed_in = cookies.getCookies()["signed_in"]
-
-    if (!signed_in) {
-        return (
-            <header>
-                <nav>
-                    <label htmlFor="check" className="checkbtn">
-                        <i className="fas fa-bars"></i>
-                    </label>
-                    <a href="../../index.html" className="logo">
-                        <img src="../../favicon.svg" alt="Logo" width="20px" height="20px"/>
-                    </a>
-                    <ul id="navigation">
-                        <li><a href="../../index.html" className="btn active">Home</a></li>
-                        <li><a href="../../visualization.html" className="btn">Data Visualization</a></li>
-                        <li><a href="../../settings.html" className="btn">Settings</a></li>
-                        <li><a href="../../login.html" className="btn">Login</a></li>
-                    </ul>
-                </nav>
-            </header>
-        );
+    function logOut() {
+        cookies.deleteCookies();
+        window.location.reload();
     }
-    else {
-        return (
-            <header>
-                <nav>
-                    <label htmlFor="check" className="checkbtn">
-                        <i className="fas fa-bars"></i>
-                    </label>
-                    <a href="../../index.html" className="logo">
-                        <img src="../../favicon.svg" alt="Logo" width="20px" height="20px"/>
-                    </a>
-                    <ul id="navigation">
-                        <li><a href="../../index.html" className="btn active">Home</a></li>
-                        <li><a href="../../visualization.html" className="btn">Data Visualization</a></li>
-                        <li><a href="../../settings.html" className="btn">Settings</a></li>
-                        <li><a onClick={() => logOut()} className="btn">Logout</a></li>
-                    </ul>
-                </nav>
-            </header>
-        );
-    }
-}
 
-function logOut() {
-    cookies.deleteCookies()
-    window.location.reload()
-    console.log("logging out")
-    console.log(cookies.getCookies())
+    return (
+        <header className={styles.header}>
+            <nav className={styles.navbar}>
+
+                {/* Logo */}
+
+                <a href="../../index.html" className={styles.logo}>
+                    <img src="../../favicon.svg" alt="Logo von GeneticAlgorithms" width="20px" height="20px"/>
+                </a>
+
+                {/* Navigation */}
+
+                <ul className={styles.navbarList}>
+                    <li>
+                        <a href="../../index.html" className={styles.navbarListItem}>Home</a>
+                    </li>
+
+                    <li>
+                        <a href="../../visualization.html" className={styles.navbarListItem}>Data Visualization</a>
+                    </li>
+
+                    <li>
+                        <a href="../../settings.html" className={styles.navbarListItem}>Settings</a>
+                    </li>
+
+                    {/*Button für Login bzw. Logout je nach aktuellem Zustand*/}
+
+                    {signed_in ? (
+                        <li>
+                            <a onClick={logOut} className={styles.navbarListItem}>Logout</a>
+                        </li>
+                    ) : (
+                        <li>
+                            <a href="../../login.html" className={styles.navbarListItem}>Login</a>
+                        </li>
+                    )}
+                </ul>
+            </nav>
+        </header>
+    );
 }
 
 export default Header;

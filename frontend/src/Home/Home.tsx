@@ -1,6 +1,6 @@
 import Header from '../Header/Header.tsx';
-import './Home.css';
 import Footer from '../Footer/Footer.tsx';
+import './Home.css';
 
 function Home() {
     return (
@@ -20,7 +20,7 @@ function Home() {
                 </p>
                 
                 <div className="button-container">
-                    <button onClick={_ => clickButton()}>Proceed to Simulation</button>
+                    <button onClick={clickButton}>Proceed to Simulation</button>
                 </div>
             </div>
 
