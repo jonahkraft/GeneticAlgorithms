@@ -1,5 +1,4 @@
 body {
-  font-family: Arial, sans-serif;
   background: linear-gradient(to right, #A7C8FF, #A0D7FF);
   background-size: 400% 400%;
   margin: 0;
@@ -175,8 +174,8 @@ h1, h2, h3 {
 }
 
 .user-list td {
-  background-color: #ffffff; /* Weißer Hintergrund für die Zeilen */
-  color: #333; /* Dunkle Schriftfarbe */
+  background-color: #ffffff;
+  color: #333;
 }
 
 .user-list td button {

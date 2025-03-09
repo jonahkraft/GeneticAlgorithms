@@ -1,20 +1,16 @@
-/* Home.css */
-
 body {
-  font-family: 'Helvetica Neue', sans-serif;
   margin: 0;
   padding: 0;
-  background: #f5f7fa; /* Soft background */
+  background: #f5f7fa;
   color: #333333;
 }
 
-/* Main content styles */
 .main-content {
   text-align: center;
   padding: 50px 20px;
-  background: linear-gradient(135deg, #cfd8f9, #d8e6ff, #bee0ff, #a9c3ff); /* Gradient from login page */
+  background: linear-gradient(135deg, #cfd8f9, #d8e6ff, #bee0ff, #a9c3ff);
   background-size: 400% 400%;
-  animation: waveGradient 10s ease-in-out infinite; /* Animation for gradient */
+  animation: waveGradient 10s ease-in-out infinite;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin: 60px auto;
@@ -58,7 +54,7 @@ h2 {
 }
 
 button {
-  background: linear-gradient(135deg, #007BFF, #0056b3); /* Gradient from login page */
+  background: linear-gradient(135deg, #007BFF, #0056b3);
   color: white;
   font-size: 1.1rem;
   padding: 15px 30px;
@@ -69,16 +65,15 @@ button {
 }
 
 button:hover {
-  background: linear-gradient(135deg, #0056b3, #003f7f); /* Darker gradient for hover */
-  transform: scale(1.05); /* Slight zoom effect */
+  background: linear-gradient(135deg, #0056b3, #003f7f);
+  transform: scale(1.05);
 }
 
 button:active {
-  background: linear-gradient(135deg, #003f7f, #002c5f); /* Even darker gradient for active state */
-  transform: scale(1); /* Reset zoom effect */
+  background: linear-gradient(135deg, #003f7f, #002c5f);
+  transform: scale(1);
 }
 
-/* FAQ Section Styles */
 .faq {
   margin-top: 50px;
   padding: 20px;
@@ -110,7 +105,5 @@ summary {
 
 details p {
   margin-top: 10px;
-  color: #607d8b; /* Slightly muted text color */
+  color: #607d8b;
 }
-
-/* Header and Footer Styles - You can add custom header and footer styles here if needed */
