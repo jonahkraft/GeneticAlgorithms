@@ -31,4 +31,6 @@
 .footerLinksItem {
     display: inline;
     margin: 0 15px;
+    text-decoration: none;
+    color: #7f8c8d;
 }

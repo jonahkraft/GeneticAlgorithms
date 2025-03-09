@@ -15,6 +15,8 @@ function Footer() {
                 </ul>
             </div>
 
+            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" className={styles.footerLinksItem}>Never gonna give you up :)</a>
+
         </footer>
     );
 }
