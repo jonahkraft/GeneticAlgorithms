@@ -19,7 +19,7 @@ footer hr {
     width: 80%;
     margin: 20px auto;
 }
- 
+
 footer a {
     color: #ecf0f1;
     text-decoration: none;
@@ -30,8 +30,15 @@ footer a:hover {
     color: #3498db;
 }
 
-footer .footer-note {
+footer .footer-links ul {
+    list-style: none;
+    padding: 0;
     font-size: 0.9em;
     margin-top: 10px;
     color: #7f8c8d;
+}
+
+footer .footer-links ul li {
+    display: inline;
+    margin: 0 15px;
 }

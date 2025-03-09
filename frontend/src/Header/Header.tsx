@@ -14,7 +14,7 @@ function Header() {
                         <i className="fas fa-bars"></i>
                     </label>
                     <a href="../../index.html" className="logo">
-                        <img src="../../public/favicon.svg" alt="Logo" width="20px" height="20px"/>
+                        <img src="../../favicon.svg" alt="Logo" width="20px" height="20px"/>
                     </a>
                     <ul id="navigation">
                         <li><a href="../../index.html" className="btn active">Home</a></li>
@@ -34,7 +34,7 @@ function Header() {
                         <i className="fas fa-bars"></i>
                     </label>
                     <a href="../../index.html" className="logo">
-                        <img src="../../public/favicon.svg" alt="Logo" width="20px" height="20px"/>
+                        <img src="../../favicon.svg" alt="Logo" width="20px" height="20px"/>
                     </a>
                     <ul id="navigation">
                         <li><a href="../../index.html" className="btn active">Home</a></li>

@@ -1,8 +1,8 @@
 import Header from '../Header/Header.tsx';
-import './HomePage.css';
+import './Home.css';
 import Footer from '../Footer/Footer.tsx';
 
-function HomePage() {
+function Home() {
     return (
         <>
             <Header />
@@ -20,7 +20,7 @@ function HomePage() {
                 </p>
                 
                 <div className="button-container">
-                    <button>Proceed to Simulation</button>
+                    <button onClick={_ => clickButton()}>Proceed to Simulation</button>
                 </div>
             </div>
 
@@ -45,4 +45,8 @@ function HomePage() {
     );
 }
 
-export default HomePage;
+function clickButton() {
+    window.location.href="../../visualization.html";
+}
+
+export default Home;
