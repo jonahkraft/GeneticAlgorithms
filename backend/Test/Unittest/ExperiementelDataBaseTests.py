@@ -1,12 +1,22 @@
 from ast import Try
 import sqlite3
 from concurrent.futures import ThreadPoolExecutor
-
+import csv
 import UnitMeta
 from backend.Test import MetaTest
 import asyncio
 from backend import database
+import copy
 import random;
+def CSVDataEquals(leftCSV : list[str], right : list[dict]) -> bool:
+    leftStr = str(leftCSV)
+    rCopy = copy.deepcopy(right)
+    for d in rCopy:
+        for key in d:
+            d[key] = str(d[key])
+    return leftStr == str(rCopy)
+
+
 
 def ToTuple(vals : dict[str, int | float]) -> tuple[int, float, float, float, float, float, float, float, float, float]:
     return (vals["generation"], vals["final_drive"], vals["roll_radius"], vals["gear_3"], vals["gear_4"], vals["gear_5"], vals["consumption"], vals["elasticity_3"], vals["elasticity_4"], vals["elasticity_5"])
@@ -37,6 +47,7 @@ class ExperiementalDataTests(UnitMeta.UnitMeta):
 
     def TestExportData(this):
         this.ClearTestDB()
+        this.TestAddData()
         if not this.addedTestData:
             return "Erst Test Daten hinzufügen!";
         # Äquivalenzklassen: k-Elementige Teilmengen
@@ -54,24 +65,35 @@ class ExperiementalDataTests(UnitMeta.UnitMeta):
         commands = []
         for i in range(len(ops)):
             commands.append(leftCols[i] + " " + ops[i] + " " + rightCols[i])
-            commands.append(leftCols[i] + " " + ops[i] + " " + reals[i])
+            commands.append(leftCols[i] + " " + ops[i] + " " + str(reals[i]))
         for colSelection in testCols:
             for i in range(len(commands)):
                 for j in range(len(commands)):
                     (corIndI, corIndJ) = (i // 2, j // 2)
-
-                    expectedResult : list[tuple] = []
+                    compareRealI = i % 2 == 1
+                    compareRealJ = j % 2 == 1
+                    (con0, con1) = (commands[i], commands[j])
+                    expectedResult : list[dict] = []
                     for data in TestData:
                         dictData = ToDict(data)
-                        if funcs[corIndI](data[leftCols[corIndI]], data[rightCols[corIndI]]) and funcs[corIndI](data[leftCols[corIndI]], reals[corIndI]):
-                            if funcs[corIndJ](data[leftCols[corIndJ]], data[rightCols[corIndJ]]) and funcs[corIndJ](data[leftCols[corIndJ]], reals[corIndJ]):
+                        if (compareRealI or funcs[corIndI](dictData[leftCols[corIndI]], dictData[rightCols[corIndI]])) and (not compareRealI or funcs[corIndI](dictData[leftCols[corIndI]], reals[corIndI])):
+                            if (compareRealJ or funcs[corIndJ](dictData[leftCols[corIndJ]], dictData[rightCols[corIndJ]])) and (not compareRealJ or funcs[corIndJ](dictData[leftCols[corIndJ]], reals[corIndJ])):
                                 resDict = {}
                                 for val in colSelection:
-                                    resDict[val] = data[val]
+                                    resDict[val] = dictData[val]
                                 expectedResult.append(resDict)
+                    database.export_experiment_data_to_csv("test.csv", colSelection, [con0, con1], testConnection)
+                    result = []
+                    with open("test.csv", mode = "r") as file:
+                        content = csv.DictReader(file)
+                        result = [row for row in content]
+                    if not (len(result) == len(expectedResult) and CSVDataEquals(result, expectedResult)):
+                        print(con0 + "," + con1 + "," + str(colSelection))
+                        return "Fehlgeschlagen mit " + str(result) + "vs " + str(expectedResult)
 
 
-        pass
+
+        return True
 
 
     @staticmethod
@@ -129,3 +151,4 @@ if __name__ == "__main__":
     inst = ExperiementalDataTests()
     print(inst.TestAddData())
     print(inst.StressTestAdd())
+    print(inst.TestExportData())
