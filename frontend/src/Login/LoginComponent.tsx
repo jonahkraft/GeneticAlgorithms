@@ -4,6 +4,7 @@ import { useState } from 'react';
 import cookies from '../cookies.ts'
 import displayWarning from "./displayWarninig.tsx";
 import WarningComponent from "./warning.tsx";
+import axios from 'axios';
 
 
 function Login() {
@@ -87,6 +88,22 @@ function Login() {
 }
 
 function logIn(username: string) {
+
+    axios.post("/api/login", {
+        "username": username,
+        "password": "password"
+    }) /*
+        {headers:{
+            "Content-Type": "application/json",
+            //"Authorization": "Bearer ??"
+        }}
+    )*/
+        .then((response) => {
+            console.log("SOMETHING HAPPENED!!")
+        }).catch((error) => {
+            console.log("fuck")
+        })
+    
     let role
 
     if (username === "admin") {
@@ -110,8 +127,8 @@ function logIn(username: string) {
     }
 
     cookies.saveCookies({"username": username, "role": role, "signed_in": true})
-    window.location.reload()
-    window.location.href = "../../visualization.html"
+    // window.location.reload()
+    // window.location.href = "../../visualization.html"
 }
 
 // Check for User
