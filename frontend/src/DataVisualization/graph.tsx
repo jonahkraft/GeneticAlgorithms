@@ -2,7 +2,7 @@ import Chart from 'chart.js/auto'
 
 const graph = () => {
     
-    let testList = {
+    const testList = {
         '0': [
             {
                 generation: '0',
@@ -1348,13 +1348,13 @@ const graph = () => {
     }
 
     type ObjectKey = keyof typeof testList;
-    let list : {gen: string, consumption: string}[] = [];
+    const list : {gen: string, consumption: string}[] = [];
 
-    for (var i=0; i< Object.keys(testList).length; i++) {
+    for (let i=0; i< Object.keys(testList).length; i++) {
         
         const generationIndex = i.toString() as ObjectKey;
 
-        for (var j=0; j< testList[generationIndex].length; j++) {
+        for (let j=0; j< testList[generationIndex].length; j++) {
 
             const verbrauch = testList[generationIndex][j].Consumption
             
