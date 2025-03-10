@@ -8,7 +8,15 @@ import asyncio
 from backend import database
 import copy
 import random;
+""" Helper Functions """
+
+
 def GetRandomPartition(vals : list) -> list[list]:
+    """
+    Nimmt eine Liste und gibt eine zufällige Partition zurück.
+    :param vals:
+    :return:
+    """
     actPartition = []
     while len(vals) > 0:
         k =  random.randint(1, len(vals))
@@ -17,6 +25,12 @@ def GetRandomPartition(vals : list) -> list[list]:
         vals = [val for val in vals if not (val in choice)]
     return actPartition
 def CSVDataEquals(leftCSV : list[str], right : list[dict]) -> bool:
+    """
+    Überprüft ob die CSV Daten (vom DictReader) mit dem Dictionary übereinstimmen.
+    :param leftCSV: die Daten vom CSV Reader
+    :param right:  Der Dictionary<string, object>
+    :return:
+    """
     leftStr = str(leftCSV)
     rCopy = copy.deepcopy(right)
     for d in rCopy:
@@ -27,9 +41,19 @@ def CSVDataEquals(leftCSV : list[str], right : list[dict]) -> bool:
 
 
 def ToTuple(vals : dict[str, int | float]) -> tuple[int, float, float, float, float, float, float, float, float, float]:
+    """
+    Nimmt einen Dictionary der alle Simulationsdaten enthält und erstellt einen Tupel daraus.
+    :param vals: Der Dictionary<string, double/int> der die passenden Attribute enthält.
+    :return: Die Simulationsdaten vom Dictionary als Tupel.
+    """
     return (vals["generation"], vals["final_drive"], vals["roll_radius"], vals["gear_3"], vals["gear_4"], vals["gear_5"], vals["consumption"], vals["elasticity_3"], vals["elasticity_4"], vals["elasticity_5"])
 
 def ToDict(vals : list[int | float]) -> dict[str, int | float]:
+    """
+    Erstellt einen attributierten Dictionary mit string's als Keys, der die gegebenen Elemente enthält.
+    :param vals: Die Liste der Länge 10 mit l[0] is int, Rest ist float
+    :return: Den attribuierten Dictionary mit den Simulationsdaten.
+    """
     MetaTest.MetaTest.typeCheck(MetaTest.MetaTest(), vals, [int, float, float, float, float, float, float, float, float, float])
     return  {
         "generation": vals[0],
@@ -44,16 +68,30 @@ def ToDict(vals : list[int | float]) -> dict[str, int | float]:
         "elasticity_5": vals[9]
     };
 def ToList(vals : dict[str, int | float]) -> list[int | float]:
+    """
+    Erstellt eine Liste mit Simulationsdaten aus einem attribuierten Dictionary
+    :param vals: Der Dictionary.
+    :return: Die Liste mit den Simulationsdaten
+    """
     return [vals["generation"], vals["final_drive"], vals["roll_radius"], vals["gear_3"], vals["gear_4"], vals["gear_5"], vals["consumption"], vals["elasticity_3"], vals["elasticity_4"], vals["elasticity_5"]]
 
 
 
 class ExperiementalDataTests(UnitMeta.UnitMeta):
     def __init__(this, *args, **kwargs):
+        """
+        Die Init Funktion.
+        :param args:
+        :param kwargs:
+        """
         this.addedTestData = False
         pass
 
     def TestExportData(this):
+        """
+        Hier wird mittels Äquivalenzbildung getestet, ob das Exportieren der CSV Dateien funktioniert.
+        :return: true iff der Test korrekt durchlaufen wurde, sonst ein String mit der Fehlermeldung
+        """
         this.ClearTestDB()
         this.TestAddData()
         if not this.addedTestData:
@@ -103,7 +141,11 @@ class ExperiementalDataTests(UnitMeta.UnitMeta):
 
         return True
     def TestAddExperiementDataFromCSV(self):
-
+        """
+        Hier wird überprüft, ob die Experiement/Simulationsdaten korrekt geadded werden.
+        Dies wird mithilfe von zufälligen Partitionen des Testdatensatzes bewerkstelligt.
+        :return:
+        """
         TestPartitionCount : int = 10
         for _ in range(TestPartitionCount):
             partition = GetRandomPartition(TestData)
@@ -136,6 +178,10 @@ class ExperiementalDataTests(UnitMeta.UnitMeta):
         return True
     @staticmethod
     def GetDataFromSQL():
+        """
+        Hilfsfunktion die alle aktuellen Daten in car_data ausgibt
+        :return: Alle aktuellen Daten in car_data in der Form list[tuple[int, .., float]]
+        """
         con = sqlite3.connect(testConnection)
         cur = con.cursor()
         cur.execute("select * from car_data")
@@ -144,23 +190,41 @@ class ExperiementalDataTests(UnitMeta.UnitMeta):
         return vals
     @staticmethod
     def ClearTestDB():
+        """
+        Löscht alle Daten aus der Testdatenbank
+        :return:
+        """
         con = sqlite3.connect(testConnection)
         con.execute("delete from car_data")
         con.commit()
         con.close()
     @staticmethod
     def StressTestAddTestData():
+        """
+        Added paralell die Testdaten mit der add_experiement_data Funktion zur Datenbank
+        :return:
+        """
        def pApplied(data : list) -> None:
            database.add_experiment_data(data, testConnection)
        with ThreadPoolExecutor() as executor:
           for _ in executor.map(pApplied, [ToList(ToDict(data)) for data in TestData]):
               pass
     def __call__(self, *args, **kwargs):
+        """
+        Führt alle Tests in der Klasse auf
+        :param args:
+        :param kwargs:
+        :return:
+        """
         self.TestAddData()
         self.StressTestAddTestData()
         self.TestExportData()
         self.TestAddExperiementDataFromCSV()
     def StressTestAdd(self):
+        """
+        Nutzt die paralelle StressTestAddTestData Funktion um einen Stresstest durchzuführen
+        :return: bool | string, True wenn alles geklappt hat, sonst einen String mit der Fehlernachricht.
+        """
         self.ClearTestDB()
         self.StressTestAddTestData()
         res : list[list[int | float]] = []
@@ -172,6 +236,10 @@ class ExperiementalDataTests(UnitMeta.UnitMeta):
             return "Test fehlgeschlagen; falsche Daten wurden hinzugefügt"
         return True
     def TestAddData(self):
+        """
+        Tested die add_experiement_data Funktion indem der randomisierte Testdatensatz synchron hinzugefügt wird.
+        :return:
+        """
         self.ClearTestDB()
         for data in TestData:
             try:
