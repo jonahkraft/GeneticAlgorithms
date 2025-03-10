@@ -106,7 +106,7 @@ function logIn(username: string) {
     }
     else {
         // dann wurde es über "continue as simulator" aufgerufen
-        role = "placeholder_role"
+        role = "simulator"
     }
 
     cookies.saveCookies({"username": username, "role": role, "signed_in": true})

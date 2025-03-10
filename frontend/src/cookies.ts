@@ -1,6 +1,6 @@
 const standardValue = {
     username: "could not load username",
-    role: "could not load role",
+    role: "simulator",
     signed_in: false,
 }
 
