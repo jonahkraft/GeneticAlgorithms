@@ -8,7 +8,7 @@ import { Dropdown } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import graph from "./graph.tsx";
 import graphGen from "./graphGen.tsx";
-import './DataVisualization.css';
+import styles from './DataVisualization.module.css';
 
 
 function generateResultList(arr: any) {
@@ -1378,9 +1378,9 @@ function generateResultList(arr: any) {
 }
 
 
-function toggleSidebar(side: any) {
-    document.getElementById(side + 'Sidebar')?.classList.toggle('open')
-}
+// function toggleSidebar(side: any) {
+//     document.getElementById(side + 'Sidebar')?.classList.toggle('open')
+// }
 
 
 function DataVisualization() {
@@ -1427,7 +1427,6 @@ function DataVisualization() {
         graph();
     }, []);
 
-
     useEffect(() => {
         graphGen(selectedGeneration!);
     }, [selectedGeneration]);
@@ -1473,23 +1472,18 @@ function DataVisualization() {
     console.log('SelectedGeneration: ', selectedGeneration)
     console.log('GeneratedElement: ', generatedElement)
 
-
-    // TODO: button toggle btn left bin war anglegt in der Div sidebar left -> überarbeiten. Wenn Vorlagen
-    // TODO: für beispielsweise DIVs angelegt werden, dann verwendet die auch
-
     return (
         <>
             <Header />
-            <div className="toolbar">Toolbar</div>
-            <div className="container">
-                <button className="toggle-btn left-btn" onClick={() => toggleSidebar('left')}>☰</button>
+            <div className={styles.toolbar}>Toolbar</div>
+            <div className={styles.container}>
+                {/*<button className="toggle-btn left-btn" onClick={() => toggleSidebar('left')}>☰</button>*/}
+                {/*<div className="sidebar left" id="leftSidebar">*/}
+                {/*    <button className="close-btn" onClick={() => toggleSidebar('left')}>✖</button>*/}
+                {/*    Left Sidebar Content*/}
+                {/*</div>*/}
 
-                <div className="sidebar left" id="leftSidebar">
-                    <button className="close-btn" onClick={() => toggleSidebar('left')}>✖</button>
-                    Left Sidebar Content
-                </div>
-
-                <Dropdown id="dropdown-wrapper">
+                <Dropdown id={styles.dropdownWrapper}>
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
                         Selection Generations
                     </Dropdown.Toggle>
@@ -1506,19 +1500,30 @@ function DataVisualization() {
                         )}
                     </Dropdown.Menu>
                 </Dropdown>
-
             </div>
 
-            <div className="content" id="mainContent">
-                <h2>{selectedGeneration ? `Selected generation: ${selectedGeneration}` : "Please select a generation"}</h2>
-                {generatedElement}
+            <div className={styles.mainContent}>
+                <p>hier Parameter</p>
+                <hr/>
+
+                {selectedGeneration ? (
+                    <>
+                        <h2>Selected generation: {selectedGeneration}</h2>
+                        {generatedElement}
+                    </>
+                ) : (
+                 <></>
+                )}
+
+                {/*<h2>{selectedGeneration ? `Selected generation: ${selectedGeneration}` : "Please select a generation"}</h2>*/}
+                {/*{generatedElement}*/}
 
                 <h2>{'Overview of all generations'}</h2>
                 <div style={{width:"800px"}}><canvas id="my_graph"></canvas></div>
             </div>
 
-            <div className="sidebar right" id="rightSidebar">Right Sidebar Content</div>
-            <button className="toggle-btn right-btn" onClick={() => toggleSidebar('right')}>☰</button>
+            {/*<div className="sidebar right" id="rightSidebar">Right Sidebar Content</div>*/}
+            {/*<button className="toggle-btn right-btn" onClick={() => toggleSidebar('right')}>☰</button>*/}
             <Footer />
         </>
     );
