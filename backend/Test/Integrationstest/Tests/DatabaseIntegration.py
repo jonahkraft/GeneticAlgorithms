@@ -1,8 +1,14 @@
-from typing import Optional
 
-from backend.Test.Integrationstest.IntegrationMeta import IntegrationMeta
 import sqlite3
+import requests
+
+from typing import Optional, Any, Sequence
+from flask import jsonify
 from flask.wrappers import Response
+from backend import api                 #TODO: SHOULD NOT BE IMPORTED HERE
+from sqlite3 import Connection, Cursor
+
+from backend.Test.Integrationstest.IntegrationMeta import IntegrationMeta, TestResult
 
 
 class DatabaseIntegrationTest(IntegrationMeta):
@@ -12,24 +18,22 @@ class DatabaseIntegrationTest(IntegrationMeta):
     Integration only complete if all the tests return true
     """
 
-    def connect(self, **kwargs) -> bool:
+    def connect(self, **kwargs) -> IntegrationMeta:
         """
         Test for the correct initialization of the database connection
         possible keyword arguments: database_path
         :param kwargs: a sequence of required variable-value pairs for the function
-        :type kwargs: dict
         :return: returns true if the database connection is established
-        :type: bool
         """
-        database = sqlite3.connect(kwargs['database_path'])
-        assert isinstance(database, sqlite3.Connection),\
-            f"Success, connected to database {kwargs['database_path'].split("/")[-1].split(".")[0]}"
+        database : Connection = sqlite3.connect(kwargs['database_path'])
+        assert self.typeCheck(database, sqlite3.Connection),\
+            f"Failure (Connect), connected to database {kwargs['database_path'].split("/")[-1].split(".")[0]}"
 
         database.close()
 
-        return True
+        return self             #TODO : through the TESTPASSED pipeline
 
-    def databaseToDatabase(self, **kwargs) -> bool:
+    def databaseToDatabase(self, **kwargs) -> IntegrationMeta:
 
         """
         Test to ensure that database connection accually works.
@@ -39,55 +43,56 @@ class DatabaseIntegrationTest(IntegrationMeta):
         :return: returns true if the database can be reached
         """
 
-        database = sqlite3.connect(kwargs['database_path'])
+        database : Connection = sqlite3.connect(kwargs['database_path'])
 
         test_username = "TestUser"
         test_password = "TestPassword"
 
         database.add_user(test_username, test_password, connnection_path=kwargs['database_path'])
 
-        cursor = database.cursor()
-        cursor.execute("SELECT * FROM users WHERE ?=user_name",[test_username])
+        cursor : Cursor = database.cursor()
+        cursor.execute('SELECT * FROM users WHERE ?=user_name',[test_username])
 
-        response = cursor.fetchone()
-        if response is not None: response = response[0]
+        response : Any = cursor.fetchone()
+        if response is Sequence: response = response[0]
 
         database.close()
-        assert response is not None, "Failure, Got no response from database"
+        assert response is not None, "Failure (Database to Database), Got no response from database"
 
-        return True
+        return self
 
 
-    def databaseToServer(self, **kwargs) -> bool:
+    def databaseToServer(self, **kwargs) -> IntegrationMeta:
 
         """
         Test to integration database into the server.
-        Possible keyword arguments: database_path, server
+        Possible keyword arguments: database_path, server_address
         :param kwargs: a sequence of required variable-value pairs for the function
         :type kwargs: dict
         :return: returns true if the database can communicate with the server
         """
 
-        database = sqlite3.connect(kwargs['database_path'])
-        server = kwargs['server']
+        database : Connection = sqlite3.connect(kwargs['database_path'])
 
         test_username = "TestUser"
         test_password = "TestPassword"
 
         database.add_user(test_username, test_password, connnection_path=kwargs['database_path'])
 
-        serverResponse : Optional[Response, None] = server.login(test_username, test_password)
+        server_address : str = kwargs['server_address'] if kwargs['server_address'] is not None else "http://localhost:5000/api"    #TODO: through meta
+        serverResponse : Optional[Response] = requests.post(f"{server_address}/login",                                          #TODO: IMPLEMENT encapsed optional
+                                                                  json={"username":test_username, "password": test_password})
 
-        assert serverResponse[-1] is 200, f"Failure, Got response {serverResponse[-1]} from server"
+        assert serverResponse.status_code == 200, f"Failure (Database to Server), Got response {serverResponse.status_code} from server"
         database.close()
 
-        return True
+        return self
 
-    def integrationInDocker(self, **kwargs) -> bool:
+    def integrationInDocker(self, **kwargs) -> IntegrationMeta:
         pass
 
 
-    def disconnect(self, **kwargs) -> bool:
+    def disconnect(self, **kwargs) -> IntegrationMeta:
 
         """
         Tests for the correct closure of the database connection
@@ -97,15 +102,31 @@ class DatabaseIntegrationTest(IntegrationMeta):
         :return: returns true if the database can be disconnected
         """
 
-        database : sqlite3.Connection = kwargs['database']
-        assert database.close() is None, "Success, closed database connection"
+        database : Connection = kwargs['database']
+        assert database.close() is None, "Failure (Disconnect), closed database connection"
 
-        return True
+        return self
 
-    def __call__(self, *args, **kwargs) -> bool:
+    def __call__(self, *args, **kwargs) -> IntegrationMeta:
+        #TODO: PASS THE ARGUMENTS TO THE FUNCTIONS BY EACH / delete all test user data
+        """
+        Runs all the database integration tests
+        :param args: positional arguments
+        :param kwargs: takes the configuration data needed throughout the integration tests
+        :return: returns true if all tests passed
+        """
+        self.deleteUserData(database_path=kwargs['database_path'])
+        return (self.connect(**kwargs) is self.databaseToDatabase(**kwargs)
+                is self.databaseToServer(**kwargs) is self.disconnect(**kwargs))
 
-        # TODO: run all tests and make sure all are true then return true
-        return True
+
+if __name__ == "__main__":
+
+    databaseIntegrationInstance = DatabaseIntegrationTest()
+    testResult = databaseIntegrationInstance(database_path="backend/db/users.db",
+                                server=api, database=sqlite3.connect("backend/db/users.db"))
+
+    # databaseIntegrationInstance.connect().connect().connect()
 
 
 

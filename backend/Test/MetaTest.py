@@ -1,7 +1,5 @@
 from typing import Any, Callable, Iterable, Sequence, Optional
-
 #ERRORS
-
 
 
 class MetaTest:
@@ -9,7 +7,6 @@ class MetaTest:
     def __init__(self, *args, **kwargs):
         pass
 
-    # q
     def typeCheck(self, inferredTypes : list[Any]|Any, actualTypes : list[Any]|Any) -> list[bool]:
 
         return [isinstance(i, a) for i, a in zip(inferredTypes, actualTypes)] if isinstance(inferredTypes, Iterable) \

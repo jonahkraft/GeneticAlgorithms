@@ -1,11 +1,8 @@
+import sqlite3
 
-# from ..Logging import *
-# from ..MetaTest import MetaTest
 from backend.Test.MetaTest import MetaTest
 from typing import Callable, Sequence, Any, Union
-import sqlite3
-# from Tests import DatabaseIntegration, DockerIntegration, ServerIntegration, SimulationIntegration
-import backend.api as server
+from sqlite3 import Connection, Cursor
 
 
 class IntegrationMeta(MetaTest):
@@ -14,7 +11,7 @@ class IntegrationMeta(MetaTest):
         super().__init__(**kwargs)
         pass
 
-    def connect(self, checkingFunc : Callable, connectionInterface : Callable, **kwargs) -> bool:
+    def connect(self, **kwargs):
         """
         :interface: The interface to be checked for a successful connection
 
@@ -27,27 +24,50 @@ class IntegrationMeta(MetaTest):
 
         #if checking data avialable then follow
 
-        return checkingFunc(connectionInterface(**kwargs))
+        # return checkingFunc(connectionInterface(**kwargs))
+        return self
 
     def disconnect(self):
-        pass
+        return self
 
     def isinterfaceDefiniert(self):
-        pass
+        return self
 
-    def send(self, promt: Union[Sequence[Any], Any, None], return_ok : Union[Sequence[Any], Any]) -> bool:
+    def send(self, promt: Union[Sequence[Any], Any, None], return_ok : Union[Sequence[Any], Any]):
         """
         Checks if an interface communication is possible.
         :param promt: data(s) to be sent
         :param return_ok: the expected return value(s)
         :return: returns true if the interface communication is possible
         """
+        pass
+
+    def decompose(self) -> str:
+        # TODO : recursive decomposition of the testpassed object
+        pass
+
+    def deleteUserData(self, **kwargs):
+
+        database : Connection = sqlite3.connect(kwargs['database_path'])
+        cursor : Cursor = database.cursor()
+
+        cursor.execute('DELETE FROM users WHERE ?= user_name', ["TestUser"])
+        database.close()
 
 
-    def __call__(self, *args, **kwargs):
-        self.connect(**kwargs)
-        self.isinterfaceDefiniert()
-        self.disconnect()
+
+class TestResult(IntegrationMeta):
+
+    def __init__(self, **kwargs) -> None:
+
+        super().__init__(**kwargs)
+
+        self.message = None
+        self.isTestPassed = True
+
+    def __eq__(self, other: Any) -> bool:
+
+        return self.isTestPassed == other.isTestPassed
 
 
 if __name__ == '__main__':
