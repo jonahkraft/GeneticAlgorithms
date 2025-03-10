@@ -14,13 +14,6 @@
     letter-spacing: 1px;
 }
 
-.footerLine {
-    /*border: 0;*/
-    border-top: 1px solid #ffffff;
-    width: 80%;
-    margin: 20px auto;
-}
-
 .footerLinks {
     list-style: none;
     padding: 0;
