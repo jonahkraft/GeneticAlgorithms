@@ -32,7 +32,7 @@ def login(username: str, password: str):
     response["registered"] = True
 
     if not db.check_password(username, password):
-       return jsonify(response), 401 
+        return jsonify(response), 401
 
     response["password_correct"] = True
 
@@ -41,8 +41,9 @@ def login(username: str, password: str):
 
     return jsonify(response), 200
 
+
 def register(username: str, password: str, role: str):
-    possible_roles = { "data_analyst", "administrator", "simulation_expert" }
+    possible_roles = {"data_analyst", "administrator", "simulation_expert"}
 
     response = {
         "success": False,
@@ -64,7 +65,8 @@ def register(username: str, password: str, role: str):
 
     return jsonify(response), 200
 
-@api.route("/api/echo", methods = ["POST"])
+
+@api.route("/api/echo", methods=["POST"])
 @jwt_required()
 def api_echo():
     """Echo the received message back to client"""
@@ -74,7 +76,8 @@ def api_echo():
     print(f"Echo sent by {current_user}: {msg}")
     return jsonify(msg), 200
 
-@api.route("/api/login", methods = ["POST"])
+
+@api.route("/api/login", methods=["POST"])
 def api_login():
     """Handles login request
 
@@ -93,19 +96,20 @@ def api_login():
     }
 
     """
-    
+
     data = request.get_json()
 
     username = data["username"]
     password = data["password"]
-    
+
     return login(username, password)
 
-@api.route("/api/register", methods = ["POST"])
+
+@api.route("/api/register", methods=["POST"])
 @jwt_required()
 def api_register():
     """Handles register request
-    
+
     :param JSON
     {
         "username": "<username>",
@@ -121,7 +125,7 @@ def api_register():
     }
 
     """
-    
+
     current_user = get_jwt_identity()
 
     if db.get_role(current_user) != "administrator":
@@ -133,13 +137,14 @@ def api_register():
     password = data["password"]
     role = data["role"]
 
-    return register(username, password, role) 
+    return register(username, password, role)
 
-@api.route("/api/delete_user", methods = ["POST"])
+
+@api.route("/api/delete_user", methods=["POST"])
 @jwt_required()
 def api_delete_user():
     """Handles register request
-    
+
     :param JSON
     {
         "username": "<username>"
@@ -162,14 +167,15 @@ def api_delete_user():
 
     if db.delete_user(username):
         return jsonify({}), 200
-    
+
     return jsonify({}), 404
 
-@api.route("/api/change_password", methods = ["POST"])
+
+@api.route("/api/change_password", methods=["POST"])
 @jwt_required()
 def api_change_password():
     """Changes the users password 
-    
+
     :param JSON
     {
         "new_password": "<new password>"
@@ -188,31 +194,33 @@ def api_change_password():
     new_password = data["new_password"]
 
     if db.change_password(current_user, new_password):
-        return jsonify({},200)
-    return jsonify({},404)
+        return jsonify({}, 200)
+    return jsonify({}, 404)
 
-@api.route("/api/get_generations", methods = ["GET"])
+
+@api.route("/api/get_generations", methods=["GET"])
 @jwt_required()
 def api_get_generations():
     current_user = get_jwt_identity()
-    
+
     role = db.get_role(current_user)
 
-    allowed_roles = { "data_analyst", "administrator" }
+    allowed_roles = {"data_analyst", "administrator"}
 
     if role not in allowed_roles:
         return jsonify({}), 401
 
     with open("./results/generations.csv", "r") as file:
-        return jsonify({ "content": file.read() }), 200
+        return jsonify({"content": file.read()}), 200
 
     return jsonify({}), 404
 
-@api.route("/api/start_simulation", methods = ["POST"])
+
+@api.route("/api/start_simulation", methods=["POST"])
 @jwt_required()
 def api_start_simulation():
     """Starts a simulation with the given parameters
-    
+
     :param JSON
     {
         "population_size": int,
@@ -221,23 +229,24 @@ def api_start_simulation():
         "strategy": int,
         "aep": float,
         "elite_count": int,
-        "alien_count" int
+        "alien_count": int,
+        "weights": list[int]
     }
 
     :returns JSON
     {
-        
+
     }
 
     """
     current_user = get_jwt_identity()
 
     role = db.get_role(current_user)
-    allowed_roles = { "data_analyst", "administrator", "simulator" }
+    allowed_roles = {"data_analyst", "administrator", "simulator"}
 
     if role not in allowed_roles:
         return jsonify({}), 401
-    
+
     data = request.get_json()
 
     population_size = data["population_size"]
@@ -247,10 +256,11 @@ def api_start_simulation():
     aep = data["aep"]
     elite_count = data["elite_count"]
     alien_count = data["alien_count"]
-    
-    simulation_interface = sim.Schnittstelle(population_size,simulation_seed)
+    weights = data["weights"]
 
-    simulation_interface.evolute(generation_count,strategy,aep,elite_count,alien_count)
+    simulation_interface = sim.Schnittstelle(population_size, simulation_seed, weights)
+
+    simulation_interface.evolute(generation_count, strategy, aep, elite_count, alien_count)
 
     simulation_interface.results()
 
@@ -263,7 +273,7 @@ def api_start_simulation():
 @jwt_required()
 def api_get_simulation_data():
     """Requests historic simulation data for further analysis
-    
+
     :param JSON
     {
         "columns": list[str],
@@ -279,11 +289,11 @@ def api_get_simulation_data():
     current_user = get_jwt_identity()
 
     role = db.get_role(current_user)
-    allowed_roles = { "data_analyst", "administrator"}
+    allowed_roles = {"data_analyst", "administrator"}
 
     if role not in allowed_roles:
         return jsonify({}), 401
-    
+
     data = request.get_json()
 
     columns = data["columns"]
@@ -292,16 +302,15 @@ def api_get_simulation_data():
     db.export_experiment_data_to_csv("./results/export_data.csv", columns, row_constraints)
 
     with open("./results/export_data.csv", "r") as file:
-        return jsonify({ "content": file.read() }), 200
+        return jsonify({"content": file.read()}), 200
 
     return jsonify({}), 404
 
 
-@api.route("/api/protected_test", methods = ["POST"])
+@api.route("/api/protected_test", methods=["POST"])
 @jwt_required()
 def api_protected_test():
-     # Access the identity of the current user with get_jwt_identity
+    # Access the identity of the current user with get_jwt_identity
     current_user = get_jwt_identity()
     print(current_user)
     return jsonify(logged_in_as=current_user), 200
-

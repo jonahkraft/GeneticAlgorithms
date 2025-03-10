@@ -1390,7 +1390,7 @@ const graph = () => {
                     },
                     {
                         type: 'line',
-                        label: 'Durchschnitt',
+                        label: 'Average Consumption',
                         data: avg.map(row => ({x: row.gen, y: row.genAvg})),
                         borderColor: 'rgb(0, 0, 0)'
                     }

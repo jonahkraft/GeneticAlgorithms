@@ -2,7 +2,7 @@ from codesnippets.car import Car
 from codesnippets.evolution.interfaces.population import Population
 from codesnippets.evolution.operators import EVAL_PARETO, REC_CROSS_POINT
 from codesnippets.evolution.strategies import STRAT_B
-from codesnippets.utilities.helper import import_generations_from_csv,plot_generations,export_generations_to_csv
+from codesnippets.utilities.helper import import_generations_from_csv, plot_generations, export_generations_to_csv
 
 '''
 Übergebbare Parameter:
@@ -14,6 +14,7 @@ population_size := konstante Größe der Population
 given_seed := seed für die Erzeugung der ersten Population
 elite_count := Anzahl der Top Individuen, die für die nächste Generation behalten werden
 alien_count := Anzahl der Individuen, die komplett neu generiert werden für die nächste Generation
+weights := die Gewichte der Ziehlparameter consumption, elasticity 3-5
 '''
 
 PATH = "backend/results/"
@@ -27,12 +28,15 @@ class Schnittstelle(object):
     Objekte sollten erhaltbar/nutzbar sein für Vergleiche.
     '''
 
-    def __init__(self, population_size=10, given_seed=42):
+    def __init__(self, population_size=10, given_seed=42, weights=[-4, -2, -1, -1]):
         '''
         Generiert eine Startpopulation entsprechend eines übergebenen seeds in übergebener Größe,
         welche allerdings nicht kleiner oder gleich der Anzahl der Elite (Standardmäßig 2) + der
         Anzahl der Aliens (Standardmäßig 0) sein darf.
+        Definiert auch die Gewichtung der Zielparameter.
         '''
+        Car._Blueprint['goals'] = weights  # consumption, elasticity 3, elasticity 4, elasticity 5
+
         self.generation = Population(Car, population_size, seed=given_seed)
 
     def evolute(self, generation_count=10, strategy=1, aep=0.2, elite_count=2, alien_count=0):
@@ -97,6 +101,6 @@ class Schnittstelle(object):
 
 
 # Example
-#x = Schnittstelle()
-#x.evolute(generation_count=10, strategy=1)
-#x.results()
+# x = Schnittstelle()
+# x.evolute(generation_count=10, strategy=1)
+# x.results()
