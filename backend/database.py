@@ -238,18 +238,43 @@ def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], const
     :type file_path
 
     """
+    def is_number(s: str) -> bool:
+        try:
+            float(s)
+            return True
+        except ValueError:
+            return False
+
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+
+    possible_operators = ["<",">","<=",">=","="]
+    cur.execute("SELECT * FROM car_data")
+    possible_cols = cur.description
+    possible_cols = [i[0] for i in possible_cols]
+    cur.fetchall()
+
     if columns == []:
         cols = "*"
     else:
-        cols = ", ".join(columns)
+        for c in columns:
+            if c not in possible_cols:
+                raise ValueError((f"The Column '{c}' does not exist"))
+        cols = ",".join(columns)
 
     if constraints == []:
         rows = ""
     else:
+        for c in constraints:
+            lhs, op, rhs = c.split(" ")
+            if op not in possible_operators:
+                raise ValueError((f"'{op}' is no valid operator"))
+            if not(is_number(lhs) or lhs in possible_cols):
+                raise ValueError((f"'{lhs}' is no valid operand"))
+            if not(is_number(rhs) or rhs in possible_cols):
+                raise ValueError((f"'{rhs}' is no valid operand"))
+            
         rows = " WHERE " + " AND ".join(constraints)
-
-    connection = sqlite3.connect(connection_path)
-    cur = connection.cursor()
 
     sql_query = f"SELECT {cols} FROM car_data{rows}"
 
@@ -286,6 +311,6 @@ if __name__ == "__main__":
     
     #print(add_user("user", "password", "administrator", connection_path="backend/db/users.db"))
     #print(check_password("user","password", connection_path="backend/db/users.db"))
-    #get_experiment_data("test.csv", ["generation","consumption","elasticity_4", "gear_3"], ["generation > 5", "gear_3 < 1.5"], connection_path="backend/db/simulation_data.db")
+    export_experiment_data_to_csv("test.csv", ["generation","consumption","elasticity_4", "gear_3"], ["generation > 5", "gear_3 < 1.5"], connection_path="backend/db/simulation_data.db")
     #add_experiment_data_from_csv("backend/results/generations.csv","backend/db/simulation_data.db")
     pass
