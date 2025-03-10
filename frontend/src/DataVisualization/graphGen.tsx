@@ -2,7 +2,7 @@ import Chart from 'chart.js/auto'
 
 const graphGen = (gen: string) => {
 
-    let testList = {
+    const testList = {
         '0': [
             {
                 generation: '0',
@@ -1352,19 +1352,19 @@ const graphGen = (gen: string) => {
     // const generation = "0"
 
     type ObjectKey = keyof typeof testList;
-    let list: { 
+    const list: {
         gear3: string, ela3: string,
         gear4: string, ela4: string,
         gear5: string, ela5: string,
         
      }[] = []; 
 
-    for (var i = 0; i < Object.keys(testList).length; i++) {
+    for (let i = 0; i < Object.keys(testList).length; i++) {
 
         const generationIndex = i.toString() as ObjectKey;
 
         if (generationIndex == generation) {
-            for (var j = 0; j < testList[generationIndex].length; j++) {
+            for (let j = 0; j < testList[generationIndex].length; j++) {
 
                 const g3 = testList[generationIndex][j]['Gear 3']
                 const e3 = testList[generationIndex][j]['Elasticity 3']
