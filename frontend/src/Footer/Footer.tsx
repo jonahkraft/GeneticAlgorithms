@@ -4,7 +4,7 @@ function Footer() {
     return (
         <footer className={styles.footer}>
             <hr className={styles.footerLine}/>
-            <p className={styles.footerText}><b>Website Information</b></p>
+            <p className={styles.footerText}>Website Information</p>
 
             <div>
                 <ul className={styles.footerLinks}>

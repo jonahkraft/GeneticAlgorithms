@@ -12,31 +12,20 @@ body {
 }
 
 .toolbar {
-    background: #333;
-    color: white;
     padding: 10px;
-    text-align: center;
-    font-size: 18px;
 }
 
 .container {
-    display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px;
     position: relative;
 }
 
-.dropdownWrapper {
-    margin-left: auto;
-}
-
 .mainContent {
-    flex-grow: 1;
     padding: 20px;
     background: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
     text-align: center;
 }
 
