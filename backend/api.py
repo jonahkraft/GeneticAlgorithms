@@ -229,7 +229,7 @@ def api_start_simulation():
         "strategy": int,
         "aep": float,
         "elite_count": int,
-        "alien_count"; int,
+        "alien_count": int,
         "weights": list[int]
     }
 
