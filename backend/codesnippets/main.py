@@ -33,7 +33,10 @@ class Schnittstelle(object):
         Generiert eine Startpopulation entsprechend eines übergebenen seeds in übergebener Größe,
         welche allerdings nicht kleiner oder gleich der Anzahl der Elite (Standardmäßig 2) + der
         Anzahl der Aliens (Standardmäßig 0) sein darf.
-        Definiert auch die Gewichtung der Zielparameter.
+        Definiert auch die Gewichtung der Zielparameter, welche in einer Liste der Länge 4 stehen
+        müssen, gefüllt mit Zahlen (sowohl Integer als auch Float sind erlaubt).
+        Negative Zahlen minimieren und positive Zahlen maximieren die Ausgabe, da wir den Konsum
+        und die Zeit um von 0 auf 100 zu kommen betrachten, wollen wir Standardmäßig minimieren.
         '''
         Car._Blueprint['goals'] = weights  # consumption, elasticity 3, elasticity 4, elasticity 5
 
