@@ -91,23 +91,30 @@ function logIn(username: string) {
 
     axios.post("/api/login", {
         "username": username,
-        "password": "password"
-    }) /*
+        "password": "password" //TO DO: Passwort Variable einsetzen
+    })
+
+        /*
+
         {headers:{
             "Content-Type": "application/json",
             //"Authorization": "Bearer ??"
         }}
     )*/
         .then((response) => {
-            console.log("SOMETHING HAPPENED!!")
+            console.log("SOMETHING HAPPENED!!") //TODO: Weiterleiten auf Datenvisualisierung (angemeldet!)
         }).catch((error) => {
-            console.log("fuck")
+            console.log("FEHLER")
+        if (error.status === 401){
+            console.log("Passwort oder Name falsch!") //TODO: Fehlermeldung auf der Website anzeigen
+        }
         })
+    //TODO: Register Button? Theoretisch einfach mit Backend zu koppeln
     
     let role
 
-    if (username === "admin") {
-        // TODO: Nur für die Präsentation!!
+    if (username === "admin") { // Damit man Admin Ansicht sieht(Präsi)
+        // TODO: Nur für die Präsentation!!()
         role = "admin"
     }
 
@@ -117,7 +124,7 @@ function logIn(username: string) {
         // dafür zusätzlich password als Argument nehmen //Backendverbindung--> Vergleiche ob User richtiges Passwort eingegeben hat
         role = "placeholder_role" //Backendverbindung--> Welche rolle ist dem Nutzer zugewiesen
 
-        // TODO: Fehlermeldung, wenn Name oder Passwort falsch ---> Backendverbindung
+        // TODO: Fehlermeldung, wenn Name oder Passwort falsch ---> Backendverbindung // Kinda schon da, nur screen nocj nichz
         // Funktion triggerWarning dafür nutzen
 
     }
@@ -126,7 +133,7 @@ function logIn(username: string) {
         role = "simulator"
     }
 
-    cookies.saveCookies({"username": username, "role": role, "signed_in": true})
+    cookies.saveCookies({"username": username, "role": role, "signed_in": true}) //TODO Herausfinden wie wir mit Cookies umgehen, vorallem nach schließem
     // window.location.reload()
     // window.location.href = "../../visualization.html"
 }
