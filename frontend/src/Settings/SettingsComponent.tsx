@@ -15,10 +15,10 @@ function Settings() {
     };
 
     // TODO: Nutzer aus Datenbank laden für Admin-Funktionen
-
+    // Potentielle Backendverbindung?
     return (
         <>
-            <Header />
+            <Header/>
             <div className="settings-page">
                 <div className="settings-container">
                     <div className="leftbox">

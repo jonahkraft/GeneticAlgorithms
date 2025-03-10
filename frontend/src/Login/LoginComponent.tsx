@@ -94,13 +94,13 @@ function logIn(username: string) {
         role = "admin"
     }
 
-    else if (username !== "placeholder") {
+    else if (username !== "placeholder") { //Backendverbindung--> welche User sind erlaubt
         // dann wurde es über login aufgerufen
         // TODO: sollte callUser aufrufen und davon die Rolle des Benutzers erhalten
-        // dafür zusätzlich password als Argument nehmen
-        role = "placeholder_role"
+        // dafür zusätzlich password als Argument nehmen //Backendverbindung--> Vergleiche ob User richtiges Passwort eingegeben hat
+        role = "placeholder_role" //Backendverbindung--> Welche rolle ist dem Nutzer zugewiesen
 
-        // TODO: Fehlermeldung, wenn Name oder Passwort falsch
+        // TODO: Fehlermeldung, wenn Name oder Passwort falsch ---> Backendverbindung
         // Funktion triggerWarning dafür nutzen
 
     }

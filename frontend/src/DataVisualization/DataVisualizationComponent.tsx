@@ -1389,14 +1389,14 @@ function DataVisualization() {
 
     // generations erstellt eine Liste aller Generations von 0 - x (in Test Liste 0-10)
     const [generations, setGenerations] = useState<string[]>([]);
-
+// Backendverbindung
     // selectedGeneration speichert die ausgewählte Generation und zeigt diese auf der Website an
     const [selectedGeneration, setSelectedGeneration] = useState<string | null>(null);
 
     // ändert den Main Content der Seite
     // @ts-ignore
     const [generatedElement, setGeneratedElement] = useState<JSX.Element | null>(null);
-
+//Backendverbindung
     // load CSV Files
     useEffect(() => {
         console.log('DataVisualization');
@@ -1414,11 +1414,11 @@ function DataVisualization() {
     // Verarbeitung der Daten (generateResultList & loadGenerations)
     useEffect(() => {
         if (data.length > 0) {
-            const generations = generateResultList(data);
+            const generations = generateResultList(data); //Backendverbindung
             loadGenerations(generations);
         } else {
             // do it anyway for testing
-            const generations = generateResultList(data);
+            const generations = generateResultList(data);//Backendverbindung
             loadGenerations(generations);
         }
     }, [data]);
