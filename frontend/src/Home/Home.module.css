@@ -6,7 +6,7 @@ body {
   font-family: Helvetica, Arial, sans-serif;
 }
 
-.main-content {
+.mainContent {
   text-align: center;
   padding: 50px 20px;
   background: linear-gradient(135deg, #cfd8f9, #d8e6ff, #bee0ff, #a9c3ff);
@@ -21,7 +21,7 @@ body {
 
 @keyframes waveGradient {
   0% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
   25% {
     background-position: 50% 50%;
@@ -33,28 +33,28 @@ body {
     background-position: 50% 50%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
 }
 
-h2 {
+.header {
   color: #2c3e50;
   font-size: 2.5rem;
   margin-bottom: 20px;
 }
 
-.intro-text {
+.introText {
   font-size: 1.1rem;
   color: #4f5b66;
   margin: 20px 0;
   line-height: 1.6;
 }
 
-.button-container {
+.buttonContainer {
   margin-top: 30px;
 }
 
-button {
+.button {
   background: linear-gradient(135deg, #007BFF, #0056b3);
   color: white;
   font-size: 1.1rem;
@@ -65,12 +65,12 @@ button {
   transition: background-color 0.3s, transform 0.2s;
 }
 
-button:hover {
+.button:hover {
   background: linear-gradient(135deg, #0056b3, #003f7f);
   transform: scale(1.05);
 }
 
-button:active {
+.button:active {
   background: linear-gradient(135deg, #003f7f, #002c5f);
   transform: scale(1);
 }
@@ -86,25 +86,25 @@ button:active {
   margin: 40px auto;
 }
 
-h3 {
+.smallHeader {
   color: #2c3e50;
   font-size: 1.8rem;
   margin-bottom: 15px;
 }
 
-details {
+.details {
   margin: 10px 0;
   background-color: #f4f6fb;
   padding: 15px;
   border-radius: 5px;
 }
 
-summary {
+.summary {
   font-weight: bold;
   cursor: pointer;
 }
 
-details p {
+.detailsText {
   margin-top: 10px;
   color: #607d8b;
 }

@@ -1,4 +1,4 @@
-import './Login.css';
+import styles from './Login.module.css';
 import Header from "../Header/Header.tsx";
 import { useState } from 'react';
 import cookies from '../cookies.ts'
@@ -44,11 +44,11 @@ function Login() {
     return (
         <>
             <Header />
-            <div className="center">
-                <h1>Login</h1>
+            <div className={styles.center}>
+                <h1 className={styles.header}>Login</h1>
                 <form onSubmit={getUserdata}>
-                    <div className="input-container">
-                        <input
+                    <div className={styles.inputContainer}>
+                        <input className={styles.input}
                             id="username"
                             type="text"
                             name="username"
@@ -57,10 +57,10 @@ function Login() {
                             onChange={(event) => onTextInput(event)}
                             placeholder=" "
                         />
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="username" className={styles.label}>Username</label>
                     </div>
-                    <div className="input-container">
-                        <input
+                    <div className={styles.inputContainer}>
+                        <input className={styles.input}
                             id="password"
                             type="password"
                             name="password"
@@ -69,15 +69,16 @@ function Login() {
                             onChange={(event) => onPasswordInput(event)}
                             placeholder=" "
                         />
-                        <label htmlFor="password">Password</label>
+                        <label className={styles.label} htmlFor="password">Password</label>
                     </div>
+
                     <WarningComponent text={text}/>
 
-                    <div className="pass">Forget Password?</div>
+                    <div className={styles.pass}>Forget Password?</div>
 
-                    <button className="button" type="submit" onClick={_ => logIn(username)}>Login</button>
+                    <button className={styles.button} type="submit" onClick={_ => logIn(username)}>Login</button>
                     <p><br/></p>
-                    <div className="signup_link" onClick={_ => logIn("placeholder")}>
+                    <div className={styles.signupLink} onClick={_ => logIn("placeholder")}>
                         Continue as Simulator
                     </div>
                 </form>

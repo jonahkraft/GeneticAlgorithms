@@ -56,7 +56,7 @@ nav ul a {
 }
 
 nav ul a:hover,
-nav ul .active {
+nav ul .navigationLinkActive {
     color: #1E90FF;
     background: none;
     padding: 10px 20px;
