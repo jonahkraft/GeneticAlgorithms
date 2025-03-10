@@ -1473,6 +1473,10 @@ function DataVisualization() {
     console.log('SelectedGeneration: ', selectedGeneration)
     console.log('GeneratedElement: ', generatedElement)
 
+
+    // TODO: button toggle btn left bin war anglegt in der Div sidebar left -> überarbeiten. Wenn Vorlagen
+    // TODO: für beispielsweise DIVs angelegt werden, dann verwendet die auch
+
     return (
         <>
             <Header />
