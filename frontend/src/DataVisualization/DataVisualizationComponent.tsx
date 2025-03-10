@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import graph from "./graph.tsx";
 import graphGen from "./graphGen.tsx";
 import styles from './DataVisualization.module.css';
+import Card from "../Card/Card.tsx";
 
 
 function generateResultList(arr: any) {
@@ -1507,19 +1508,21 @@ function DataVisualization() {
                 <hr/>
 
                 {selectedGeneration ? (
-                    <>
+                    <Card>
                         <h2>Selected generation: {selectedGeneration}</h2>
                         {generatedElement}
-                    </>
+                    </Card>
                 ) : (
                  <></>
                 )}
 
+                <Card>
+                    <h2>{'Overview of all generations'}</h2>
+                    <div style={{width:"800px"}}><canvas id="my_graph"></canvas></div>
+                </Card>
+
                 {/*<h2>{selectedGeneration ? `Selected generation: ${selectedGeneration}` : "Please select a generation"}</h2>*/}
                 {/*{generatedElement}*/}
-
-                <h2>{'Overview of all generations'}</h2>
-                <div style={{width:"800px"}}><canvas id="my_graph"></canvas></div>
             </div>
 
             {/*<div className="sidebar right" id="rightSidebar">Right Sidebar Content</div>*/}
