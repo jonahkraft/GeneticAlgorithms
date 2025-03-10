@@ -254,10 +254,12 @@ def api_start_simulation():
 
     simulation_interface.results()
 
+    db.add_experiment_data_from_csv("./results/generations.csv")
+
     return jsonify({}), 200
 
 
-@api.route("/api/get_simulation_data", methods = ["GET"])
+@api.route("/api/get_simulation_data", methods = ["POST"])
 @jwt_required()
 def api_get_simulation_data():
     """Requests historic simulation data for further analysis

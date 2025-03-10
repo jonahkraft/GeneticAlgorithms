@@ -212,12 +212,21 @@ def add_experiment_data_from_csv(file_path: str, connection_path: str = "db/simu
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
+
+    cur.execute("SELECT MAX(experiment_id) FROM car_data")
+    max_exp_ind = cur.fetchone()[0]
+
+    if max_exp_ind is None:
+        max_exp_ind = 0
+    else:
+        max_exp_ind += 1
+
     with open(file_path,'r') as file:
         reader = csv.reader(file)
-        rows = [row for row in reader]
-        to_db = [(int(i[0]),float(i[1]),float(i[2]),float(i[3]),float(i[4]),float(i[5]),float(i[6]),float(i[7]),float(i[8]),float(i[9])) for i in rows[1:]]
+        rows = [row[0].split(";") for row in reader]
+        to_db = [(int(i[0]),float(i[1]),float(i[2]),float(i[3]),float(i[4]),float(i[5]),float(i[6]),float(i[7]),float(i[8]),float(i[9]),int(max_exp_ind)) for i in rows[1:]]
 
-    cur.executemany("INSERT INTO car_data (generation, final_drive, roll_radius, gear_3, gear_4, gear_5, consumption, elasticity_3, elasticity_4, elasticity_5) VALUES (?,?,?,?,?,?,?,?,?,?);", to_db)
+    cur.executemany("INSERT INTO car_data (generation, final_drive, roll_radius, gear_3, gear_4, gear_5, consumption, elasticity_3, elasticity_4, elasticity_5,experiment_id) VALUES (?,?,?,?,?,?,?,?,?,?,?);", to_db)
     connection.commit()
     connection.close()
 
@@ -256,9 +265,9 @@ def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], const
 
 if __name__ == "__main__":
     #con = sqlite3.connect("backend/db/simulation_data.db")
-
+#
     #cur = con.cursor()
-
+#
     #cur.execute("""CREATE TABLE car_data(
     #            generation INT NOT NULL,
     #            final_drive REAL NOT NULL,
@@ -269,12 +278,14 @@ if __name__ == "__main__":
     #            consumption REAL NOT NULL,
     #            elasticity_3 REAL NOT NULL,
     #            elasticity_4 REAL NOT NULL,
-    #            elasticity_5 REAL NOT NULL
+    #            elasticity_5 REAL NOT NULL,
+    #            experiment_id INT NOT NULL
     #            )""")
     #
     #con.commit()
     
-    print(add_user("user", "password", "administrator", connection_path="backend/db/users.db"))
+    #print(add_user("user", "password", "administrator", connection_path="backend/db/users.db"))
     #print(check_password("user","password", connection_path="backend/db/users.db"))
     #get_experiment_data("test.csv", ["generation","consumption","elasticity_4", "gear_3"], ["generation > 5", "gear_3 < 1.5"], connection_path="backend/db/simulation_data.db")
+    #add_experiment_data_from_csv("backend/results/generations.csv","backend/db/simulation_data.db")
     pass
