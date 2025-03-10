@@ -17,7 +17,7 @@ function Settings() {
     // TODO: Nutzer aus Datenbank laden für Admin-Funktionen
 
     return (
-        <>
+        <div>
             <Header />
             <div className={styles.settingsPage}>
                 <div className={styles.settingsContainer}>
@@ -149,7 +149,7 @@ function Settings() {
                 </div>
             </div>
             <Footer />
-        </>
+        </div>
     );
 }
 

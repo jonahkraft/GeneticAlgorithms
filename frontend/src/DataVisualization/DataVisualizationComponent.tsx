@@ -1474,7 +1474,7 @@ function DataVisualization() {
     console.log('GeneratedElement: ', generatedElement)
 
     return (
-        <>
+        <div className={styles.wrapper}>
             <Header />
             <div className={styles.toolbar}>Toolbar</div>
             <div className={styles.container}>
@@ -1528,7 +1528,7 @@ function DataVisualization() {
             {/*<div className="sidebar right" id="rightSidebar">Right Sidebar Content</div>*/}
             {/*<button className="toggle-btn right-btn" onClick={() => toggleSidebar('right')}>☰</button>*/}
             <Footer />
-        </>
+        </div>
     );
 }
 
