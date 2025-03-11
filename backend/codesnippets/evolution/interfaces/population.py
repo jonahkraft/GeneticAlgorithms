@@ -322,12 +322,8 @@ class Population:
         generations = [copy(self)]
 
         # evolve the population
-        for i in tqdm(range(n), desc=f'Evolving {self._IndividualClass.__name__}s using {strategy.__name__} as '
-                                     f'evolution strategy.'):
+        for i in range(n):
             generations.append(strategy(generations[-1], i, n))
-
-        # sleep a second to make sure that the tqdm bar is displayed correctly
-        time.sleep(1)
 
         # return the generations
         return generations
