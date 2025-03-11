@@ -199,7 +199,7 @@ def api_change_password():
 @jwt_required()
 def api_get_generations():
     """Returns the contents of generations.csv file"
-    
+
     :returns JSON
     {
         "content": "<content>"
@@ -235,7 +235,7 @@ def api_start_simulation():
         "aep": float,
         "elite_count": int,
         "alien_count": int,
-        "weights": list[int]
+        "weights": list[float]
     }
 
     :returns JSON {}
@@ -271,7 +271,7 @@ def api_start_simulation():
     return jsonify({}), 200
 
 
-@api.route("/api/get_simulation_data", methods = ["POST"])
+@api.route("/api/get_simulation_data", methods=["POST"])
 @jwt_required()
 def api_get_simulation_data():
     """Requests historic simulation data for further analysis
