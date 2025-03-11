@@ -1387,21 +1387,20 @@ const graphGen = (gen: string) => {
         {
             type: 'scatter',
             data: {
-                labels: list.map(row => row.gear3),
                 datasets: [
                     {
                         label: 'gear3/Ela3',
-                        data: list.map(row => row.ela3),
+                        data: list.map(row => ({x: row.gear3, y: row.ela3})),
                         borderColor: 'rgb(0, 35, 224)',
                     },
                     {
                         label: 'gear4/Ela4',
-                        data: list.map(row => row.ela4),
+                        data: list.map(row => ({x: row.gear4, y: row.ela4})),
                         borderColor: 'rgb(184, 76, 254)',
                     },
                     {
                         label: 'gear5/Ela5',
-                        data: list.map(row => row.ela5),
+                        data: list.map(row => ({x: row.gear5, y: row.ela5})),
                         borderColor: 'rgb(22, 241, 253)',
                     },
                 ]
