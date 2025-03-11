@@ -4,6 +4,7 @@ import { useState } from 'react';
 import styles from "./Settings.module.css";
 import cookies from "../cookies.ts";
 import DarkModeButton from "../Settings/DarkModeButton.tsx"
+import ToggleButton from "../Settings/ToggleButton.tsx";
 
 function Settings() {
     const [selectedTab, setSelectedTab] = useState<string>("account");
@@ -36,7 +37,7 @@ function Settings() {
                                 Appearance
                             </a>
                             <a className={selectedTab === "speech" ? styles.navigationLinkActive : styles.navigationLinkInactive} onClick={() => handleTabClick("speech")}>
-                                Placeholder
+                                Accesibility
 
                             </a>
 
@@ -103,7 +104,8 @@ function Settings() {
                         {selectedTab === "speech" && (
                             <>
                                 <h2 className={styles.header}>Easy Speech</h2>
-                                <p className={styles.settingsText}>Enable/Disable speech mode</p>
+                                <ToggleButton></ToggleButton>
+
                             </>
                         )}
 

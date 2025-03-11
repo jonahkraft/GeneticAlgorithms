@@ -1,3 +1,5 @@
+{/*source: universe.io, Switch by Madflows*/}
+{/*https://uiverse.io/Madflows/fresh-fireant-15*/}
 import styles from "../Settings/DarkModeButton.module.css";
 
 function DarkModeButton(){
