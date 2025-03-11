@@ -13,9 +13,12 @@ CORS(app)  # Allow frontend to communicate with backend
 import api
 
 # ToDo: Add protected paths
-protected_paths_analyst = []  # Pfade auf den der Analyst keinen Zugriff haben soll
-protected_paths_simulation = []  # Pfad auf den der Simulationsexperte keinen Zugriff haben soll
+# Pfade auf denen Analyst bzw Simulationsexperte keinen Zugriff haben soll, wenn nur Admin zugriff haben soll
+# path in beide Listen eintragen.
+protected_paths_analyst = [register.html]
+protected_paths_simulation = [register.html ]
 
+# Handelt alle eingehenden Routen und leitet diese an die entsprechenden Funktionen weiter
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def serve_react(path: str):
@@ -26,6 +29,7 @@ def serve_react(path: str):
             return serve_unprotected_react(path)
     return send_from_directory(app.static_folder, "index.html")
 
+# Behandelt die Routen welche einen Login benötigen bzw. handelt die Rollenberechtigung
 @jwt_required()
 def serve_protected_react(path: str):
     current_user = get_jwt_identity()
@@ -39,6 +43,7 @@ def serve_protected_react(path: str):
         return send_from_directory(app.static_folder, path)
     return send_from_directory(app.static_folder, "index.html")
 
+# Behandelt unprotected Routes
 def serve_unprotected_react(path: str):
     absolute_path = os.path.join(app.static_folder, path)
     if os.path.exists(absolute_path):
