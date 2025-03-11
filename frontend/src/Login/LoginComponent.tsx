@@ -104,7 +104,7 @@ function logIn(username: string) {
         // dann wurde es über login aufgerufen
         // TODO: sollte callUser aufrufen und davon die Rolle des Benutzers erhalten
         // dafür zusätzlich password als Argument nehmen
-        role = "placeholder_role"
+        role = "simulator"
 
         // TODO: Fehlermeldung, wenn Name oder Passwort falsch
         // Funktion triggerWarning dafür nutzen
