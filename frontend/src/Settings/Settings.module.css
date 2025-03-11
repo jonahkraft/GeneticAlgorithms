@@ -197,3 +197,17 @@ body {
 button {
   margin-left: 1px;
 }
+.accountbutton{
+  background: ghostwhite;
+  color: #05264e;
+  border-radius: 8px;
+  text-align: center;
+  width: 25%;
+  border: #05264e solid 1px;
+
+}
+.passwordinput{
+  width: 50%;
+  background: ghostwhite;
+  color: #05264e;
+}

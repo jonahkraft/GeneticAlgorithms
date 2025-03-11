@@ -61,33 +61,33 @@ function Settings() {
                             <>
                                 <span className={styles.settingsText}>username: {name}</span>
                                 <span className={styles.settingsText}>role: {role}</span>
-                                <button onClick={togglePopup}>Change Password</button> {/*TODO Funktion implementieren und schöner*/}
+                                <button onClick={togglePopup} className = {styles.accountbutton}>Change Password</button> {/*TODO Funktion implementieren und schöner*/}
                                                                                        {isPopupVisible && (
                                                                                            <div>
                                                                                                <p style={{ color: "black" }}>Enter your old Password:</p>
-                                                                                               <input
+                                                                                               <input className={styles.passwordinput}
                                                                                                    type="password"
                                                                                                    //value={oldPassword}
                                                                                                    //nChange={handleOldPasswordChange}
                                                                                                    placeholder="Old Password"
                                                                                                />
                                                                                                <p style={{ color: "black" }}>Enter your new Password:</p>
-                                                                                               <input
+                                                                                               <input className={styles.passwordinput}
                                                                                                    type="password"
                                                                                                    //value={oldPassword}
                                                                                                    //onChange={handleOldPasswordChange}
-                                                                                                   placeholder="Old Password"
+                                                                                                   placeholder="New Password"
                                                                                                />
                                                                                                <p style={{ color: "black" }}>Enter your new Password again:</p>
-                                                                                               <input
+                                                                                               <input className={styles.passwordinput}
                                                                                                    type="password"
                                                                                                    //value={oldPassword}
                                                                                                    //onChange={handleOldPasswordChange}
-                                                                                                   placeholder="Old Password"
+                                                                                                   placeholder="New Password"
                                                                                                />
                                                                                            </div>
                                                                                        )}
-                                <button>Delete Account</button> {/*TODO implizierter logout/aus Datenbank löschen und schöner machen*/}
+                                <button className = {styles.accountbutton}>Delete Account </button> {/*TODO implizierter logout/aus Datenbank löschen und schöner machen*/}
 
 
                             </>
