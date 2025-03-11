@@ -16,6 +16,7 @@ import transmitParameters from "./parameters.tsx";
 import DownloadButton from "./DownloadButton.tsx"
 import UserPersmissionsComponent from '../UserPermissions/UserPersmissionsComponent.tsx'
 import UploadButton from "../UploadButton/UploadButton.tsx";
+import {downloadCSV} from "./ButtonFunctions.ts";
 
 function generateResultList(arr: object) {
     // Create Object that contains lists for every generation
@@ -1549,12 +1550,13 @@ function DataVisualization() {
         setTransmittedData(result);
     }
 
-    // For Debugging Purpose
+    // For Debugging Purpose/ Test Purpose
     console.log('Data: ', data, typeof (data))
     console.log('Generations: ', generations, typeof (generations))
     console.log('SelectedGeneration: ', selectedGeneration, typeof (selectedGeneration))
     console.log('GeneratedElement: ', generatedElement, typeof (generatedElement))
     console.log(document.cookie)
+    const tmpList = generateResultList(data)
 
     return (
         <div className={styles.wrapper}>
@@ -1690,7 +1692,7 @@ function DataVisualization() {
                     <div className={styles.userButtons}>
                         <UserPersmissionsComponent></UserPersmissionsComponent>
                         <UploadButton></UploadButton>
-                        <DownloadButton></DownloadButton>
+                        <DownloadButton onClick={() => downloadCSV(tmpList, 'Frontendtest')}></DownloadButton>
                     </div>
                 </Card>
 

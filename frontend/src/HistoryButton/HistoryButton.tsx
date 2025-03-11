@@ -1,5 +1,5 @@
 import styles from './HistoryButton.module.css';
-import placeholderButtonFunction from "../DataVisualization/ButtonFunctions.ts";
+import { placeholderButtonFunction } from "../DataVisualization/ButtonFunctions.ts";
 
 function HistoryButton(){
     return <div className={styles.container}>

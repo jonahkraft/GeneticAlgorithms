@@ -1,5 +1,5 @@
 import styles from './UploadButton.module.css';
-import placeholderButtonFunction from "../DataVisualization/ButtonFunctions.ts";
+import { placeholderButtonFunction } from "../DataVisualization/ButtonFunctions.ts";
 
 function UploadButton(){
     return <div className={styles.container}>

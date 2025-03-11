@@ -1,5 +1,5 @@
 import styles from './DebugButton.module.css';
-import placeholderButtonFunction from "../DataVisualization/ButtonFunctions.ts";
+import { placeholderButtonFunction } from "../DataVisualization/ButtonFunctions.ts";
 
 function DebugButton(){
     return <div className={styles.container}>
