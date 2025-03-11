@@ -1,6 +1,6 @@
 import styles from './Header.module.css'
 import cookies from '../cookies.ts'
-
+import UserLabel from "../UserLabel/UserLabel.tsx";
 
 function Header() {
     const signed_in = cookies.getCookies()["signed_in"];
@@ -50,6 +50,7 @@ function Header() {
                         </li>
                     )}
                 </ul>
+                <UserLabel></UserLabel>
             </nav>
         </header>
     );
