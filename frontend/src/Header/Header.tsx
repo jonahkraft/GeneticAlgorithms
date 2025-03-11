@@ -6,8 +6,11 @@ function Header() {
     const signed_in = cookies.getCookies()["signed_in"];
 
     function logOut() {
-        cookies.deleteCookies();
-        window.location.reload();
+        if (confirm("Are you sure you want to sign out?")) {
+            cookies.deleteCookies();
+            window.location.reload();
+            window.location.href = "../../index.html"
+        }
     }
 
     return (

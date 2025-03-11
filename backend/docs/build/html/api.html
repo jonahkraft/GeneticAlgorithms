@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>api module &#8212; Genetic Algorithms Backend  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="app module" href="app.html" />
+    <link rel="prev" title="backend" href="modules.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-api">
+<span id="api-module"></span><h1>api module<a class="headerlink" href="#module-api" title="Link to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="api.api_change_password">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">api_change_password</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#api_change_password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.api_change_password" title="Link to this definition">¶</a></dt>
+<dd><p>Changes the users password</p>
+<p>:param JSON
+{</p>
+<blockquote>
+<div><p>“new_password”: “&lt;new password&gt;”</p>
+</div></blockquote>
+<p>}</p>
+<p>:returns JSON
+{</p>
+<blockquote>
+<div><p>“success”: bool</p>
+</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.api_delete_user">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">api_delete_user</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#api_delete_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.api_delete_user" title="Link to this definition">¶</a></dt>
+<dd><p>Handles register request</p>
+<p>:param JSON
+{</p>
+<blockquote>
+<div><p>“username”: “&lt;username&gt;”</p>
+</div></blockquote>
+<p>}</p>
+<p>:returns JSON
+{</p>
+<blockquote>
+<div><p>“success”: bool</p>
+</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.api_echo">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">api_echo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#api_echo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.api_echo" title="Link to this definition">¶</a></dt>
+<dd><p>Echo the received message back to client</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.api_get_generations">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">api_get_generations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#api_get_generations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.api_get_generations" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the contents of generations.csv file”</p>
+<p>:returns JSON
+{</p>
+<blockquote>
+<div><p>“content”: “&lt;content&gt;”</p>
+</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.api_get_simulation_data">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">api_get_simulation_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#api_get_simulation_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.api_get_simulation_data" title="Link to this definition">¶</a></dt>
+<dd><p>Requests historic simulation data for further analysis</p>
+<p>:param JSON
+{</p>
+<blockquote>
+<div><p>“columns”: list[str],
+“row_constraints”: list[str]</p>
+</div></blockquote>
+<p>}</p>
+<p>:returns JSON
+{</p>
+<blockquote>
+<div><p>“content” : csv file</p>
+</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.api_login">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">api_login</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#api_login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.api_login" title="Link to this definition">¶</a></dt>
+<dd><p>Handles login request</p>
+<p>:param JSON
+{</p>
+<blockquote>
+<div><p>“username”: “&lt;username&gt;”,
+“password”: “&lt;password&gt;”</p>
+</div></blockquote>
+<p>}</p>
+<p>:returns JSON
+{</p>
+<blockquote>
+<div><p>“registered”: bool,
+“password_correct”: bool,
+“access_token”: “&lt;token&gt;”,
+“role”: “data_analyst | simulation_expert | administrator”</p>
+</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.api_register">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">api_register</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#api_register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.api_register" title="Link to this definition">¶</a></dt>
+<dd><p>Handles register request</p>
+<p>:param JSON
+{</p>
+<blockquote>
+<div><p>“username”: “&lt;username&gt;”,
+“password”: “&lt;password&gt;”,
+“role”: “&lt;data_analyst | simulation_expert | administrator&gt;”</p>
+</div></blockquote>
+<p>}</p>
+<p>:returns JSON
+{</p>
+<blockquote>
+<div><p>“success”: bool,
+“already_registered”: bool,
+“invalid_role”: bool</p>
+</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.api_start_simulation">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">api_start_simulation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#api_start_simulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.api_start_simulation" title="Link to this definition">¶</a></dt>
+<dd><p>Starts a simulation with the given parameters</p>
+<p>:param JSON
+{</p>
+<blockquote>
+<div><p>“population_size”: int,
+“simulation_seed”: int,
+“generation_count”: int,
+“strategy”: int,
+“aep”: float,
+“elite_count”: int,
+“alien_count”: int,
+“weights”: list[float]</p>
+</div></blockquote>
+<p>}</p>
+<p>:returns JSON {}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.login">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.login" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.register">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">role</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.register" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Genetic Algorithms Backend</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">backend</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">api module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="app.html">app module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="codesnippets.html">codesnippets package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database.html">database module</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">backend</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">backend</a></li>
+      <li>Next: <a href="app.html" title="next chapter">app module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;1980, Thomas Kottenhahn, Christian Maul, Sambou Kinteh, Patrick Radau, Janik Rostami-Abandansari, Anton Schönfeld, Paul Seidel, Simon Laubersheimer.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/api.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

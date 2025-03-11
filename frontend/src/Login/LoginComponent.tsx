@@ -1,9 +1,10 @@
 import styles from './Login.module.css';
 import Header from "../Header/Header.tsx";
 import { useState } from 'react';
-import cookies from '../cookies.ts'
+//import cookies from '../cookies.ts'
 import displayWarning from "./displayWarninig.tsx";
 import WarningComponent from "./warning.tsx";
+import logIn from './LoginExport.ts'
 
 
 function Login() {
@@ -76,9 +77,9 @@ function Login() {
 
                     <div className={styles.pass}>Forget Password?</div>
 
-                    <button className={styles.button} type="submit" onClick={_ => logIn(username)}>Login</button>
+                    <button className={styles.button} type="submit" onClick={() => logIn(username)}>Login</button>
                     <p><br/></p>
-                    <div className={styles.signupLink} onClick={_ => logIn("placeholder")}>
+                    <div className={styles.signupLink} onClick={() => logIn("placeholder")}>
                         Continue as Simulator
                     </div>
                 </form>
@@ -87,19 +88,25 @@ function Login() {
     );
 }
 
+/*
 function logIn(username: string) {
-    let role
+    let role = ''
 
     if (username === "admin") {
         // TODO: Nur für die Präsentation!!
         role = "admin"
     }
 
+    else if (username === "data_analyst"){
+        // TODO: Nur für Prototyp
+        role = 'data_analyst'
+    }
+
     else if (username !== "placeholder") {
         // dann wurde es über login aufgerufen
         // TODO: sollte callUser aufrufen und davon die Rolle des Benutzers erhalten
         // dafür zusätzlich password als Argument nehmen
-        role = "placeholder_role"
+        role = "simulator"
 
         // TODO: Fehlermeldung, wenn Name oder Passwort falsch
         // Funktion triggerWarning dafür nutzen
@@ -114,6 +121,8 @@ function logIn(username: string) {
     window.location.reload()
     window.location.href = "../../visualization.html"
 }
+
+ */
 
 // Check for User
 // function callUser(username: string, password: string) {

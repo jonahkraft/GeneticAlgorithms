@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>codesnippets.main &#8212; Genetic Algorithms Backend  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=12dfc556" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for codesnippets.main</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">codesnippets.car</span> <span class="kn">import</span> <span class="n">Car</span>
+<span class="kn">from</span> <span class="nn">codesnippets.evolution.interfaces.population</span> <span class="kn">import</span> <span class="n">Population</span>
+<span class="kn">from</span> <span class="nn">codesnippets.evolution.operators</span> <span class="kn">import</span> <span class="n">EVAL_PARETO</span><span class="p">,</span> <span class="n">REC_CROSS_POINT</span>
+<span class="kn">from</span> <span class="nn">codesnippets.evolution.strategies</span> <span class="kn">import</span> <span class="n">STRAT_B</span>
+<span class="kn">from</span> <span class="nn">codesnippets.utilities.helper</span> <span class="kn">import</span> <span class="n">import_generations_from_csv</span><span class="p">,</span> <span class="n">plot_generations</span><span class="p">,</span> <span class="n">export_generations_to_csv</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Übergebbare Parameter:</span>
+
+<span class="sd">aep := Mutationsrate, je höher, desto geringere Mutation (deswegen 1-aep im Code), zwischen 0 und 1</span>
+<span class="sd">generation_count := Anzahl der Generationen die berrechnet werden</span>
+<span class="sd">strategy := die Strategie, die angewandt wird bei der Generierung neuer Generationen</span>
+<span class="sd">population_size := konstante Größe der Population</span>
+<span class="sd">given_seed := seed für die Erzeugung der ersten Population</span>
+<span class="sd">elite_count := Anzahl der Top Individuen, die für die nächste Generation behalten werden</span>
+<span class="sd">alien_count := Anzahl der Individuen, die komplett neu generiert werden für die nächste Generation</span>
+<span class="sd">weights := die Gewichte der Ziehlparameter consumption, elasticity 3-5</span>
+<span class="sd">path := Pfad fürs exporiteren der Ergebnisse/ importieren der CSV als Generation</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="n">PATH</span> <span class="o">=</span> <span class="s2">&quot;backend/results/&quot;</span>
+
+
+<div class="viewcode-block" id="Schnittstelle">
+<a class="viewcode-back" href="../../codesnippets.html#codesnippets.main.Schnittstelle">[docs]</a>
+<span class="k">class</span> <span class="nc">Schnittstelle</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Erzeugt ein Objekt, welches sich um ein Experiment kümmert, sprich eine Reihe von Generationen</span>
+<span class="sd">    bis ein gewünschtes Ziel erreicht wurde.</span>
+<span class="sd">    Danach kann ein neues Objekt erzeugt werden um ein neues Experiment zu starten und beide</span>
+<span class="sd">    Objekte sollten erhaltbar/nutzbar sein für Vergleiche.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="Schnittstelle.__init__">
+<a class="viewcode-back" href="../../codesnippets.html#codesnippets.main.Schnittstelle.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">population_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">given_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Generiert eine Startpopulation entsprechend eines übergebenen seeds in übergebener Größe,</span>
+<span class="sd">        welche allerdings nicht kleiner oder gleich der Anzahl der Elite (Standardmäßig 2) + der</span>
+<span class="sd">        Anzahl der Aliens (Standardmäßig 0) sein darf.</span>
+<span class="sd">        Definiert auch die Gewichtung der Zielparameter, welche in einer Liste der Länge 4 stehen</span>
+<span class="sd">        müssen, gefüllt mit Zahlen (sowohl Integer als auch Float sind erlaubt).</span>
+<span class="sd">        Negative Zahlen minimieren und positive Zahlen maximieren die Ausgabe, da wir den Konsum</span>
+<span class="sd">        und die Zeit um von 0 auf 100 zu kommen betrachten, wollen wir Standardmäßig minimieren.</span>
+
+<span class="sd">        :param population_size: size of the population (constant)</span>
+<span class="sd">        :type population_size: int</span>
+
+<span class="sd">        :param given_seed: seed for the random generation of the first population</span>
+<span class="sd">        :type given_seed: int</span>
+
+<span class="sd">        :param weights: defines how you weight consumption, elasticity 3, elasticity 4 and elasticity 5</span>
+<span class="sd">        :type weights: list[float]</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">Car</span><span class="o">.</span><span class="n">_Blueprint</span><span class="p">[</span><span class="s1">&#39;goals&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weights</span>  <span class="c1"># consumption, elasticity 3, elasticity 4, elasticity 5</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">generation</span> <span class="o">=</span> <span class="n">Population</span><span class="p">(</span><span class="n">Car</span><span class="p">,</span> <span class="n">population_size</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">given_seed</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Schnittstelle.evolute">
+<a class="viewcode-back" href="../../codesnippets.html#codesnippets.main.Schnittstelle.evolute">[docs]</a>
+    <span class="k">def</span> <span class="nf">evolute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generation_count</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">aep</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">elite_count</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alien_count</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;&#39;</span>
+<span class="sd">        Generiert die nächsten [generation_count] Generationen entsprechend der ausgewählten Strategie.</span>
+<span class="sd">        Dabei gibt es zusätzlich die Optionen aep einzustellen, was unter anderem die Mutationsrate</span>
+<span class="sd">        beeinflusst.</span>
+<span class="sd">        Hat für Strategie A und B nur gewisse Relevanz, da dort aep im Laufe der Generationen</span>
+<span class="sd">        automatisch angepasst wird.</span>
+
+<span class="sd">        :param generation_count: how many generations you want to progress</span>
+<span class="sd">        :type generation_count: int</span>
+
+<span class="sd">        :param strategy: which strategy you want to use</span>
+<span class="sd">        :type strategy: int</span>
+
+<span class="sd">        :param aep: mutationrate</span>
+<span class="sd">        :type aep: float</span>
+
+<span class="sd">        :param elite_count: number of elites that stay between generations </span>
+<span class="sd">        :type elite_count: int</span>
+
+<span class="sd">        :param alien_count: number of aliens that get generated comepletely new each generation</span>
+<span class="sd">        :type alien_count: int</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">def</span> <span class="nf">STRAT_C</span><span class="p">(</span><span class="n">population</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">__</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            Eine Custom Strategie welche keine Besserung des Ergebnis verspricht, es allerdings</span>
+<span class="sd">            ermöglicht, die automatische Anpassung des aep im Laufe der Generationen zu umgehen, sowie</span>
+<span class="sd">            die Einstellungen für weitere Parameter, welche teilweise ungenutzt waren und nützlich</span>
+<span class="sd">            erschienen.</span>
+<span class="sd">            &#39;&#39;&#39;</span>
+            <span class="k">return</span> <span class="n">population</span><span class="o">.</span><span class="n">next_generation</span><span class="p">(</span>
+                <span class="n">aep</span><span class="o">=</span><span class="mi">1</span><span class="o">-</span><span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">aep</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="n">eval_funct</span><span class="o">=</span><span class="n">EVAL_PARETO</span><span class="p">,</span>
+                <span class="n">recombination_funct</span><span class="o">=</span><span class="n">REC_CROSS_POINT</span><span class="p">,</span>
+                <span class="n">elite</span><span class="o">=</span><span class="n">elite_count</span><span class="p">,</span>
+                <span class="n">alien</span><span class="o">=</span><span class="n">alien_count</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">strategy</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generation</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generation_count</span><span class="p">,</span> <span class="n">STRAT_C</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generation</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">generation_count</span><span class="p">,</span> <span class="n">STRAT_B</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Schnittstelle.results">
+<a class="viewcode-back" href="../../codesnippets.html#codesnippets.main.Schnittstelle.results">[docs]</a>
+    <span class="k">def</span> <span class="nf">results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">PATH</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Gibt alle Individuen aller Generationen des aktuellen Experiments in einer csv aus, samt Eingaben</span>
+<span class="sd">        und Ausgaben der Simulation in folgender Form:</span>
+<span class="sd">        [Generation] [Final Drive] [Roll Radius] [Gear 3] [Gear 4] [Gear 5] (Eingaben)</span>
+<span class="sd">        [Consumption] [Elasticity 3] [Elasticity 4] [Elasticity 5] (Ausgaben)</span>
+
+<span class="sd">        Zusätzlich werden noch 5 png erzeugt um die Entwicklung zu visualisieren.</span>
+<span class="sd">        Drei davon stellen die Population jeweils im Anfangszustand, in der Mitte der Entwicklungsdauer</span>
+<span class="sd">        und am Ende der Entwicklung dar.</span>
+<span class="sd">        Die anderen beiden visualisieren den Phänotyp, sowie die Qualität.</span>
+
+<span class="sd">        :param path: path to export the results to</span>
+<span class="sd">        :type path: str</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">plot_generations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generation</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;generations&quot;</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">export_generations_to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generation</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;generations&quot;</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="n">path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Schnittstelle.import_from_csv">
+<a class="viewcode-back" href="../../codesnippets.html#codesnippets.main.Schnittstelle.import_from_csv">[docs]</a>
+    <span class="k">def</span> <span class="nf">import_from_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="s1">&#39;generations&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">PATH</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Importiert eine csv als Generation. Alternativ zu einem zufälligen Startzustand.</span>
+
+<span class="sd">        :param file: name of the CSV</span>
+<span class="sd">        :type file: str</span>
+
+<span class="sd">        :param path: path to import the CSV from</span>
+<span class="sd">        :type path: str</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generation</span> <span class="o">=</span> <span class="n">import_generations_from_csv</span><span class="p">(</span>
+            <span class="n">Car</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span>
+            <span class="n">directory</span><span class="o">=</span><span class="n">path</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Schnittstelle.clear">
+<a class="viewcode-back" href="../../codesnippets.html#codesnippets.main.Schnittstelle.clear">[docs]</a>
+    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Entfernt alle Instanzen der Klasse und leert den Cache, um zu garantieren, dass unterschiedliche</span>
+<span class="sd">        Experimente sich untereinander nicht beeinflussen.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">Car</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+</div>
+
+
+
+<span class="c1"># Example</span>
+<span class="c1"># x = Schnittstelle()</span>
+<span class="c1"># x.evolute(generation_count=10, strategy=1)</span>
+<span class="c1"># x.results()</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Genetic Algorithms Backend</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">backend</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;1980, Thomas Kottenhahn, Christian Maul, Sambou Kinteh, Patrick Radau, Janik Rostami-Abandansari, Anton Schönfeld, Paul Seidel, Simon Laubersheimer.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
