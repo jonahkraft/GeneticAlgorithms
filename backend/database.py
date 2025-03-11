@@ -79,7 +79,7 @@ def delete_user(user_name:str, connection_path: str = "db/users.db") -> bool:
     connection.commit()
     connection.close()
 
-def change_password(user_name: str, new_password: str, connection_path: str = "db/users.db"):
+def change_password(user_name: str, new_password: str, connection_path: str = "db/users.db") -> bool:
     """
     Changes a users password in the user database
 
@@ -92,8 +92,8 @@ def change_password(user_name: str, new_password: str, connection_path: str = "d
     :param conn: path to the database
     :type conn: str
 
-    :returns:
-        bool: returns True if the password has been changed successfully, False otherwise
+    :returns: returns True if the password has been changed successfully, False otherwise
+    :rytpe: bool
 
     """
 
@@ -152,6 +152,9 @@ def check_password(user_name: str, password: str, connection_path: str = "db/use
 
     :param conn: path to the database
     :type conn: str
+
+    :returns: returns True if the password is correct, False otherwise
+    :rtype: bool
     """
 
     connection = sqlite3.connect(connection_path)
@@ -176,6 +179,9 @@ def user_exists(user_name: str, connection_path: str = "db/users.db") -> bool:
 
     :param conn: path to the database
     :type conn: str
+
+    :returns: returns True if user exists, False otherwise
+    :rtype: bool
     """
 
     connection = sqlite3.connect(connection_path)
@@ -190,6 +196,16 @@ def add_experiment_data(
         data : list[float],
         connection_path: str = "db/simulation_data.db"
     ) -> None:
+    """
+    Adds the given data to the simulation database
+    
+    :param data: The data to be added
+    :type data: list[float]
+
+    :param connection_path: The path to the database
+    :type connection: str
+    """
+
 
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
@@ -236,6 +252,18 @@ def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], const
 
     :param file_path: The filepath of the resulting csv file
     :type file_path
+
+    :param columns: The columns to be exported
+    :type columns: list[str]
+
+    :param constraints: The constraints to be applied. Contrainsts are in the form of "lhs op rhs" where lhs and rhs are either column names or numbers and op is one of the following operators: "<",">","<=",">=","="
+    :type constraints: list[str]
+
+    :param connection_path: The path to the database
+    :type connection_path: str
+
+    :returns: The path to the resulting csv file
+    :rtype: str
 
     """
     def is_number(s: str) -> bool:
