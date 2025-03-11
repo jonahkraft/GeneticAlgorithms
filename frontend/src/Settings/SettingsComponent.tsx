@@ -1,15 +1,18 @@
 import Header from "../Header/Header.tsx";
 import Footer from "../Footer/Footer.tsx";
 import { useState } from 'react';
-import AccountButton from "../AccountButton/AccountButton.tsx";
 import styles from "./Settings.module.css";
 import cookies from "../cookies.ts";
-import ToggleButton from "./ToggleButton.tsx"
+import DarkModeButton from "../Settings/DarkModeButton.tsx"
 
 function Settings() {
     const [selectedTab, setSelectedTab] = useState<string>("account");
     const role: string = cookies.getCookies()["role"];
-
+    const name: string | boolean = cookies.getCookies()["username"];
+    const [isPopupVisible,setPopupVisible] = useState(false);
+    const togglePopup =() =>{
+        setPopupVisible(!isPopupVisible);
+    }
     const handleTabClick = (tab: string) => {
         setSelectedTab(tab);
     };
@@ -30,15 +33,13 @@ function Settings() {
                                 Account
                             </a>
                             <a className={selectedTab === "color" ? styles.navigationLinkActive : styles.navigationLinkInactive} onClick={() => handleTabClick("color")}>
-                                Color Filter
+                                Appearance
                             </a>
                             <a className={selectedTab === "speech" ? styles.navigationLinkActive : styles.navigationLinkInactive} onClick={() => handleTabClick("speech")}>
-                                Easy Speech
-                                <ToggleButton></ToggleButton>
+                                Placeholder
+
                             </a>
-                            <a className={selectedTab === "language" ? styles.navigationLinkActive : styles.navigationLinkInactive} onClick={() => handleTabClick("language")}>
-                                Language
-                            </a>
+
 
                             {/* Nutzerverwaltung: Nur für Admins verfügbar */}
                             {role === "admin" && (
@@ -57,15 +58,45 @@ function Settings() {
                     <div className={styles.rightbox}>
                         {selectedTab === "account" && (
                             <>
-                                <AccountButton />
-                                <p className={styles.settingsText}>Change Password</p>
+                                <span className={styles.settingsText}>username: {name}</span>
+                                <span className={styles.settingsText}>role: {role}</span>
+                                <button onClick={togglePopup}>Change Password</button> {/*TODO Funktion implementieren und schöner*/}
+                                                                                       {isPopupVisible && (
+                                                                                           <div>
+                                                                                               <p style={{ color: "black" }}>Enter your old Password:</p>
+                                                                                               <input
+                                                                                                   type="password"
+                                                                                                   //value={oldPassword}
+                                                                                                   //nChange={handleOldPasswordChange}
+                                                                                                   placeholder="Old Password"
+                                                                                               />
+                                                                                               <p style={{ color: "black" }}>Enter your new Password:</p>
+                                                                                               <input
+                                                                                                   type="password"
+                                                                                                   //value={oldPassword}
+                                                                                                   //onChange={handleOldPasswordChange}
+                                                                                                   placeholder="Old Password"
+                                                                                               />
+                                                                                               <p style={{ color: "black" }}>Enter your new Password again:</p>
+                                                                                               <input
+                                                                                                   type="password"
+                                                                                                   //value={oldPassword}
+                                                                                                   //onChange={handleOldPasswordChange}
+                                                                                                   placeholder="Old Password"
+                                                                                               />
+                                                                                           </div>
+                                                                                       )}
+                                <button>Delete Account</button> {/*TODO implizierter logout/aus Datenbank löschen und schöner machen*/}
+
+
                             </>
+
                         )}
 
                         {selectedTab === "color" && (
                             <>
-                                <h2 className={styles.header}>Color Filter</h2>
-                                <p className={styles.settingsText}>Enable/Disable color filter</p>
+                                <h2 className={styles.header}>Appearance</h2>
+                                <p className={styles.settingsText}> Switch to dark mode <DarkModeButton /> </p>
                             </>
                         )}
 
@@ -76,12 +107,6 @@ function Settings() {
                             </>
                         )}
 
-                        {selectedTab === "language" && (
-                            <>
-                                <h2 className={styles.header}>Language</h2>
-                                <p className={styles.settingsText}>Switch between English and German</p>
-                            </>
-                        )}
 
                         {selectedTab === "user-management" && role === "admin" && (
                             <>

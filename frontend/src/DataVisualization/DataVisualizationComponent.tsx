@@ -1587,21 +1587,59 @@ function DataVisualization() {
                 </Card>*/}
 
                 <Card>
+                    <h2>Description</h2>
+                    <p>
+                        In the genetic algorithm we start with a population of entities.
+                        This population is the first generation.
+                        Every generation is the base of the following generation.
+                        This is archived by selecting and multiplying good entities and deleting bad ones.
+                        Each entity represents a set of input values and their corresponding results for consumption and elasticity.
+                        First the input values will be randomly set.
+                        After all results are computed, the entities will be ranked depending on their result values.
+                        Good performing entities with slightly modified values are used to generate a new population.
+                        The best performing entities are called elites.
+                        Elites are not modified, but copied to the next generation.
+                        The worst performing entities will not be used for future generations.
+                    </p>
+                </Card>
+
+                <Card>
                     <div className={styles.paraContent}>
-                        <a>Mutationsrate: </a>
-                        <input type="text" name="aep" value={paraInputs.aep} onChange={handleParaChange} />
-                        <a>Generation Count: </a>
-                        <input type="text" name="generation_count" value={paraInputs.generation_count} onChange={handleParaChange} />
-                        <a>Population Size: </a>
-                        <input type="text" name="population_size" value={paraInputs.population_size} onChange={handleParaChange} />
-                        <a>Given Seed: </a>
-                        <input type="text" name="given_seed" value={paraInputs.given_seed} onChange={handleParaChange} />
-                        <a>Elite Count: </a>
-                        <input type="text" name="elite_count" value={paraInputs.elite_count} onChange={handleParaChange} />
-                        <a>Alien Count: </a>
-                        <input type="text" name="alien_count" value={paraInputs.alien_count} onChange={handleParaChange} />
-                        <a>Weigths: </a>
-                        <input type="text" name="weights" value={paraInputs.weights} onChange={handleParaChange} />
+                        <div>
+                            <label>Mutationsrate: </label>
+                            <input type="text" name="aep" value={paraInputs.aep} onChange={handleParaChange} />
+                            <label>rate of mutation. A higher value results in less mutation (values between 0 and 1)</label>
+                        </div>
+                        <div>
+                            <label>Generation Count: </label>
+                            <input type="text" name="generation_count" value={paraInputs.generation_count} onChange={handleParaChange} />
+                            <label>Number of computaded generations</label>
+                        </div>
+                        <div>
+                            <label>Population Size: </label>
+                            <input type="text" name="population_size" value={paraInputs.population_size} onChange={handleParaChange} />
+                            <label>Size of a population</label>
+                        </div>
+                        <div>
+                            <label>Given Seed: </label>
+                            <input type="text" name="given_seed" value={paraInputs.given_seed} onChange={handleParaChange} />
+                            <label>Seed for random generation of the first population</label>
+                        </div>
+                        <div>
+                            <label>Elite Count: </label>
+                            <input type="text" name="elite_count" value={paraInputs.elite_count} onChange={handleParaChange} />
+                            <label>Number of elites. Elites are the top entities that will remain unchanged for the next generation</label>
+                        </div>
+                        <div>
+                            <label>Alien Count: </label>
+                            <input type="text" name="alien_count" value={paraInputs.alien_count} onChange={handleParaChange} />
+                            <label>Number of Entities that will be randomly generated in every generation</label>
+                        </div>
+                        <div>
+                            <label>Weigths: </label>
+                            <input type="text" name="weights" value={paraInputs.weights} onChange={handleParaChange} />
+                            <label>Weights of the result-values: consumption, elasticity (values between 3-5)</label>
+                        </div>
 
                         <button className={styles.paraButton} onClick={() => {
                             transmitParameters(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights);

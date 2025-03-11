@@ -38,7 +38,6 @@ def login(username: str, password: str):
 
     return jsonify(response), 200
 
-
 def register(username: str, password: str, role: str):
     possible_roles = {"data_analyst", "administrator", "simulation_expert"}
 
@@ -62,7 +61,6 @@ def register(username: str, password: str, role: str):
 
     return jsonify(response), 200
 
-
 @api.route("/api/echo", methods=["POST"])
 @jwt_required()
 def api_echo():
@@ -72,7 +70,6 @@ def api_echo():
     msg = request.json
     print(f"Echo sent by {current_user}: {msg}")
     return jsonify(msg), 200
-
 
 @api.route("/api/login", methods=["POST"])
 def api_login():
@@ -100,7 +97,6 @@ def api_login():
     password = data["password"]
 
     return login(username, password)
-
 
 @api.route("/api/register", methods=["POST"])
 @jwt_required()
@@ -136,7 +132,6 @@ def api_register():
 
     return register(username, password, role)
 
-
 @api.route("/api/delete_user", methods=["POST"])
 @jwt_required()
 def api_delete_user():
@@ -167,7 +162,6 @@ def api_delete_user():
 
     return jsonify({}), 404
 
-
 @api.route("/api/change_password", methods=["POST"])
 @jwt_required()
 def api_change_password():
@@ -194,7 +188,6 @@ def api_change_password():
         return jsonify({}, 200)
     return jsonify({}, 404)
 
-
 @api.route("/api/get_generations", methods=["GET"])
 @jwt_required()
 def api_get_generations():
@@ -219,7 +212,6 @@ def api_get_generations():
         return jsonify({"content": file.read()}), 200
 
     return jsonify({}), 404
-
 
 @api.route("/api/start_simulation", methods=["POST"])
 @jwt_required()
@@ -264,9 +256,8 @@ def api_start_simulation():
 
     simulation_interface.evolute(generation_count, strategy, aep, elite_count, alien_count)
 
-    simulation_interface.results()
-
-    db.add_experiment_data_from_csv("./results/generations.csv")
+    simulation_results = simulation_interface.results()
+    db.add_experiment_data(simulation_results)
 
     return jsonify({}), 200
 
