@@ -1522,7 +1522,7 @@ function DataVisualization() {
         const { name, value } = e.target;
         if(e.target.name === 'generation_count' || e.target.name === 'population_size' || e.target.name === 'elite_count' || e.target.name === 'alien_count'){
             // Erlaubt nur int-Zahlen
-            if (/^\d+$/.test(value)) {
+            if (/^\d+$|^$/.test(value)) {
                 setParaInputs((prev) => ({ ...prev, [name]: value }));
             }
         }
