@@ -10,6 +10,6 @@ function ToggleButton(){
             </label>
         </div>
     );
-};
+}
 
 export default ToggleButton;

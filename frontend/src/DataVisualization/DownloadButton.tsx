@@ -17,7 +17,7 @@ function DownloadButton(){
             </label>
         </div>
     );
-};
+}
 
 
 export default DownloadButton;
