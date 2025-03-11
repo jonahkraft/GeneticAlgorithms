@@ -238,7 +238,7 @@ def add_experiment_data(data: list[list], connection_path: str = "db/simulation_
         max_exp_ind += 1
 
     rows = [row + [max_exp_ind] for row in data]
-    to_db = [(int(i[0]),float(i[1]),float(i[2]),float(i[3]),float(i[4]),float(i[5]),float(i[6]),float(i[7]),float(i[8]),float(i[9]),int(max_exp_ind)) for i in rows]
+    to_db = [(int(i[0]),float(i[1]),float(i[2]),float(i[3]),float(i[4]),float(i[5]),float(i[6]),float(i[7]),float(i[8]),float(i[9]),int(max_exp_ind)) for i in rows[1:]]
 
     cur.executemany("INSERT INTO car_data (generation, final_drive, roll_radius, gear_3, gear_4, gear_5, consumption, elasticity_3, elasticity_4, elasticity_5,experiment_id) VALUES (?,?,?,?,?,?,?,?,?,?,?);", to_db)
     connection.commit()
