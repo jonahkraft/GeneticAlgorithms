@@ -14,6 +14,7 @@ import Card from "../Card/Card.tsx";
 import transmitParameters from "./parameters.tsx";
 // import {type} from "node:os";
 import DownloadButton from "./DownloadButton.tsx"
+import UserPersmissionsComponent from '../UserPermissions/UserPersmissionsComponent.tsx'
 
 function generateResultList(arr: object) {
     // Create Object that contains lists for every generation
@@ -1519,6 +1520,7 @@ function DataVisualization() {
 
     // Überprüfe, ob gegebener Input eine gültige Dezimalzahl ist (zB 1234.5678). Die Funktion erlaubt auch nur ein Komma (.)
     function handleParaChange(e: React.ChangeEvent<HTMLInputElement>) {
+        // TODO: Eingabefeld begrenzen, damit man nicht zu lange zahlen eintragen kann
         const { name, value } = e.target;
         if (e.target.name === 'generation_count' || e.target.name === 'population_size' || e.target.name === 'elite_count' || e.target.name === 'alien_count') {
             // Erlaubt nur int-Zahlen
@@ -1644,8 +1646,13 @@ function DataVisualization() {
                     <h2>{'Overview of all generations'}</h2>
                     <div style={{ width: "800px" }}><canvas id="my_graph"></canvas></div>
                 </Card>
+                <hr/>
+                <Card>
+                    <UserPersmissionsComponent></UserPersmissionsComponent>
 
-                <DownloadButton></DownloadButton>
+                    <DownloadButton></DownloadButton>
+                </Card>
+
                 {/*<h2>{selectedGeneration ? `Selected generation: ${selectedGeneration}` : "Please select a generation"}</h2>*/}
                 {/*{generatedElement}*/}
             </div>
