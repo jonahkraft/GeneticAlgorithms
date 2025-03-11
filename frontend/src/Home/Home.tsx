@@ -27,15 +27,15 @@ function Home() {
                 <h3 className={styles.smallHeader}>FAQ</h3>
                 <details className={styles.details}>
                     <summary className={styles.summary}>What is this simulation about?</summary>
-                    <p className={styles.detailsText}>This simulation helps you understand the workings of various algorithms used in data analysis.</p>
+                    <p className={styles.detailsText}>This simulation lets you optimize certain features of a car. For this to happen, a set of Parameters is given to a genetic algotrithm. The algorithm then goes through multiple generations, each one better than the last, until it reaches the optimum.</p>
                 </details>
                 <details className={styles.details}>
                     <summary className={styles.summary}>How do I use the simulation?</summary>
-                    <p className={styles.detailsText}>Simply select an algorithm from the list, and then proceed to the simulation to see the results.</p>
+                    <p className={styles.detailsText}>First, you have to go to the Data Visualization Page. There simply set your Parameters and start the simulation. If you want to take a closer look at a certain generation, you can do that as well. Just pick it from the drop-down menu.</p>
                 </details>
                 <details className={styles.details}>
-                    <summary className={styles.summary}>Can I try multiple algorithms?</summary>
-                    <p className={styles.detailsText}>Yes, you can explore different algorithms in sequence or choose the one that fits your needs.</p>
+                    <summary className={styles.summary}>When i run the simuation i just get that strange graph. What does it mean?</summary>
+                    <p className={styles.detailsText}>In the overview graph you get all members of the population sortet by generation and consuption. In the generation specific graph, each member of the generation gets three points, one for every one of the three gears. These are positioned according to their gear and their elasticity.</p>
                 </details>
             </div>
             <Footer />

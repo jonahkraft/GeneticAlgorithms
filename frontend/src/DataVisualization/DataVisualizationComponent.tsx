@@ -13,7 +13,7 @@ import styles from './DataVisualization.module.css';
 import Card from "../Card/Card.tsx";
 import transmitParameters from "./parameters.tsx";
 // import {type} from "node:os";
-
+import DownloadButton from "./DownloadButton.tsx"
 
 function generateResultList(arr: object) {
     // Create Object that contains lists for every generation
@@ -1381,7 +1381,7 @@ function generateResultList(arr: object) {
     console.log(arr)
     return (testList)
 }
-
+//
 
 // function toggleSidebar(side: any) {
 //     document.getElementById(side + 'Sidebar')?.classList.toggle('open')
@@ -1631,7 +1631,9 @@ function DataVisualization() {
                         <h2>Selected generation: {selectedGeneration}</h2>
                         {generatedElement}
                     </Card>
+
                 ) : (
+
                  <></>
                 )}
 
@@ -1640,6 +1642,7 @@ function DataVisualization() {
                     <div style={{width:"800px"}}><canvas id="my_graph"></canvas></div>
                 </Card>
 
+                <DownloadButton></DownloadButton>
                 {/*<h2>{selectedGeneration ? `Selected generation: ${selectedGeneration}` : "Please select a generation"}</h2>*/}
                 {/*{generatedElement}*/}
             </div>
