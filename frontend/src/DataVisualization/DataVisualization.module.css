@@ -48,8 +48,10 @@ body {
 .paraContent {
     display: flex;
     flex-wrap: wrap;
+    flex-direction: column;
     gap: 10px;
-    align-items: center;
+    align-items: left;
+    text-align: left;
 }
 
 .paraContent input {
