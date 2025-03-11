@@ -111,7 +111,7 @@ def api_register():
     {
         "username": "<username>",
         "password": "<password>",
-        "role": "data_analyst | simulation_expert | administrator"
+        "role": "<data_analyst | simulation_expert | administrator>"
     }
 
     :returns JSON
@@ -198,6 +198,14 @@ def api_change_password():
 @api.route("/api/get_generations", methods=["GET"])
 @jwt_required()
 def api_get_generations():
+    """Returns the contents of generations.csv file"
+    
+    :returns JSON
+    {
+        "content": "<content>"
+    }
+    """
+
     current_user = get_jwt_identity()
 
     role = db.get_role(current_user)
@@ -230,10 +238,7 @@ def api_start_simulation():
         "weights": list[int]
     }
 
-    :returns JSON
-    {
-
-    }
+    :returns JSON {}
 
     """
     current_user = get_jwt_identity()
@@ -305,12 +310,3 @@ def api_get_simulation_data():
         return jsonify({"content": file.read()}), 200
 
     return jsonify({}), 404
-
-
-@api.route("/api/protected_test", methods=["POST"])
-@jwt_required()
-def api_protected_test():
-    # Access the identity of the current user with get_jwt_identity
-    current_user = get_jwt_identity()
-    print(current_user)
-    return jsonify(logged_in_as=current_user), 200
