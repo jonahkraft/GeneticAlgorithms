@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import cookies from "../cookies.ts";
+import styles from "./AccountButton.module.css";
 
 interface AccountData {
     username: string;
@@ -23,15 +24,15 @@ function AccountButton() {
     };
 
     return (
-        <div className="account-container">
-            <button onClick={toggleTextVisibility} className="account-btn">
+        <div className={styles.accountContainer}>
+            <button onClick={toggleTextVisibility} className={styles.accountBtn}>
                 Account Information
             </button>
 
             {isTextVisible && (
-                <div className="account-info">
-                    <p><b>Username:</b> {data.username}</p>
-                    <p><b>Role:</b> {data.role}</p>
+                <div className={styles.accountInfo}>
+                    <p className={styles.accountInfoText}><b>Username:</b> {data.username}</p>
+                    <p className={styles.accountInfoText}><b>Role:</b> {data.role}</p>
                 </div>
             )}
         </div>

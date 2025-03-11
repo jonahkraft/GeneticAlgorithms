@@ -1,8 +1,8 @@
 import Header from "../Header/Header.tsx";
 import Footer from "../Footer/Footer.tsx";
 import { useState } from 'react';
-import AccountButton from "./AccountButton.tsx";
-import "./Settings.css";
+import AccountButton from "../AccountButton/AccountButton.tsx";
+import styles from "./Settings.module.css";
 import cookies from "../cookies.ts";
 
 
@@ -17,117 +17,103 @@ function Settings() {
     // TODO: Nutzer aus Datenbank laden für Admin-Funktionen
 
     return (
-        <>
+        <div>
             <Header />
-            <div className="settings-page">
-                <div className="settings-container">
-                    <div className="leftbox">
+            <div className={styles.settingsPage}>
+                <div className={styles.settingsContainer}>
+                    <div className={styles.leftbox}>
 
-                        <div id="logo">
-                            <h1 className="logo">Settings</h1>
-                        </div>
+                        <h1 className={styles.header}>Settings</h1>
 
-                        <nav>
-                            <a className={selectedTab === "account" ? "active" : ""} onClick={() => handleTabClick("account")}>
-                                <i className="fa fa-user"></i> Account
+                        <nav className={styles.navigation}>
+                            <a className={selectedTab === "account" ? styles.navigationLinkActive : styles.navigationLinkInactive} onClick={() => handleTabClick("account")}>
+                                Account
                             </a>
-                            <a className={selectedTab === "color" ? "active" : ""} onClick={() => handleTabClick("color")}>
-                                <i className="fa fa-palette"></i> Color Filter
+                            <a className={selectedTab === "color" ? styles.navigationLinkActive : styles.navigationLinkInactive} onClick={() => handleTabClick("color")}>
+                                Color Filter
                             </a>
-                            <a className={selectedTab === "speech" ? "active" : ""} onClick={() => handleTabClick("speech")}>
-                                <i className="fa fa-volume-up"></i> Easy Speech
+                            <a className={selectedTab === "speech" ? styles.navigationLinkActive : styles.navigationLinkInactive} onClick={() => handleTabClick("speech")}>
+                                Easy Speech
                             </a>
-                            <a className={selectedTab === "language" ? "active" : ""} onClick={() => handleTabClick("language")}>
-                                <i className="fa fa-language"></i> Language
+                            <a className={selectedTab === "language" ? styles.navigationLinkActive : styles.navigationLinkInactive} onClick={() => handleTabClick("language")}>
+                                Language
                             </a>
 
                             {/* Nutzerverwaltung: Nur für Admins verfügbar */}
                             {role === "admin" && (
-                                <a className={selectedTab === "user-management" ? "active" : ""} onClick={() => handleTabClick("user-management")}>
-                                    <i className="fa fa-users"></i> User Management
+                                <a className={selectedTab === "user-management" ? styles.navigationLinkActive : styles.navigationLinkInactive} onClick={() => handleTabClick("user-management")}>
+                                    User Management
                                 </a>
                             )}
                         </nav>
 
-                        <div className="language-switch">
-                            <button className="language-btn">ENG</button>
-                            <button className="language-btn">DE</button>
+                        <div className={styles.languageSwitch}>
+                            <button className={styles.languageButton}>ENG</button>
+                            <button className={styles.languageButton}>DE</button>
                         </div>
-
                     </div>
 
-                    <div className="rightbox">
+                    <div className={styles.rightbox}>
                         {selectedTab === "account" && (
                             <>
                                 <AccountButton />
-                                <p>Change Password</p>
+                                <p className={styles.settingsText}>Change Password</p>
                             </>
                         )}
 
                         {selectedTab === "color" && (
                             <>
-                                <h2>Color Filter</h2>
-                                <p>Enable/Disable color filter</p>
+                                <h2 className={styles.header}>Color Filter</h2>
+                                <p className={styles.settingsText}>Enable/Disable color filter</p>
                             </>
                         )}
 
                         {selectedTab === "speech" && (
                             <>
-                                <h2>Easy Speech</h2>
-                                <p>Enable/Disable speech mode</p>
+                                <h2 className={styles.header}>Easy Speech</h2>
+                                <p className={styles.settingsText}>Enable/Disable speech mode</p>
                             </>
                         )}
 
                         {selectedTab === "language" && (
                             <>
-                                <h2>Language</h2>
-                                <p>Switch between English and German</p>
+                                <h2 className={styles.header}>Language</h2>
+                                <p className={styles.settingsText}>Switch between English and German</p>
                             </>
                         )}
 
                         {selectedTab === "user-management" && role === "admin" && (
                             <>
-                                <h2>User Management</h2>
-                                <p>Manage system users and their roles. You can add, edit, or delete users.</p>
+                                <h2 className={styles.header}>User Management</h2>
+                                <p className={styles.settingsText}>Manage system users and their roles. You can add, edit, or delete users.</p>
 
                                 {/* Eingabemaske zum Hinzufügen eines neuen Benutzers, derzeit ohne Funktionalität */}
-                                <div className="user-form">
-                                    <h3>Add New User</h3>
+                                <div>
+                                    <h3 className={styles.header}>Add New User</h3>
                                     <form>
+                                        <input className={styles.userFormInput} type="text" placeholder="Enter username" required />
+                                        <input className={styles.userFormInput} type="password" placeholder="Enter password" required />
 
-                                        <div className="form-group">
-                                            <label htmlFor="username">Username:</label>
-                                            <input type="text" id="username" placeholder="Enter username" required />
-                                        </div>
+                                        <select className={styles.userFormSelect} required>
+                                            <option value="simulator">Simulator</option>
+                                            <option value="data-analyst">Data Analyst</option>
+                                            <option value="admin">Admin</option>
+                                        </select>
 
-                                        <div className="form-group">
-                                            <label htmlFor="password">Password:</label>
-                                            <input type="password" id="password" placeholder="Enter password" required />
-                                        </div>
-
-                                        <div className="form-group">
-                                            <label htmlFor="role">Role:</label>
-                                            <select id="role" required>
-                                                <option value="simulator">Simulator</option>
-                                                <option value="data-analyst">Data Analyst</option>
-                                                <option value="admin">Admin</option>
-                                            </select>
-                                        </div>
-
-                                        <button type="submit">Add User</button>
+                                        <button type="submit" className={styles.userFormButton}>Add User</button>
                                     </form>
                                 </div>
 
                                 {/* Benutzerliste zum Bearbeiten und Löschen von Nutzern */}
-                                <div className="user-list">
-                                    <h3>Existing Users</h3>
-                                    <table>
+                                <div className={styles.userList}>
+                                    <h3 className={styles.header}>Existing Users</h3>
+                                    <table className={styles.table}>
                                         <thead>
                                         <tr>
-                                            <th>Username</th>
-                                            <th>Password</th>
-                                            <th>Role</th>
-                                            <th>Actions</th>
+                                            <th className={styles.th}>Username</th>
+                                            <th className={styles.th}>Password</th>
+                                            <th className={styles.th}>Role</th>
+                                            <th className={styles.th}>Actions</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -135,22 +121,22 @@ function Settings() {
                                         {/* Daten derzeit hardgecoded, anpassen! */}
 
                                         <tr>
-                                            <td>John Doe</td>
-                                            <td>**********</td>
-                                            <td>Admin</td>
-                                            <td>
-                                                <button>Edit</button>
-                                                <button>Delete</button>
+                                            <td className={styles.td}>John Doe</td>
+                                            <td className={styles.td}>**********</td>
+                                            <td className={styles.td}>Admin</td>
+                                            <td className={styles.td}>
+                                                <button className={styles.userListButton}>Edit</button>
+                                                <button className={styles.userListButton}>Delete</button>
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <td>Jane Smith</td>
-                                            <td>**********</td>
-                                            <td>Data Analyst</td>
-                                            <td>
-                                                <button>Edit</button>
-                                                <button>Delete</button>
+                                            <td className={styles.td}>Jane Smith</td>
+                                            <td className={styles.td}>**********</td>
+                                            <td className={styles.td}>Data Analyst</td>
+                                            <td className={styles.td}>
+                                                <button className={styles.userListButton}>Edit</button>
+                                                <button className={styles.userListButton}>Delete</button>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -163,7 +149,7 @@ function Settings() {
                 </div>
             </div>
             <Footer />
-        </>
+        </div>
     );
 }
 

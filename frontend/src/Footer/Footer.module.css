@@ -4,20 +4,14 @@
     text-align: center;
     padding: 30px 0;
     font-family: Helvetica, Arial, sans-serif;
+    margin-top: auto;
 }
 
 .footerText {
     font-size: 1.1em;
     margin: 0;
-    font-weight: 300;
+    font-weight: bold;
     letter-spacing: 1px;
-}
-
-.footerLine {
-    border: 0;
-    border-top: 1px solid #34495e;
-    width: 80%;
-    margin: 20px auto;
 }
 
 .footerLinks {
