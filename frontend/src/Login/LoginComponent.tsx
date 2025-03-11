@@ -76,9 +76,9 @@ function Login() {
 
                     <div className={styles.pass}>Forget Password?</div>
 
-                    <button className={styles.button} type="submit" onClick={_ => logIn(username)}>Login</button>
+                    <button className={styles.button} type="submit" onClick={() => logIn(username)}>Login</button>
                     <p><br/></p>
-                    <div className={styles.signupLink} onClick={_ => logIn("placeholder")}>
+                    <div className={styles.signupLink} onClick={() => logIn("placeholder")}>
                         Continue as Simulator
                     </div>
                 </form>
@@ -93,6 +93,11 @@ function logIn(username: string) {
     if (username === "admin") {
         // TODO: Nur für die Präsentation!!
         role = "admin"
+    }
+
+    else if (username === "data_analyst"){
+        // TODO: Nur für Prototyp
+        role = 'data_analyst'
     }
 
     else if (username !== "placeholder") {
