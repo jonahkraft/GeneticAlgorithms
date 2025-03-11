@@ -299,7 +299,10 @@ def api_get_simulation_data():
     columns = data["columns"]
     row_constraints = data["row_constraints"]
 
-    db.export_experiment_data_to_csv("./results/export_data.csv", columns, row_constraints)
+    try:
+        db.export_experiment_data_to_csv("./results/export_data.csv", columns, row_constraints)
+    except sqlite3.Error as e:
+        return jsonify({"msg": e}), 400
 
     with open("./results/export_data.csv", "r") as file:
         return jsonify({"content": file.read()}), 200
