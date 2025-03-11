@@ -1,7 +1,8 @@
 import Header from "../Header/Header.tsx"
 import Footer from "../Footer/Footer.tsx"
 import axios from 'axios';
-// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import Papa from 'papaparse';
 import { useEffect, useState } from "react";
 import { Dropdown } from 'react-bootstrap';
@@ -10,9 +11,10 @@ import graph from "./graph.tsx";
 import graphGen from "./graphGen.tsx";
 import styles from './DataVisualization.module.css';
 import Card from "../Card/Card.tsx";
+// import {type} from "node:os";
 
 
-function generateResultList(arr: any) {
+function generateResultList(arr: object) {
     // Create Object that contains lists for every generation
     /*
     const groupedData: Record<string, any[]> = {};
@@ -1374,6 +1376,7 @@ function generateResultList(arr: any) {
             }
         ]
     }
+    console.log(typeof(testList))
     console.log(arr)
     return (testList)
 }
@@ -1383,10 +1386,24 @@ function generateResultList(arr: any) {
 //     document.getElementById(side + 'Sidebar')?.classList.toggle('open')
 // }
 
+// Interface für Datentyp in functions loadGenerations
+interface GenerationData {
+    generation: string;
+    'Final Drive': string;
+    'Roll Radius': string;
+    'Gear 3': string;
+    'Gear 4': string;
+    'Gear 5': string;
+    Consumption: string;
+    'Elasticity 3': string;
+    'Elasticity 4': string;
+    'Elasticity 5': string;
+}
+
 
 function DataVisualization() {
     // data speichert Datensatz vom backend Server, funktioniert aktell noch nicht, daher ist data Null
-    const [data, setData] = useState<any[]>([]);
+    const [data, setData] = useState<object[]>([]);
 
     // generations erstellt eine Liste aller Generations von 0 - x (in Test Liste 0-10)
     const [generations, setGenerations] = useState<string[]>([]);
@@ -1395,7 +1412,8 @@ function DataVisualization() {
     const [selectedGeneration, setSelectedGeneration] = useState<string | null>(null);
 
     // ändert den Main Content der Seite
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     const [generatedElement, setGeneratedElement] = useState<JSX.Element | null>(null);
 
     // load CSV Files
@@ -1419,22 +1437,26 @@ function DataVisualization() {
             loadGenerations(generations);
         } else {
             // do it anyway for testing
+            // TODO: else Fall abändern, wenn backend Abfrage funktioniert
             const generations = generateResultList(data);
             loadGenerations(generations);
         }
     }, [data]);
 
+    // Anzeige Graph aller Generationen
     useEffect(() => {
         graph();
     }, []);
 
+    // Anzeige Graph einer spezifischen Generation (alle Generationen x)
     useEffect(() => {
         graphGen(selectedGeneration!);
     }, [selectedGeneration]);
 
     // Show Generation Drop Down
-    function loadGenerations(arr: any) {
-        if (arr.length === 0) {
+    function loadGenerations(arr: Record<string, GenerationData[]>) {
+        console.log("in function loadGen:", typeof(arr)) // returned object
+        if (Object.keys(arr).length === 0) {
             return
         }
 
@@ -1452,7 +1474,8 @@ function DataVisualization() {
     // Change Drop Down Element
     function handleDropdownSelect(index: number) {
         const selectedGen = 'Generation ' + generations[index];
-        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         document.getElementById("dropdown-basic").innerHTML = selectedGen;
 
         // Saves selected generation in state
@@ -1468,10 +1491,10 @@ function DataVisualization() {
     }
 
     // For Debugging Purpose
-    console.log('Data: ', data)
-    console.log('Generations: ', generations)
-    console.log('SelectedGeneration: ', selectedGeneration)
-    console.log('GeneratedElement: ', generatedElement)
+    console.log('Data: ', data, typeof(data))
+    console.log('Generations: ', generations, typeof(generations))
+    console.log('SelectedGeneration: ', selectedGeneration, typeof(selectedGeneration))
+    console.log('GeneratedElement: ', generatedElement, typeof(generatedElement))
 
     return (
         <div className={styles.wrapper}>
