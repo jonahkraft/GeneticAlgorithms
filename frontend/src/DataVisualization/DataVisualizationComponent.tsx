@@ -15,6 +15,7 @@ import transmitParameters from "./parameters.tsx";
 // import {type} from "node:os";
 import DownloadButton from "./DownloadButton.tsx"
 import UserPersmissionsComponent from '../UserPermissions/UserPersmissionsComponent.tsx'
+import UploadButton from "../UploadButton/UploadButton.tsx";
 
 function generateResultList(arr: object) {
     // Create Object that contains lists for every generation
@@ -1686,9 +1687,11 @@ function DataVisualization() {
                 </Card>
                 <hr/>
                 <Card>
-                    <UserPersmissionsComponent></UserPersmissionsComponent>
-
-                    <DownloadButton></DownloadButton>
+                    <div className={styles.userButtons}>
+                        <UserPersmissionsComponent></UserPersmissionsComponent>
+                        <UploadButton></UploadButton>
+                        <DownloadButton></DownloadButton>
+                    </div>
                 </Card>
 
                 {/*<h2>{selectedGeneration ? `Selected generation: ${selectedGeneration}` : "Please select a generation"}</h2>*/}

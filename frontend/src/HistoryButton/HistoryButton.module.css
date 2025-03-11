@@ -1,0 +1,13 @@
+.container{
+
+}
+
+.historyButton{
+    color: black;
+    border: 2px solid black;
+}
+
+.historyButton:hover {
+    background: linear-gradient(135deg, #3c79ba, #296098);
+    transform: scale(1.05);
+}

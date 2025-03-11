@@ -60,6 +60,11 @@ body {
     border-radius: 4px;
 }
 
+.userButtons {
+    display: flex;
+    gap: 30px
+}
+
 /* Zeug von der Sidebar */
 
 /*.left {*/

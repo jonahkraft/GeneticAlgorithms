@@ -1,0 +1,13 @@
+.container{
+
+}
+
+.uploadButton{
+    color: black;
+    border: 2px solid black;
+}
+
+.uploadButton:hover {
+    background: linear-gradient(135deg, #3c79ba, #296098);
+    transform: scale(1.05);
+}

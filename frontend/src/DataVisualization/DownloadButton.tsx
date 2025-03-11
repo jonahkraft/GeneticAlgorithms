@@ -1,4 +1,3 @@
-import React from "react";
 import styles from './DownloadButton.module.css';
 
 function DownloadButton(){
@@ -18,6 +17,5 @@ function DownloadButton(){
         </div>
     );
 }
-
 
 export default DownloadButton;
