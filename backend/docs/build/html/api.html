@@ -32,8 +32,155 @@
 
           <div class="body" role="main">
             
-  <section id="api-module">
-<h1>api module<a class="headerlink" href="#api-module" title="Link to this heading">¶</a></h1>
+  <section id="module-api">
+<span id="api-module"></span><h1>api module<a class="headerlink" href="#module-api" title="Link to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="api.api_change_password">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">api_change_password</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#api_change_password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.api_change_password" title="Link to this definition">¶</a></dt>
+<dd><p>Changes the users password</p>
+<p>:param JSON
+{</p>
+<blockquote>
+<div><p>“new_password”: “&lt;new password&gt;”</p>
+</div></blockquote>
+<p>}</p>
+<p>:returns JSON
+{</p>
+<blockquote>
+<div><p>“success”: bool</p>
+</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.api_delete_user">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">api_delete_user</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#api_delete_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.api_delete_user" title="Link to this definition">¶</a></dt>
+<dd><p>Handles register request</p>
+<p>:param JSON
+{</p>
+<blockquote>
+<div><p>“username”: “&lt;username&gt;”</p>
+</div></blockquote>
+<p>}</p>
+<p>:returns JSON
+{</p>
+<blockquote>
+<div><p>“success”: bool</p>
+</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.api_echo">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">api_echo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#api_echo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.api_echo" title="Link to this definition">¶</a></dt>
+<dd><p>Echo the received message back to client</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.api_get_generations">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">api_get_generations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#api_get_generations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.api_get_generations" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the contents of generations.csv file”</p>
+<p>:returns JSON
+{</p>
+<blockquote>
+<div><p>“content”: “&lt;content&gt;”</p>
+</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.api_get_simulation_data">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">api_get_simulation_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#api_get_simulation_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.api_get_simulation_data" title="Link to this definition">¶</a></dt>
+<dd><p>Requests historic simulation data for further analysis</p>
+<p>:param JSON
+{</p>
+<blockquote>
+<div><p>“columns”: list[str],
+“row_constraints”: list[str]</p>
+</div></blockquote>
+<p>}</p>
+<p>:returns JSON
+{</p>
+<blockquote>
+<div><p>“content” : csv file</p>
+</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.api_login">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">api_login</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#api_login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.api_login" title="Link to this definition">¶</a></dt>
+<dd><p>Handles login request</p>
+<p>:param JSON
+{</p>
+<blockquote>
+<div><p>“username”: “&lt;username&gt;”,
+“password”: “&lt;password&gt;”</p>
+</div></blockquote>
+<p>}</p>
+<p>:returns JSON
+{</p>
+<blockquote>
+<div><p>“registered”: bool,
+“password_correct”: bool,
+“access_token”: “&lt;token&gt;”,
+“role”: “data_analyst | simulation_expert | administrator”</p>
+</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.api_register">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">api_register</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#api_register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.api_register" title="Link to this definition">¶</a></dt>
+<dd><p>Handles register request</p>
+<p>:param JSON
+{</p>
+<blockquote>
+<div><p>“username”: “&lt;username&gt;”,
+“password”: “&lt;password&gt;”,
+“role”: “&lt;data_analyst | simulation_expert | administrator&gt;”</p>
+</div></blockquote>
+<p>}</p>
+<p>:returns JSON
+{</p>
+<blockquote>
+<div><p>“success”: bool,
+“already_registered”: bool,
+“invalid_role”: bool</p>
+</div></blockquote>
+<p>}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.api_start_simulation">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">api_start_simulation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#api_start_simulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.api_start_simulation" title="Link to this definition">¶</a></dt>
+<dd><p>Starts a simulation with the given parameters</p>
+<p>:param JSON
+{</p>
+<blockquote>
+<div><p>“population_size”: int,
+“simulation_seed”: int,
+“generation_count”: int,
+“strategy”: int,
+“aep”: float,
+“elite_count”: int,
+“alien_count”: int,
+“weights”: list[float]</p>
+</div></blockquote>
+<p>}</p>
+<p>:returns JSON {}</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.login">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.login" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.register">
+<span class="sig-prename descclassname"><span class="pre">api.</span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">role</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api.html#register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.register" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
 
 

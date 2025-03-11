@@ -15,8 +15,8 @@ import api
 # ToDo: Add protected paths
 # Pfade auf denen Analyst bzw Simulationsexperte keinen Zugriff haben soll, wenn nur Admin zugriff haben soll
 # path in beide Listen eintragen.
-protected_paths_analyst = [register.html]
-protected_paths_simulation = [register.html ]
+protected_paths_analyst = ["register.html"]
+protected_paths_simulation = ["register.html"]
 
 # Handelt alle eingehenden Routen und leitet diese an die entsprechenden Funktionen weiter
 @app.route("/", defaults={"path": ""})
