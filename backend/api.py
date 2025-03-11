@@ -303,8 +303,8 @@ def api_get_simulation_data():
 
     try:
         db.export_experiment_data_to_csv("./results/export_data.csv", columns, row_constraints)
-    except sqlite3.Error as e:
-        return jsonify({"msg": e}), 400
+    except ValueError as e:
+        return jsonify({"msg": f"{e}"}), 400
 
     with open("./results/export_data.csv", "r") as file:
         return jsonify({"content": file.read()}), 200
