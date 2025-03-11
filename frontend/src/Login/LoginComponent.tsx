@@ -1,9 +1,10 @@
 import styles from './Login.module.css';
 import Header from "../Header/Header.tsx";
 import { useState } from 'react';
-import cookies from '../cookies.ts'
+//import cookies from '../cookies.ts'
 import displayWarning from "./displayWarninig.tsx";
 import WarningComponent from "./warning.tsx";
+import logIn from './LoginExport.ts'
 
 
 function Login() {
@@ -87,6 +88,7 @@ function Login() {
     );
 }
 
+/*
 function logIn(username: string) {
     let role = ''
 
@@ -119,6 +121,8 @@ function logIn(username: string) {
     window.location.reload()
     window.location.href = "../../visualization.html"
 }
+
+ */
 
 // Check for User
 // function callUser(username: string, password: string) {
