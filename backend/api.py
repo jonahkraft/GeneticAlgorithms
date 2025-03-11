@@ -6,10 +6,7 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 
-
 from app import app as api
-
-import sqlite3
 
 import database as db
 from codesnippets import main as sim

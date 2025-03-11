@@ -6,7 +6,7 @@ import os
 app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app)  # Allow frontend to communicate with backend
 
-# import api
+import api
 
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
