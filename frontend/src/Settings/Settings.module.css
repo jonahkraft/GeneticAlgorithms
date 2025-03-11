@@ -1,9 +1,7 @@
 body {
-  font-family: Helvetica, Arial, sans-serif;
   background: linear-gradient(to right, #A7C8FF, #A0D7FF);
-  background-size: 400% 400%;
   margin: 0;
-  padding: 20px;
+  padding: 0;
 }
 
 .settingsPage {
@@ -169,4 +167,33 @@ body {
 
 .userListButton:last-child {
   background: #e74c3c;
+}
+.settingRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 6px;
+  margin: 10px 0;
+}
+
+.textSizeSlider {
+  width: 100px;
+  cursor: pointer;
+}
+
+.settingsText {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 16px;
+}
+
+.settingsText p {
+  margin: 0;
+}
+
+button {
+  margin-left: 1px;
 }
