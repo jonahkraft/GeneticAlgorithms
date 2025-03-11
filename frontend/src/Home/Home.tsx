@@ -13,6 +13,10 @@ function Home() {
                 <p className={styles.introText}>
                     Evolution: The driving force for diversity and adaptation on our planet. Natural selection ensures that only the strongest survive and pass on the secret of their success to their children.
                 </p>
+                <div className={styles.pictureContainer}>
+                    <img src="/example.png" className={styles.image} alt="Example Data Visaulization"/>
+
+                </div>
                 <p className={styles.introText}>
                     Our simulation uses these same principles in the form of genetic algorithms to find the optimal balance between performance and consumption in vehicles.
                 </p>
