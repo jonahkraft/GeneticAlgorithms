@@ -4,7 +4,7 @@ import { useState } from 'react';
 import AccountButton from "../AccountButton/AccountButton.tsx";
 import styles from "./Settings.module.css";
 import cookies from "../cookies.ts";
-
+import ToggleButton from "./ToggleButton.tsx"
 
 function Settings() {
     const [selectedTab, setSelectedTab] = useState<string>("account");
@@ -34,6 +34,7 @@ function Settings() {
                             </a>
                             <a className={selectedTab === "speech" ? styles.navigationLinkActive : styles.navigationLinkInactive} onClick={() => handleTabClick("speech")}>
                                 Easy Speech
+                                <ToggleButton></ToggleButton>
                             </a>
                             <a className={selectedTab === "language" ? styles.navigationLinkActive : styles.navigationLinkInactive} onClick={() => handleTabClick("language")}>
                                 Language
