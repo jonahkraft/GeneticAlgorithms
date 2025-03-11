@@ -2,12 +2,13 @@ from codesnippets.car import Car
 from codesnippets.evolution.interfaces.population import Population
 from codesnippets.evolution.operators import EVAL_PARETO, REC_CROSS_POINT
 from codesnippets.evolution.strategies import STRAT_B
-from codesnippets.utilities.helper import import_generations_from_csv, plot_generations, export_generations_to_csv
+from codesnippets.utilities.helper import import_generations_from_csv, plot_generations, export_generations_to_csv, export_generations_to_list
 
 '''
 Übergebbare Parameter:
 
-aep := Mutationsrate, je höher, desto geringere Mutation (deswegen 1-aep im Code), zwischen 0 und 1
+aep := Mutationsrate, eigentlich: je höher, desto geringere Mutation
+deswegen 1-aep in Strategie-C damit es intuitiver ist, zwischen 0 und 1
 generation_count := Anzahl der Generationen die berrechnet werden
 strategy := die Strategie, die angewandt wird bei der Generierung neuer Generationen
 population_size := konstante Größe der Population
@@ -106,12 +107,15 @@ class Schnittstelle(object):
         Drei davon stellen die Population jeweils im Anfangszustand, in der Mitte der Entwicklungsdauer
         und am Ende der Entwicklung dar.
         Die anderen beiden visualisieren den Phänotyp, sowie die Qualität.
+        Ist aktuell nicht drin lol
 
         :param path: path to export the results to
         :type path: str
+
+        :returns: list of all the values of the generations with a header
+        :rtype: list[list[float]] 
         '''
-        plot_generations(self.generation, name="generations", directory=path)
-        export_generations_to_csv(self.generation, name="generations", directory=path)
+        return export_generations_to_list(self.generation)
 
     def import_from_csv(self, file='generations', path=PATH):
         '''

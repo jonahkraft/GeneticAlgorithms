@@ -1,6 +1,7 @@
 import Header from '../Header/Header.tsx';
 import Footer from '../Footer/Footer.tsx';
 import styles from './Home.module.css';
+import logIn from '../Login/LoginExport.ts'
 
 function Home() {
     return (
@@ -44,6 +45,8 @@ function Home() {
 }
 
 function clickButton() {
+    // if proceed directly to DataVisualzation you will be signed in as "simulator"
+    logIn('')
     window.location.href = "../../visualization.html";
 }
 

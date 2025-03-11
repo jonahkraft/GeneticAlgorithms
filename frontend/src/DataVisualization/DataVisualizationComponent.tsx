@@ -1377,7 +1377,7 @@ function generateResultList(arr: object) {
             }
         ]
     }
-    console.log(typeof(testList))
+    console.log(typeof (testList))
     console.log(arr)
     return (testList)
 }
@@ -1482,7 +1482,7 @@ function DataVisualization() {
 
     // Show Generation Drop Down
     function loadGenerations(arr: Record<string, GenerationData[]>) {
-        console.log("in function loadGen:", typeof(arr)) // returned object
+        console.log("in function loadGen:", typeof (arr)) // returned object
         if (Object.keys(arr).length === 0) {
             return
         }
@@ -1512,27 +1512,27 @@ function DataVisualization() {
         // Add Stuff like Update-UI
         setGeneratedElement(
             <div key={index} className="generation-canvas">
-                <div style={{width:"800px"}}><canvas id="my_graph_gen"></canvas></div>
+                <div style={{ width: "800px" }}><canvas id="my_graph_gen"></canvas></div>
             </div>
         );
     }
 
     // Überprüfe, ob gegebener Input eine gültige Dezimalzahl ist (zB 1234.5678). Die Funktion erlaubt auch nur ein Komma (.)
-    function handleParaChange(e: React.ChangeEvent<HTMLInputElement>){
+    function handleParaChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target;
-        if(e.target.name === 'generation_count' || e.target.name === 'population_size' || e.target.name === 'elite_count' || e.target.name === 'alien_count'){
+        if (e.target.name === 'generation_count' || e.target.name === 'population_size' || e.target.name === 'elite_count' || e.target.name === 'alien_count') {
             // Erlaubt nur int-Zahlen
             if (/^\d+$|^$/.test(value)) {
                 setParaInputs((prev) => ({ ...prev, [name]: value }));
             }
         }
-        if(e.target.name === 'given_seed' || e.target.name === 'weights'){
+        if (e.target.name === 'given_seed' || e.target.name === 'weights') {
             // Erlaubt nur float-Zahlen
             if (/^\d*\.?\d*$/.test(value)) {
                 setParaInputs((prev) => ({ ...prev, [name]: value }));
             }
         }
-        if(e.target.name === 'aep'){
+        if (e.target.name === 'aep') {
             // Erlaubt nur 0-1 Zahlen
             if (/^0(\.\d*)?$|^1$|^$/.test(value)) {
                 setParaInputs((prev) => ({ ...prev, [name]: value }));
@@ -1541,16 +1541,17 @@ function DataVisualization() {
     }
 
     // Zeigt übermittelte Daten auf Seite an
-    function handleTransmit(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weigths: string){
+    function handleTransmit(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weigths: string) {
         const result = `AEP: ${aep}, Generation Count: ${generation_count}, Population Size: ${population_size}, Given Seed: ${given_seed}, Elite Count: ${elite_count}, Alien Count: ${alien_count}, Weights: ${weigths}`;
         setTransmittedData(result);
     }
 
     // For Debugging Purpose
-    console.log('Data: ', data, typeof(data))
-    console.log('Generations: ', generations, typeof(generations))
-    console.log('SelectedGeneration: ', selectedGeneration, typeof(selectedGeneration))
-    console.log('GeneratedElement: ', generatedElement, typeof(generatedElement))
+    console.log('Data: ', data, typeof (data))
+    console.log('Generations: ', generations, typeof (generations))
+    console.log('SelectedGeneration: ', selectedGeneration, typeof (selectedGeneration))
+    console.log('GeneratedElement: ', generatedElement, typeof (generatedElement))
+    console.log(document.cookie)
 
     return (
         <div className={styles.wrapper}>
@@ -1564,23 +1565,6 @@ function DataVisualization() {
                 {/*    Left Sidebar Content*/}
                 {/*</div>*/}
 
-                <Dropdown id={styles.dropdownWrapper}>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">
-                        Selection Generations
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu id="dropdown-basic">
-                        {generations.length > 0 ? (
-                            generations.map((gen, index) => (
-                                <Dropdown.Item key={index} onClick={() => handleDropdownSelect(index)}>
-                                    {'Generation '+gen}
-                                </Dropdown.Item>
-                            ))
-                        ) : (
-                            <Dropdown.Item disabled>Load generations...</Dropdown.Item>
-                        )}
-                    </Dropdown.Menu>
-                </Dropdown>
             </div>
 
             <div className={styles.mainContent}>
@@ -1617,15 +1601,34 @@ function DataVisualization() {
                         <a>Weigths: </a>
                         <input type="text" name="weights" value={paraInputs.weights} onChange={handleParaChange} />
 
-                        <button className={styles.paraButton} onClick={() => { transmitParameters(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights);
-                            handleTransmit(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights)}}>Start Simulation</button>
+                        <button className={styles.paraButton} onClick={() => {
+                            transmitParameters(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights);
+                            handleTransmit(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights)
+                        }}>Start Simulation</button>
                     </div>
-                    <hr/>
+                    <hr />
                     <a id="transData">{transmittedData}</a>
                 </Card>
 
-                <hr/>
+                <hr />
 
+                <Dropdown id={styles.dropdownWrapper}>
+                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                        Select Generation
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu id="dropdown-basic">
+                        {generations.length > 0 ? (
+                            generations.map((gen, index) => (
+                                <Dropdown.Item key={index} onClick={() => handleDropdownSelect(index)}>
+                                    {'Generation ' + gen}
+                                </Dropdown.Item>
+                            ))
+                        ) : (
+                            <Dropdown.Item disabled>Load generations...</Dropdown.Item>
+                        )}
+                    </Dropdown.Menu>
+                </Dropdown>
                 {selectedGeneration ? (
                     <Card>
                         <h2>Selected generation: {selectedGeneration}</h2>
@@ -1634,12 +1637,12 @@ function DataVisualization() {
 
                 ) : (
 
-                 <></>
+                    <></>
                 )}
 
                 <Card>
                     <h2>{'Overview of all generations'}</h2>
-                    <div style={{width:"800px"}}><canvas id="my_graph"></canvas></div>
+                    <div style={{ width: "800px" }}><canvas id="my_graph"></canvas></div>
                 </Card>
 
                 <DownloadButton></DownloadButton>
