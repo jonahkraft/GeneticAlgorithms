@@ -14,6 +14,7 @@ import Card from "../Card/Card.tsx";
 import transmitParameters from "./parameters.tsx";
 // import {type} from "node:os";
 import DownloadButton from "./DownloadButton.tsx"
+import cookies from '../cookies.ts'
 
 function generateResultList(arr: object) {
     // Create Object that contains lists for every generation
@@ -1379,6 +1380,7 @@ function generateResultList(arr: object) {
     }
     console.log(typeof(testList))
     console.log(arr)
+
     return (testList)
 }
 //
@@ -1564,23 +1566,6 @@ function DataVisualization() {
                 {/*    Left Sidebar Content*/}
                 {/*</div>*/}
 
-                <Dropdown id={styles.dropdownWrapper}>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">
-                        Selection Generations
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu id="dropdown-basic">
-                        {generations.length > 0 ? (
-                            generations.map((gen, index) => (
-                                <Dropdown.Item key={index} onClick={() => handleDropdownSelect(index)}>
-                                    {'Generation '+gen}
-                                </Dropdown.Item>
-                            ))
-                        ) : (
-                            <Dropdown.Item disabled>Load generations...</Dropdown.Item>
-                        )}
-                    </Dropdown.Menu>
-                </Dropdown>
             </div>
 
             <div className={styles.mainContent}>
@@ -1626,6 +1611,23 @@ function DataVisualization() {
 
                 <hr/>
 
+                <Dropdown id={styles.dropdownWrapper}>
+                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                        Select Generation
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu id="dropdown-basic">
+                        {generations.length > 0 ? (
+                            generations.map((gen, index) => (
+                                <Dropdown.Item key={index} onClick={() => handleDropdownSelect(index)}>
+                                    {'Generation '+gen}
+                                </Dropdown.Item>
+                            ))
+                        ) : (
+                            <Dropdown.Item disabled>Load generations...</Dropdown.Item>
+                        )}
+                    </Dropdown.Menu>
+                </Dropdown>
                 {selectedGeneration ? (
                     <Card>
                         <h2>Selected generation: {selectedGeneration}</h2>
