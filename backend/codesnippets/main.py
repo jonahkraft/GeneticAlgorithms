@@ -7,7 +7,7 @@ from codesnippets.utilities.helper import import_generations_from_csv, plot_gene
 '''
 Übergebbare Parameter:
 
-aep := Mutatiosnrate, je höher, desto geringere Mutation (deswegen 1-aep im Code), zwischen 0 und 1
+aep := Mutationsrate, je höher, desto geringere Mutation (deswegen 1-aep im Code), zwischen 0 und 1
 generation_count := Anzahl der Generationen die berrechnet werden
 strategy := die Strategie, die angewandt wird bei der Generierung neuer Generationen
 population_size := konstante Größe der Population
@@ -15,6 +15,7 @@ given_seed := seed für die Erzeugung der ersten Population
 elite_count := Anzahl der Top Individuen, die für die nächste Generation behalten werden
 alien_count := Anzahl der Individuen, die komplett neu generiert werden für die nächste Generation
 weights := die Gewichte der Ziehlparameter consumption, elasticity 3-5
+path := Pfad fürs exporiteren der Ergebnisse/ importieren der CSV als Generation
 '''
 
 PATH = "backend/results/"
@@ -37,6 +38,15 @@ class Schnittstelle(object):
         müssen, gefüllt mit Zahlen (sowohl Integer als auch Float sind erlaubt).
         Negative Zahlen minimieren und positive Zahlen maximieren die Ausgabe, da wir den Konsum
         und die Zeit um von 0 auf 100 zu kommen betrachten, wollen wir Standardmäßig minimieren.
+
+        :param population_size: size of the population (constant)
+        :type population_size: int
+
+        :param given_seed: seed for the random generation of the first population
+        :type given_seed: int
+
+        :param weights: defines how you weight consumption, elasticity 3, elasticity 4 and elasticity 5
+        :type weights: list[float]
         '''
         Car._Blueprint['goals'] = weights  # consumption, elasticity 3, elasticity 4, elasticity 5
 
@@ -49,6 +59,21 @@ class Schnittstelle(object):
         beeinflusst.
         Hat für Strategie A und B nur gewisse Relevanz, da dort aep im Laufe der Generationen
         automatisch angepasst wird.
+
+        :param generation_count: how many generations you want to progress
+        :type generation_count: int
+
+        :param strategy: which strategy you want to use
+        :type strategy: int
+
+        :param aep: mutationrate
+        :type aep: float
+
+        :param elite_count: number of elites that stay between generations 
+        :type elite_count: int
+
+        :param alien_count: number of aliens that get generated comepletely new each generation
+        :type alien_count: int
         '''
         def STRAT_C(population, _, __):
             '''
@@ -70,7 +95,7 @@ class Schnittstelle(object):
         else:
             self.generation = self.generation.evolve(generation_count, STRAT_B)
 
-    def results(self):
+    def results(self, path=PATH):
         '''
         Gibt alle Individuen aller Generationen des aktuellen Experiments in einer csv aus, samt Eingaben
         und Ausgaben der Simulation in folgender Form:
@@ -81,18 +106,27 @@ class Schnittstelle(object):
         Drei davon stellen die Population jeweils im Anfangszustand, in der Mitte der Entwicklungsdauer
         und am Ende der Entwicklung dar.
         Die anderen beiden visualisieren den Phänotyp, sowie die Qualität.
-        '''
-        plot_generations(self.generation, name="generations", directory=PATH)
-        export_generations_to_csv(self.generation, name="generations", directory=PATH)
 
-    def import_from_csv(self, file):
+        :param path: path to export the results to
+        :type path: str
+        '''
+        plot_generations(self.generation, name="generations", directory=path)
+        export_generations_to_csv(self.generation, name="generations", directory=path)
+
+    def import_from_csv(self, file='generations', path=PATH):
         '''
         Importiert eine csv als Generation. Alternativ zu einem zufälligen Startzustand.
+
+        :param file: name of the CSV
+        :type file: str
+
+        :param path: path to import the CSV from
+        :type path: str
         '''
         self.generation = import_generations_from_csv(
             Car,
             name=f"{file}.csv",
-            directory=PATH
+            directory=path
         )
 
     def clear(self):
