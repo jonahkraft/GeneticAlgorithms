@@ -6,7 +6,7 @@ function Header() {
     const signed_in = cookies.getCookies()["signed_in"];
 
     function logOut() {
-        if (confirm("Sind Sie sicher, dass Sie sich abmelden möchten?")) {
+        if (confirm("Are you sure you want to sign out?")) {
             cookies.deleteCookies();
             window.location.reload();
         }
