@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>codesnippets.evolution package &#8212; Genetic Algorithms Backend  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="codesnippets.evolution.interfaces package" href="codesnippets.evolution.interfaces.html" />
+    <link rel="prev" title="codesnippets package" href="codesnippets.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="codesnippets-evolution-package">
+<h1>codesnippets.evolution package<a class="headerlink" href="#codesnippets-evolution-package" title="Link to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="codesnippets.evolution.interfaces.html">codesnippets.evolution.interfaces package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="codesnippets.evolution.interfaces.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="codesnippets.evolution.interfaces.html#module-codesnippets.evolution.interfaces.allele">codesnippets.evolution.interfaces.allele module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.allele.Allele"><code class="docutils literal notranslate"><span class="pre">Allele</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.allele.Allele.__init__"><code class="docutils literal notranslate"><span class="pre">Allele.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.allele.Allele.distance"><code class="docutils literal notranslate"><span class="pre">Allele.distance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.allele.Allele.get"><code class="docutils literal notranslate"><span class="pre">Allele.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.allele.Allele.get_max"><code class="docutils literal notranslate"><span class="pre">Allele.get_max()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.allele.Allele.get_mid"><code class="docutils literal notranslate"><span class="pre">Allele.get_mid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.allele.Allele.get_min"><code class="docutils literal notranslate"><span class="pre">Allele.get_min()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.allele.Allele.mutate"><code class="docutils literal notranslate"><span class="pre">Allele.mutate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.allele.Allele.set"><code class="docutils literal notranslate"><span class="pre">Allele.set()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="codesnippets.evolution.interfaces.html#module-codesnippets.evolution.interfaces.individual">codesnippets.evolution.interfaces.individual module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual"><code class="docutils literal notranslate"><span class="pre">Individual</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.__copy__"><code class="docutils literal notranslate"><span class="pre">Individual.__copy__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.__eq__"><code class="docutils literal notranslate"><span class="pre">Individual.__eq__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.__hash__"><code class="docutils literal notranslate"><span class="pre">Individual.__hash__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.__init__"><code class="docutils literal notranslate"><span class="pre">Individual.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.__str__"><code class="docutils literal notranslate"><span class="pre">Individual.__str__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual._calculate_phenotype"><code class="docutils literal notranslate"><span class="pre">Individual._calculate_phenotype()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual._clear_caches"><code class="docutils literal notranslate"><span class="pre">Individual._clear_caches()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual._enforce_constraints"><code class="docutils literal notranslate"><span class="pre">Individual._enforce_constraints()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.create"><code class="docutils literal notranslate"><span class="pre">Individual.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.distance"><code class="docutils literal notranslate"><span class="pre">Individual.distance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.get_all"><code class="docutils literal notranslate"><span class="pre">Individual.get_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.get_blueprint"><code class="docutils literal notranslate"><span class="pre">Individual.get_blueprint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.get_diversity"><code class="docutils literal notranslate"><span class="pre">Individual.get_diversity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.get_fitness"><code class="docutils literal notranslate"><span class="pre">Individual.get_fitness()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.get_genotype"><code class="docutils literal notranslate"><span class="pre">Individual.get_genotype()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.get_goals"><code class="docutils literal notranslate"><span class="pre">Individual.get_goals()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.get_group_diversity"><code class="docutils literal notranslate"><span class="pre">Individual.get_group_diversity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.get_id"><code class="docutils literal notranslate"><span class="pre">Individual.get_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.get_max_distance"><code class="docutils literal notranslate"><span class="pre">Individual.get_max_distance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.get_max_fitness"><code class="docutils literal notranslate"><span class="pre">Individual.get_max_fitness()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.get_max_phenotype"><code class="docutils literal notranslate"><span class="pre">Individual.get_max_phenotype()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.get_min_fitness"><code class="docutils literal notranslate"><span class="pre">Individual.get_min_fitness()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.get_min_phenotype"><code class="docutils literal notranslate"><span class="pre">Individual.get_min_phenotype()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.get_phenotype"><code class="docutils literal notranslate"><span class="pre">Individual.get_phenotype()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.get_relative_fitness"><code class="docutils literal notranslate"><span class="pre">Individual.get_relative_fitness()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.get_relative_phenotype"><code class="docutils literal notranslate"><span class="pre">Individual.get_relative_phenotype()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.mutate"><code class="docutils literal notranslate"><span class="pre">Individual.mutate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.order"><code class="docutils literal notranslate"><span class="pre">Individual.order()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.pseudo_class"><code class="docutils literal notranslate"><span class="pre">Individual.pseudo_class()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual.reset"><code class="docutils literal notranslate"><span class="pre">Individual.reset()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="codesnippets.evolution.interfaces.html#module-codesnippets.evolution.interfaces.population">codesnippets.evolution.interfaces.population module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population"><code class="docutils literal notranslate"><span class="pre">Population</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population.__getitem__"><code class="docutils literal notranslate"><span class="pre">Population.__getitem__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population.__init__"><code class="docutils literal notranslate"><span class="pre">Population.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population.__iter__"><code class="docutils literal notranslate"><span class="pre">Population.__iter__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population.__len__"><code class="docutils literal notranslate"><span class="pre">Population.__len__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population.__str__"><code class="docutils literal notranslate"><span class="pre">Population.__str__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population.add"><code class="docutils literal notranslate"><span class="pre">Population.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population.evolve"><code class="docutils literal notranslate"><span class="pre">Population.evolve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population.get_diversity"><code class="docutils literal notranslate"><span class="pre">Population.get_diversity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population.get_fitness"><code class="docutils literal notranslate"><span class="pre">Population.get_fitness()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population.get_goals"><code class="docutils literal notranslate"><span class="pre">Population.get_goals()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population.get_individuals"><code class="docutils literal notranslate"><span class="pre">Population.get_individuals()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population.get_pareto_front"><code class="docutils literal notranslate"><span class="pre">Population.get_pareto_front()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population.next_generation"><code class="docutils literal notranslate"><span class="pre">Population.next_generation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population.order"><code class="docutils literal notranslate"><span class="pre">Population.order()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population.plot"><code class="docutils literal notranslate"><span class="pre">Population.plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population.select_parents"><code class="docutils literal notranslate"><span class="pre">Population.select_parents()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="codesnippets.evolution.interfaces.html#module-codesnippets.evolution.interfaces">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-codesnippets.evolution.benchmark">
+<span id="codesnippets-evolution-benchmark-module"></span><h2>codesnippets.evolution.benchmark module<a class="headerlink" href="#module-codesnippets.evolution.benchmark" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="codesnippets.evolution.benchmark.Benchmark">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.benchmark.</span></span><span class="sig-name descname"><span class="pre">Benchmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">complexity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/benchmark.html#Benchmark"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.benchmark.Benchmark" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A pseudo simulation that can be used to test evolution algorithms.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="codesnippets.evolution.benchmark.Benchmark.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/benchmark.html#Benchmark.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.benchmark.Benchmark.__call__" title="Link to this definition">¶</a></dt>
+<dd><p>Performs a pseudo simulation with the given parameters.
+:param x: Input parameters as floats.
+:type x: float
+:param i: Index of the output parameter to return.
+:type i: int or None
+:return: The output of the simulation.
+:rtype: float or tuple</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="codesnippets.evolution.benchmark.Benchmark.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">complexity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/benchmark.html#Benchmark.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.benchmark.Benchmark.__init__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>m</strong> (<em>int</em>) – Number of input parameters.</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – Number of output parameters.</p></li>
+<li><p><strong>complexity</strong> – Scaling factor influencing the complexity of the simulation.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Expected to be in the range [0, 1].
+:type complexity: float or int
+:param seed: Seed for the random number generator.
+:type seed: int or None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="codesnippets.evolution.benchmark.Benchmark.evaluate">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/benchmark.html#Benchmark.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.benchmark.Benchmark.evaluate" title="Link to this definition">¶</a></dt>
+<dd><p>Evaluates the pseudo-simulation with the given parameters using the global_max_wave and local_extrema_overlay.
+:param a: Scaling factor influencing the frequency of local extrema.
+:type a: float or int
+:param b: Weighting factor influencing the weighting of global and local extrema.
+:type b: float or int
+:param c: Offset factor setting the position of the global maximum of the wave.
+:type c: float or int
+:param x: The input parameter for the wave function, expected to be in the range [0, 1].
+:type x: float or int
+:return: The value of the pseudo-simulation at the input parameter x.
+:rtype: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="codesnippets.evolution.benchmark.Benchmark.export">
+<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'simulation'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pseudo_simulations'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/benchmark.html#Benchmark.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.benchmark.Benchmark.export" title="Link to this definition">¶</a></dt>
+<dd><p>Exports the simulation to a directory.
+:param directory: Directory to save the simulation in.
+:type directory: str
+:param name: Name of the simulation.
+:type name: str</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="codesnippets.evolution.benchmark.Benchmark.global_max_wave">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">global_max_wave</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/benchmark.html#Benchmark.global_max_wave"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.benchmark.Benchmark.global_max_wave" title="Link to this definition">¶</a></dt>
+<dd><p>Creates a cosine wave, which is designed to have a maximum value of 1 at x = 0. It’s used as the foundational
+waveform for the pseudo-simulation.
+:param x: The input parameter for the wave function.
+:type x: float or int
+:return: The cosine wave value at the input parameter x.
+:rtype: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="codesnippets.evolution.benchmark.Benchmark.load">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'simulation'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pseudo_simulations'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/benchmark.html#Benchmark.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.benchmark.Benchmark.load" title="Link to this definition">¶</a></dt>
+<dd><p>Imports a simulation from a directory which must contain a settings.json file.
+:param name: Name of the simulation.
+:type name: str
+:param directory: Directory to load the simulation from.
+:type directory: str</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="codesnippets.evolution.benchmark.Benchmark.local_extrema_overlay">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local_extrema_overlay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/benchmark.html#Benchmark.local_extrema_overlay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.benchmark.Benchmark.local_extrema_overlay" title="Link to this definition">¶</a></dt>
+<dd><p>Overlays additional local extrema onto the base wave.
+:param a: Scaling factor influencing the frequency of local extrema.
+:type a: float or int
+:param x: The input parameter for the wave function.
+:type x: float or int
+:return: The value of the wave function at the input parameter x.
+:rtype: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="codesnippets.evolution.benchmark.Benchmark.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'results'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/benchmark.html#Benchmark.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.benchmark.Benchmark.plot" title="Link to this definition">¶</a></dt>
+<dd><p>Visualizes the simulation for each output dimension using 2D and 3D results and saves them in the given directory.
+:param resolution: Number of points along each axis in the results.
+:type resolution: int
+:param directory: Directory to save the results in.
+:type directory: str</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-codesnippets.evolution.metrics">
+<span id="codesnippets-evolution-metrics-module"></span><h2>codesnippets.evolution.metrics module<a class="headerlink" href="#module-codesnippets.evolution.metrics" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.metrics.METRIC_AVG">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.metrics.</span></span><span class="sig-name descname"><span class="pre">METRIC_AVG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/metrics.html#METRIC_AVG"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.metrics.METRIC_AVG" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates the average of the given values.
+:param values: The values.
+:type values: float or int
+:return: The average of the values.
+:rtype: float or int</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.metrics.METRIC_MAX">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.metrics.</span></span><span class="sig-name descname"><span class="pre">METRIC_MAX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/metrics.html#METRIC_MAX"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.metrics.METRIC_MAX" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates the maximum of the given values.
+:param values: The values.
+:type values: float or int
+:return: The maximum of the values.
+:rtype: float or int</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.metrics.METRIC_MIN">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.metrics.</span></span><span class="sig-name descname"><span class="pre">METRIC_MIN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/metrics.html#METRIC_MIN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.metrics.METRIC_MIN" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates the minimum of the given values.
+:param values: The values.
+:type values: float or int
+:return: The minimum of the values.
+:rtype: float or int</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.metrics.METRIC_SQUARED_SUM">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.metrics.</span></span><span class="sig-name descname"><span class="pre">METRIC_SQUARED_SUM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/metrics.html#METRIC_SQUARED_SUM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.metrics.METRIC_SQUARED_SUM" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates the squared sum of the given values.
+:param values: The values.
+:type values: float or int
+:return: The squared sum of the values.
+:rtype: float or int</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.metrics.METRIC_SUM">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.metrics.</span></span><span class="sig-name descname"><span class="pre">METRIC_SUM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/metrics.html#METRIC_SUM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.metrics.METRIC_SUM" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates the sum of the given values.
+:param values: The values.
+:type values: float or int
+:return: The squared sum of the values.
+:rtype: float or int</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.metrics.METRIC_SUM_WITH_OPTIONAL_POWER">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.metrics.</span></span><span class="sig-name descname"><span class="pre">METRIC_SUM_WITH_OPTIONAL_POWER</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/metrics.html#METRIC_SUM_WITH_OPTIONAL_POWER"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.metrics.METRIC_SUM_WITH_OPTIONAL_POWER" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates the sum of the given values. The power of each value can be set using the keyword argument ‘pow’.
+:param values: The values.
+:type values: float or int
+:param kwargs: Keyword arguments.
+:return: The sum of the values.
+:rtype: float or int</p>
+</dd></dl>
+
+</section>
+<section id="module-codesnippets.evolution.operators">
+<span id="codesnippets-evolution-operators-module"></span><h2>codesnippets.evolution.operators module<a class="headerlink" href="#module-codesnippets.evolution.operators" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.operators.EVAL_FITNESS">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.operators.</span></span><span class="sig-name descname"><span class="pre">EVAL_FITNESS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">individuals</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/operators.html#EVAL_FITNESS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.operators.EVAL_FITNESS" title="Link to this definition">¶</a></dt>
+<dd><p>Evaluates individuals based on their fitness.
+:param individuals: The individuals.
+:type individuals: list[Individual]
+:return: The fitness values for each individual.
+:rtype: list[float or int]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.operators.EVAL_PARETO">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.operators.</span></span><span class="sig-name descname"><span class="pre">EVAL_PARETO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">individuals</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/operators.html#EVAL_PARETO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.operators.EVAL_PARETO" title="Link to this definition">¶</a></dt>
+<dd><p>Evaluates individuals based on Pareto dominance. The value of an individual will be the number of individuals that
+it is not dominated by.
+:param individuals: The individuals.
+:type individuals: list[Individual]
+:return: The Pareto dominance ranks for each individual (attention: the interpretation of the values is inverted so</p>
+<blockquote>
+<div><p>that a higher value means a better individual).</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.operators.EVAL_REL_FITNESS">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.operators.</span></span><span class="sig-name descname"><span class="pre">EVAL_REL_FITNESS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">individuals</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/operators.html#EVAL_REL_FITNESS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.operators.EVAL_REL_FITNESS" title="Link to this definition">¶</a></dt>
+<dd><p>Evaluates individuals based on their relative fitness.
+:param individuals: The individuals.
+:type individuals: list[Individual]
+:return: The fitness values for each individual.
+:rtype: list[float or int]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.operators.GEN_GRID">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.operators.</span></span><span class="sig-name descname"><span class="pre">GEN_GRID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/operators.html#GEN_GRID"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.operators.GEN_GRID" title="Link to this definition">¶</a></dt>
+<dd><p>Generates a maximum of n points in [0,1]^m using a grid that tries to maximize the number of points.
+:param n: Number of points.
+:type n: int
+:param m: Number of dimensions.
+:type m: int
+:param seed: The seed has no effect because the grid is deterministic.
+:return: The points
+:rtype: list[list[float]]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.operators.GEN_GRID_HALTON">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.operators.</span></span><span class="sig-name descname"><span class="pre">GEN_GRID_HALTON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/operators.html#GEN_GRID_HALTON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.operators.GEN_GRID_HALTON" title="Link to this definition">¶</a></dt>
+<dd><p>Generates n points in [0,1]^m. The first points are generated using a grid, the remaining points are generated
+using the Halton sequence.
+:param n: Number of points.
+:type n: int
+:param m: Number of dimensions.
+:type m: int
+:param seed: The seed to use for the random number generator.
+:return: The points
+:rtype: list[list[float]]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.operators.GEN_HALTON">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.operators.</span></span><span class="sig-name descname"><span class="pre">GEN_HALTON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/operators.html#GEN_HALTON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.operators.GEN_HALTON" title="Link to this definition">¶</a></dt>
+<dd><p>Generates n random points in [0,1]^m using a Halton sequence.
+:param n: Number of points.
+:type n: int
+:param m: Number of dimensions.
+:type m: int
+:param seed: The seed to use for the random number generator.
+:return: The points
+:rtype: list[list[float]]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.operators.GEN_SOBOL">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.operators.</span></span><span class="sig-name descname"><span class="pre">GEN_SOBOL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/operators.html#GEN_SOBOL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.operators.GEN_SOBOL" title="Link to this definition">¶</a></dt>
+<dd><p>Generates a maximum of n points in [0,1]^m using the Sobol sequence. n should be a power of 2.
+:param n: Number of points.
+:type n: int
+:param m: Number of dimensions.
+:type m: int
+:param seed: The seed to use for the random number generator.
+:return: The points
+:rtype: list[list[float]]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.operators.GEN_SOBOL_HALTON">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.operators.</span></span><span class="sig-name descname"><span class="pre">GEN_SOBOL_HALTON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/operators.html#GEN_SOBOL_HALTON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.operators.GEN_SOBOL_HALTON" title="Link to this definition">¶</a></dt>
+<dd><p>Generates n points in [0,1]^m using the Sobol sequence. The first points are generated using the Sobol sequence, the
+remaining points are generated using a Halton sequence.
+:param n: Number of points.
+:type n: int
+:param m: Number of dimensions.
+:type m: int
+:param seed: The seed to use for the random number generator.
+:return: The points
+:rtype: list[list[float]]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.operators.GEN_UNIFORM">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.operators.</span></span><span class="sig-name descname"><span class="pre">GEN_UNIFORM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/operators.html#GEN_UNIFORM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.operators.GEN_UNIFORM" title="Link to this definition">¶</a></dt>
+<dd><p>Generates n random points in an m-dimensional space using a uniform distribution.
+:param n: Number of points.
+:type n: int
+:param m: Number of dimensions.
+:type m: int
+:param seed: The seed to use for the random number generator.
+:return: The points
+:rtype: list[list[float]]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.operators.MUT_FLIP">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.operators.</span></span><span class="sig-name descname"><span class="pre">MUT_FLIP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allele</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/operators.html#MUT_FLIP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.operators.MUT_FLIP" title="Link to this definition">¶</a></dt>
+<dd><p>Flips the given allele.
+:param allele: The allele.
+:type allele: Allele
+:param heat: The likelihood of flipping the allele.
+:type heat: float</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.operators.MUT_GAUSS">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.operators.</span></span><span class="sig-name descname"><span class="pre">MUT_GAUSS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allele</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/operators.html#MUT_GAUSS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.operators.MUT_GAUSS" title="Link to this definition">¶</a></dt>
+<dd><p>Mutates the given allele using a Gaussian distribution.
+:param allele: The allele.
+:type allele: Allele
+:param heat: The normalized mutation range (approx. 99.7% of the values will be in the range</p>
+<blockquote>
+<div><p>[old - heat/2, old + heat/2]).</p>
+</div></blockquote>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.operators.MUT_UNIFORM">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.operators.</span></span><span class="sig-name descname"><span class="pre">MUT_UNIFORM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allele</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/operators.html#MUT_UNIFORM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.operators.MUT_UNIFORM" title="Link to this definition">¶</a></dt>
+<dd><p>Mutates the given allele using a uniform distribution.
+:param allele: The allele.
+:type allele: Allele
+:param heat: The normalized range of the uniform distribution around the old value.
+:type heat: float or int</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.operators.REC_CROSS_ARITHMETIC">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.operators.</span></span><span class="sig-name descname"><span class="pre">REC_CROSS_ARITHMETIC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">parents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/operators.html#REC_CROSS_ARITHMETIC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.operators.REC_CROSS_ARITHMETIC" title="Link to this definition">¶</a></dt>
+<dd><p>Recombines the given parents using an arithmetic crossover.
+:param parents: The parents.
+:type parents: tuple(Individual)
+:return: The offspring as an Individual.
+:rtype: Individual</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.operators.REC_CROSS_POINT">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.operators.</span></span><span class="sig-name descname"><span class="pre">REC_CROSS_POINT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/operators.html#REC_CROSS_POINT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.operators.REC_CROSS_POINT" title="Link to this definition">¶</a></dt>
+<dd><p>Recombines the given parents using an n point crossover. The default number of crossover points will be calculated
+so that, if possible, each parent will be used once. The number of crossover points can also be set manually using
+the keyword argument ‘n’.
+:param parents: The parents.
+:type parents: tuple(Individual)
+:return: The offspring.
+:return: The offspring as tuple of Individuals.
+:rtype: Individual</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.operators.REC_CROSS_UNIFORM">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.operators.</span></span><span class="sig-name descname"><span class="pre">REC_CROSS_UNIFORM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">parents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/operators.html#REC_CROSS_UNIFORM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.operators.REC_CROSS_UNIFORM" title="Link to this definition">¶</a></dt>
+<dd><p>Recombines the given parents using a uniform crossover.
+:param parents: The parents.
+:type parents: tuple(Individual)
+:return: The offspring as an Individual.
+:rtype: Individual</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.operators.SEL_BEST">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.operators.</span></span><span class="sig-name descname"><span class="pre">SEL_BEST</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">individuals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_funct=&lt;function</span> <span class="pre">EVAL_FITNESS&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/operators.html#SEL_BEST"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.operators.SEL_BEST" title="Link to this definition">¶</a></dt>
+<dd><p>Selects the best n individuals.
+:param individuals: The individuals.
+:type individuals: list[Individual]
+:param n: The number of individuals to select.
+:type n: int
+:param pressure: The pressure won’t have any effect to this selection method.
+:type pressure: float or int</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.operators.SEL_ROULETTE">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.operators.</span></span><span class="sig-name descname"><span class="pre">SEL_ROULETTE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">individuals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_funct=&lt;function</span> <span class="pre">EVAL_FITNESS&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/operators.html#SEL_ROULETTE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.operators.SEL_ROULETTE" title="Link to this definition">¶</a></dt>
+<dd><p>Selects n individuals using roulette wheel selection.
+:param individuals: The individuals.
+:type individuals: list[Individual]
+:param n: The number of individuals to select.
+:type n: int
+:param pressure: The pressure to apply to the selection. Expected to be in range [0, 1]. A low pressure will result</p>
+<blockquote>
+<div><p>in a more uniform selection, a high pressure will result into the untouched roulette wheel selection.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>eval_funct</strong> (<em>function</em>) – The evaluation function to use. The evaluation function should take a list of individuals
+as input and return a list of floats or ints as output. The output values should be proportional to the
+probability of the corresponding individual being selected. If no evaluation function is given, the fitness
+values of the individuals will be used.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The selected individuals.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual" title="codesnippets.evolution.interfaces.individual.Individual">Individual</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-codesnippets.evolution.strategies">
+<span id="codesnippets-evolution-strategies-module"></span><h2>codesnippets.evolution.strategies module<a class="headerlink" href="#module-codesnippets.evolution.strategies" title="Link to this heading">¶</a></h2>
+<p>This module contains the strategies for the evolution of the population. You can create your own strategies by defining
+a function that takes the population, the current generation and the total number of generations as arguments and
+returns a new population. STRAT_A is the default strategy that is used if no strategy is specified.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.strategies.STRAT_A">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.strategies.</span></span><span class="sig-name descname"><span class="pre">STRAT_A</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/strategies.html#STRAT_A"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.strategies.STRAT_A" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="codesnippets.evolution.strategies.STRAT_B">
+<span class="sig-prename descclassname"><span class="pre">codesnippets.evolution.strategies.</span></span><span class="sig-name descname"><span class="pre">STRAT_B</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/evolution/strategies.html#STRAT_B"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.evolution.strategies.STRAT_B" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-codesnippets.evolution">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-codesnippets.evolution" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Genetic Algorithms Backend</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">backend</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="api.html">api module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="app.html">app module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="codesnippets.html">codesnippets package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database.html">database module</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">backend</a><ul>
+  <li><a href="codesnippets.html">codesnippets package</a><ul>
+      <li>Previous: <a href="codesnippets.html" title="previous chapter">codesnippets package</a></li>
+      <li>Next: <a href="codesnippets.evolution.interfaces.html" title="next chapter">codesnippets.evolution.interfaces package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;1980, Thomas Kottenhahn, Christian Maul, Sambou Kinteh, Patrick Radau, Janik Rostami-Abandansari, Anton Schönfeld, Paul Seidel, Simon Laubersheimer.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/codesnippets.evolution.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
