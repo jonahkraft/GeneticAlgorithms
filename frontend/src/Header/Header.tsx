@@ -6,8 +6,10 @@ function Header() {
     const signed_in = cookies.getCookies()["signed_in"];
 
     function logOut() {
-        cookies.deleteCookies();
-        window.location.reload();
+        if (confirm("Sind Sie sicher, dass Sie sich abmelden möchten?")) {
+            cookies.deleteCookies();
+            window.location.reload();
+        }
     }
 
     return (
