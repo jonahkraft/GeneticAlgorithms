@@ -31,7 +31,7 @@ function Home() {
                 </details>
                 <details className={styles.details}>
                     <summary className={styles.summary}>How do I use the simulation?</summary>
-                    <p className={styles.detailsText}>Fist, you have to go to the Data Visualisation Page. There simply set your Parameters and start the simulation. If you want to take a closer look at a certain generation, you can do that as well. Just pick it from the drop-down menu.</p>
+                    <p className={styles.detailsText}>First, you have to go to the Data Visualization Page. There simply set your Parameters and start the simulation. If you want to take a closer look at a certain generation, you can do that as well. Just pick it from the drop-down menu.</p>
                 </details>
                 <details className={styles.details}>
                     <summary className={styles.summary}>When i run the simuation i just get that strange graph. What does it mean?</summary>
