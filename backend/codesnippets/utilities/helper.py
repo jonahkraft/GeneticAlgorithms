@@ -11,7 +11,7 @@ import codesnippets.evolution as evo
 def export_generations_to_csv(generations, name="generations", directory=None, header=True, delimiter=","):
     """
     Exports the given generations to a csv file.
-    
+
     :param generations: The generations to export.
     :type generations: list[Population]
     :param name: The name of the file.
@@ -51,7 +51,6 @@ def export_generations_to_csv(generations, name="generations", directory=None, h
     blueprint = ind_cls.get_blueprint()
 
     # create the file
-    # create the file
     with open(os.path.join(directory, name), 'w') as f:
         # write the header
         if header:
@@ -75,6 +74,48 @@ def export_generations_to_csv(generations, name="generations", directory=None, h
     # print and return the path to the file
     print(f"Exported {len(generations)} generations to {os.path.join(directory, name)}")
     return os.path.join(directory, name)
+
+
+def export_generations_to_list(generations, header=True):
+    """
+    Exports the given generations to a csv file.
+
+    :param generations: The generations to export.
+    :type generations: list[Population]
+    :param header: Flag whether to include a header in the file.
+    :type header: bool
+    :return: list[list[float]]
+    """
+
+    # get the blueprint of the individuals
+    ind_cls = generations[0][0].__class__
+    blueprint = ind_cls.get_blueprint()
+
+    result = []
+    row = []
+
+    # write the header
+    if header:
+        row.append('generation')
+        for allele_label in blueprint['genotype_labels']:
+            row.append(allele_label)
+        for phenotype_label in blueprint['phenotype_labels']:
+            row.append(phenotype_label)
+        result.append(row)
+        row = []
+
+    # write the data
+    for i, pop in enumerate(generations):
+        for ind in pop.get_individuals():
+            row = [i]
+            for allele in ind.get_genotype():
+                row.append(allele.get())
+            for objective in ind.get_phenotype():
+                row.append(objective)
+            result.append(row)
+    result.append(row)
+
+    return result
 
 
 def import_generations_from_csv(cls, name="generations", directory=None, header=True, delimiter=";"):
