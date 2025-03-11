@@ -88,7 +88,7 @@ function Login() {
 }
 
 function logIn(username: string) {
-    let role
+    let role = ''
 
     if (username === "admin") {
         // TODO: Nur für die Präsentation!!

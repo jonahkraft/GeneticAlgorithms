@@ -14,7 +14,6 @@ import Card from "../Card/Card.tsx";
 import transmitParameters from "./parameters.tsx";
 // import {type} from "node:os";
 import DownloadButton from "./DownloadButton.tsx"
-import cookies from '../cookies.ts'
 
 function generateResultList(arr: object) {
     // Create Object that contains lists for every generation
@@ -1380,7 +1379,6 @@ function generateResultList(arr: object) {
     }
     console.log(typeof(testList))
     console.log(arr)
-
     return (testList)
 }
 //
@@ -1553,6 +1551,7 @@ function DataVisualization() {
     console.log('Generations: ', generations, typeof(generations))
     console.log('SelectedGeneration: ', selectedGeneration, typeof(selectedGeneration))
     console.log('GeneratedElement: ', generatedElement, typeof(generatedElement))
+    console.log(document.cookie)
 
     return (
         <div className={styles.wrapper}>
