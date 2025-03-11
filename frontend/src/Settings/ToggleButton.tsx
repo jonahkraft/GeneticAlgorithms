@@ -1,3 +1,5 @@
+{/*source: universe.io, Switch by mrhydden*/}
+{/*https://uiverse.io/mrhyddenn/old-fish-66*/}
 import styles from '../Settings/ToggleButton.module.css';
 
 
