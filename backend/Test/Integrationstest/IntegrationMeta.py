@@ -27,9 +27,6 @@ class IntegrationMeta(MetaTest):
         # return checkingFunc(connectionInterface(**kwargs))
         return self
 
-    def disconnect(self):
-        return self
-
     def isinterfaceDefiniert(self):
         return self
 
@@ -53,6 +50,15 @@ class IntegrationMeta(MetaTest):
 
         cursor.execute('DELETE FROM users WHERE ?= user_name', ["TestUser"])
         database.close()
+
+
+    def disconnect(self, **kwargs):
+        self.deleteUserData(database_path=kwargs['database_path'])
+
+    def databaseConnection(self, database_path: str) -> Connection:
+
+        pass
+
 
 
 
