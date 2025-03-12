@@ -15,6 +15,7 @@ import DownloadButton from "../../components/DownloadButton/DownloadButton.tsx"
 import UserPersmissions from '../../components/UserPermissions/UserPersmissions.tsx'
 import UploadButton from "../../components/UploadButton/UploadButton.tsx";
 import {downloadCSV} from "./ButtonFunctions.ts";
+import GenericButton from '../../components/GenericButton/GenericButton.tsx';
 
 function generateResultList(arr: object) {
     // Create Object that contains lists for every generation
@@ -1640,10 +1641,10 @@ function DataVisualization() {
                             <label>Weights of the result-values: consumption, elasticity (values between 3-5)</label>
                         </div>
 
-                        <button className={styles.paraButton} onClick={() => {
+                        <GenericButton title='Start Simulation' onClick={() => {
                             transmitParameters(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights);
                             handleTransmit(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights)
-                        }}>Start Simulation</button>
+                        }} />
                     </div>
                     <hr/>
                     <a id="transData">{transmittedData}</a>

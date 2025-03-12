@@ -1,5 +1,5 @@
 import cookies from "../../cookies.ts";
-import VisualizationButton from "../VisualizationButton/VisualizationButton.tsx";
+import GenericButton from "../GenericButton/GenericButton.tsx";
 import {placeholderButtonFunction} from "../../pages/DataVisualization/ButtonFunctions.ts";
 
 
@@ -10,16 +10,16 @@ function UserPersmissions(){
     if (role === 'admin') {
         return(
             <>
-                <VisualizationButton title="Protocol" onClick={placeholderButtonFunction}/>
-                <VisualizationButton title="Debug" onClick={placeholderButtonFunction}/>
-                <VisualizationButton title="History" onClick={placeholderButtonFunction}/>
+                <GenericButton title="Protocol" onClick={placeholderButtonFunction}/>
+                <GenericButton title="Debug" onClick={placeholderButtonFunction}/>
+                <GenericButton title="History" onClick={placeholderButtonFunction}/>
             </>
             )}
 
     else if (role === 'data_analyst') {
         return(
             <>
-                <VisualizationButton title="History" onClick={placeholderButtonFunction}/>
+                <GenericButton title="History" onClick={placeholderButtonFunction}/>
             </>
         )}
 
