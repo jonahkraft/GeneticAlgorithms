@@ -19,53 +19,40 @@ function showDebug(){
     return
 }
 
-function parseCSVToList(csvContent: any) {
-    const result = {}
+function parseCSVToList(csvContent: string) {
+    const result: any = {};
 
-    // remove unnecessary spaces
+    // Remove unnecessary spaces
     const lines = csvContent.trim().split("\n");
-    let currentGeneration: any = null;
 
-    let keys: any = [];
-    let currentData: any = [];
+    if (lines.length < 2) {
+        console.error("CSV file is empty or has no data rows!");
+        return result;
+    }
 
-    lines.forEach((line: any) => {
-        // Look for new row
-        if (line.startsWith("Generation")) {
-            // does current generation already exist
-            if (currentGeneration !== null) {
-                // @ts-ignore
-                result[currentGeneration] = currentData;
-            }
+    // Extract column headers
+    const keys = lines[0].split(";");
 
-            currentGeneration = line.split(" ")[1];
-            currentData = [];
+    // Process each data row
+    for (let i = 1; i < lines.length; i++) {
+        const values = lines[i].split(";");
+        if (values.length !== keys.length) continue; // Ignore malformed rows
+
+        // Create row object
+        const row: any = {};
+        keys.forEach((key, index) => {
+            row[key] = values[index];
+        });
+
+        // Determine the generation from the "generation" column
+        const generation = row["generation"];
+        if (!result[generation]) {
+            result[generation] = [];
         }
-        else {
-            // If it is no "generation"-row, start a new one
-            const values = line.split(";");
 
-            //
-            if (keys.length === 0) {
-                // get column names
-                keys = values;
-            }
-            else {
-                // if key is already set, just add the data
-                const row = { generation: currentGeneration };
-                values.forEach((value: any, index: number) => {
-                    // @ts-ignore
-                    row[keys[index]] = value;
-                });
-                currentData.push(row);
-            }
-        }
-        // for last gen
-        if (currentGeneration !== null) {
-            // @ts-ignore
-            result[currentGeneration] = currentData;
-        }
-    });
+        result[generation].push(row);
+    }
+
     return result;
 }
 
@@ -86,6 +73,7 @@ export function uploadCSV(event: any){
         // @ts-ignore
         const csvContent = e.target.result;
         // list which will contain the parsedCSV file
+        // @ts-ignore
         const parsedList = parseCSVToList(csvContent);
         // TODO: Usage for pasedList (backend i.e)
         console.log(parsedList);
@@ -100,8 +88,6 @@ export function downloadCSV(data: any, filename: string){
 
     // Iterate through all generations
     Object.keys(data).forEach((generationKey) => {
-        // Add Generation Row in csvContent
-        //csvContent += `Generation ${generationKey}\n`;
 
         // Collect data from current generation
         const generationData = data[generationKey];
@@ -112,11 +98,9 @@ export function downloadCSV(data: any, filename: string){
 
             if (blocker === 0){
                 // add to csvContent accordingly
-                console.log(keys)
                 csvContent += keys.join(";") + "\n";
                 blocker += 1
             }
-
 
             // Iterate through every row
             generationData.forEach((row: any) => {
