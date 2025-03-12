@@ -3,14 +3,22 @@ import logIn from '../Login/LoginExport.ts'
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header.tsx";
 import Footer from "../../components/Footer/Footer.tsx";
+import cookies from "../../cookies.ts";
 
 function Home() {
     const navigate = useNavigate()
 
     function clickButton() {
-        // if proceed directly to DataVisualzation you will be signed in as "simulator"
-        logIn('')
-        navigate("/data_visualization")
+        const role = cookies.getCookies().role
+        console.log(role)
+        if (role !== 'simulator'){
+            navigate("/data_visualization")
+        }
+        else{
+            // if proceed directly to DataVisualzation you will be signed in as "simulator"
+            logIn('')
+            navigate("/data_visualization")
+        }
     }
 
     return (
