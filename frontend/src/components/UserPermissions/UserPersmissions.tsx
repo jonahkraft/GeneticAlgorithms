@@ -5,7 +5,6 @@ import {placeholderButtonFunction} from "../../pages/DataVisualization/ButtonFun
 
 function UserPersmissions(){
     const role = cookies.getCookies().role
-    console.log(role);
 
     if (role === 'admin') {
         return(
@@ -18,9 +17,7 @@ function UserPersmissions(){
 
     else if (role === 'data_analyst') {
         return(
-            <>
-                <VisualizationButton title="History" onClick={placeholderButtonFunction}/>
-            </>
+            <VisualizationButton title="History" onClick={placeholderButtonFunction}/>
         )}
 
     else {
