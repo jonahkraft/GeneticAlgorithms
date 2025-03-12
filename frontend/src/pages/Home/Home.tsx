@@ -32,10 +32,8 @@ function Home() {
 
                 </div>
                 <p className={styles.introText}>
-                    Our simulation uses these same principles in the form of genetic algorithms to find the optimal balance between performance and consumption in vehicles.
-                </p>
-                <p className={styles.introText}>
-                    For each configuration of parameters, the program returns the Pareto front, a collection of solutions where no value can be improved without worsening another.
+                    Our simulation uses these same principles in the form of genetic algorithms to find the optimal balance between performance and consumption in vehicles.                     For each configuration of parameters, the program returns the Pareto front, a collection of solutions where no value can be improved without worsening another.
+
                 </p>
                 <div className={styles.buttonContainer}>
                     <button className={styles.button} onClick={clickButton}>Proceed to Simulation</button>
