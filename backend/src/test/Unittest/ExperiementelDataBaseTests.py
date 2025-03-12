@@ -66,8 +66,7 @@ def ToDict(vals : list[int | float]) -> dict[str, int | float]:
         "consumption": vals[6],
         "elasticity_3": vals[7],
         "elasticity_4": vals[8],
-        "elasticity_5": vals[9],
-        "experiement_id": vals[10]
+        "elasticity_5": vals[9]
     };
 def ToList(vals : dict[str, int | float]) -> list[int | float]:
     """
@@ -75,7 +74,7 @@ def ToList(vals : dict[str, int | float]) -> list[int | float]:
     :param vals: Der Dictionary.
     :return: Die Liste mit den Simulationsdaten
     """
-    return [vals["generation"], vals["final_drive"], vals["roll_radius"], vals["gear_3"], vals["gear_4"], vals["gear_5"], vals["consumption"], vals["elasticity_3"], vals["elasticity_4"], vals["elasticity_5"], vals["experiement_id"]]
+    return [vals["generation"], vals["final_drive"], vals["roll_radius"], vals["gear_3"], vals["gear_4"], vals["gear_5"], vals["consumption"], vals["elasticity_3"], vals["elasticity_4"], vals["elasticity_5"]]
 
 
 
@@ -269,7 +268,6 @@ if __name__ == "__main__":
         for _ in range(9):
             data.append(random.random() * 100)
         data.append(random.randint(0, 100))
-        TestData.append(ToTuple(ToDict(data)))
     inst = ExperiementalDataTests()
     print(inst.TestAddData())
     print(inst.StressTestAdd())
