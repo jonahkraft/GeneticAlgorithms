@@ -48,7 +48,7 @@ function Settings() {
 
 
                         {/* Nutzerverwaltung: Nur für Admins verfügbar */}
-                        {role === "admin" && (
+                        {role === "administrator" && (
                             <a className={selectedTab === "user-management" ? styles.navigationLinkActive : styles.navigationLinkInactive} onClick={() => handleTabClick("user-management")}>
                                 User Management
                             </a>
@@ -113,7 +113,7 @@ function Settings() {
                     )}
 
 
-                    {selectedTab === "user-management" && role === "admin" && (
+                    {selectedTab === "user-management" && role === "administrator" && (
                         <>
                             <h2 className={styles.header}>User Management</h2>
                             <p className={styles.settingsText}>Manage system users and their roles. You can add, edit, or delete users.</p>
@@ -128,7 +128,7 @@ function Settings() {
                                     <select className={styles.userFormSelect} required>
                                         <option value="simulator">Simulator</option>
                                         <option value="data-analyst">Data Analyst</option>
-                                        <option value="admin">Admin</option>
+                                        <option value="administrator">Admin</option>
                                     </select>
 
                                     <button type="submit" className={styles.userFormButton}>Add User</button>

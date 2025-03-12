@@ -3,9 +3,9 @@ import cookies from "../../cookies.ts";
 function TestlogIn(username: string) {
     let role = ''
 
-    if (username === "admin") {
+    if (username === "administrator") {
         // TODO: Nur für die Präsentation!!
-        role = "admin"
+        role = "administrator"
     }
 
     else if (username === "data_analyst"){
