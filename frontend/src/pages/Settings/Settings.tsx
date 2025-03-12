@@ -44,6 +44,12 @@ function Settings() {
     // zum Löschen
     const [userToBeDeleted, SetUserToBeDeleted] = useState("")
 
+    // zum Bearbeiten von Nutzern
+    const [oldName, setOldName] = useState("");
+    const [newName, setNewName] = useState("");
+    const [newPW, setNewPW] = useState("");
+    const [newRole, setNewRole] = useState("simulator");
+
     useEffect(() => {
         if (cookies.getCookies().role === "administrator") {
             loadUsers().then(setUsers);
@@ -117,6 +123,14 @@ function Settings() {
                     console.error("Request failed:", error.message);
                 }
             });
+    }
+
+    function editUser(oldUsername: string, newUsername: string, newPassword: string, newRole: string) {
+        console.log(oldUsername);
+        console.log(newUsername);
+        console.log(newPassword);
+        console.log(newRole);
+        // TODO !!!!!!
     }
 
     return (
@@ -291,6 +305,53 @@ function Settings() {
                                     onClick={() => deleteUser(userToBeDeleted)}
                                 >
                                     Delete User
+                                </button>
+                            </form>
+
+                            <h3 className={styles.header}>Edit User</h3>
+
+                            <form onSubmit={(e) => e.preventDefault()}>
+                                <input
+                                    className={styles.userFormInput}
+                                    type="text"
+                                    placeholder="Enter old username"
+                                    required
+                                    value={oldName}
+                                    onChange={(e) => setOldName(e.target.value)}
+                                />
+                                <input
+                                    className={styles.userFormInput}
+                                    type="text"
+                                    placeholder="Enter new username"
+                                    value={newName}
+                                    onChange={(e) => setNewName(e.target.value)}
+                                />
+
+                                <input
+                                    className={styles.userFormInput}
+                                    type="password"
+                                    placeholder="Enter new password"
+                                    value={newPW}
+                                    onChange={(e) => setNewPW(e.target.value)}
+                                />
+
+                                <select
+                                    className={styles.userFormSelect}
+                                    required
+                                    value={newRole}
+                                    onChange={(e) => setNewRole(e.target.value)}
+                                >
+                                    <option value="simulator">Simulator</option>
+                                    <option value="data_analyst">Data Analyst</option>
+                                    <option value="administrator">Admin</option>
+                                </select>
+
+                                <button
+                                    type="button"
+                                    className={styles.userFormButton}
+                                    onClick={() => editUser(oldName, newName, newPW,newRole)}
+                                >
+                                    Apply
                                 </button>
                             </form>
 
