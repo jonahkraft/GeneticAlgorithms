@@ -23,14 +23,14 @@ function Login() {
         const username = formData.get("username") as string;
         const password = formData.get("password") as string;
 
-        logIn(username, password)
-        if (cookies.isLoggedIn()) {
-            console.log("Cookies gesetzt")
-            navigate("/data_visualization")
-        }
-        else {
-            triggerWarning()
-        }
+        logIn(username, password).then(success => {
+            if (success) {
+                console.log("Cookies gesetzt");
+                navigate("/data_visualization");
+            } else {
+                triggerWarning();
+            }
+        });
     }
 
     function triggerWarning() {
@@ -110,35 +110,52 @@ function Login() {
     );
 }
 
-// Check for User
-function logIn(username: string, password: string) {
-
-    console.log("username in logIN", username)
-    console.log("passwird in lOGIN", password)
-    //const token = ''
-    axios.post('/api/login',
-        { "username": username, "password": password },
-        { headers: { "Content-Type": "application/json" } }
-    )
-         .then(response => {
-             const token = response.data.access_token
-             const role = response.data.role
-             cookies.saveCookies({"username": username, "role": role, "signed_in": true, "token": token})
-             console.log("erfolg")
-             /*
-             axios.post('/api/protected_test', {},
-                 {
-                     headers: {
-                         "Authorization": `Bearer ${token}`,
-                         "Content-Type": "application/json"  // Ensure JSON data format
-                     }
-                 }
-             )
-              */
-         })
-         .catch(error => {
-             console.error(error);
-         });
+function logIn(username: string, password: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+        axios.post('/api/login', { "username": username, "password": password }, { headers: { "Content-Type": "application/json" } })
+            .then(response => {
+                const token = response.data.access_token;
+                const role = response.data.role;
+                cookies.saveCookies({ "username": username, "role": role, "signed_in": true, "token": token });
+                console.log("erfolg");
+                resolve(true);
+            })
+            .catch(error => {
+                console.error(error);
+                resolve(false);
+            });
+    });
 }
+
+// // Check for User
+// function logIn(username: string, password: string) {
+//
+//     console.log("username in logIN", username)
+//     console.log("passwird in lOGIN", password)
+//     //const token = ''
+//     axios.post('/api/login',
+//         { "username": username, "password": password },
+//         { headers: { "Content-Type": "application/json" } }
+//     )
+//          .then(response => {
+//              const token = response.data.access_token
+//              const role = response.data.role
+//              cookies.saveCookies({"username": username, "role": role, "signed_in": true, "token": token})
+//              console.log("erfolg")
+//              /*
+//              axios.post('/api/protected_test', {},
+//                  {
+//                      headers: {
+//                          "Authorization": `Bearer ${token}`,
+//                          "Content-Type": "application/json"  // Ensure JSON data format
+//                      }
+//                  }
+//              )
+//               */
+//          })
+//          .catch(error => {
+//              console.error(error);
+//          });
+// }
 
 export default Login;
