@@ -106,7 +106,7 @@ function Login() {
 }
 
 // Check for User
-export function logIn(username: string | File | null, password: string | File | null) {
+function logIn(username: string | File | null, password: string | File | null) {
     console.log("username in logIN", username)
     console.log("passwird in lOGIN", password)
     //const token = ''
