@@ -40,4 +40,10 @@ function deleteCookies() {
     }
 }
 
-export default { getCookies, saveCookies, deleteCookies };
+function isLoggedIn() {
+    const data = getCookies();
+    return data.signed_in;
+}
+
+
+export default { getCookies, saveCookies, deleteCookies, isLoggedIn };

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>codesnippets.evolution.operators &#8212; Genetic Algorithms Backend  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=12dfc556" />
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for codesnippets.evolution.operators</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">random</span> <span class="k">as</span> <span class="nn">rdm</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">qmc</span>
+
+
+<div class="viewcode-block" id="GEN_UNIFORM">
+<a class="viewcode-back" href="../../../codesnippets.evolution.html#codesnippets.evolution.operators.GEN_UNIFORM">[docs]</a>
+<span class="k">def</span> <span class="nf">GEN_UNIFORM</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates n random points in an m-dimensional space using a uniform distribution.</span>
+<span class="sd">    :param n: Number of points.</span>
+<span class="sd">    :type n: int</span>
+<span class="sd">    :param m: Number of dimensions.</span>
+<span class="sd">    :type m: int</span>
+<span class="sd">    :param seed: The seed to use for the random number generator.</span>
+<span class="sd">    :return: The points</span>
+<span class="sd">    :rtype: list[list[float]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">rdm_original_state</span> <span class="o">=</span> <span class="n">rdm</span><span class="o">.</span><span class="n">getstate</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">rdm</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[[</span><span class="n">rdm</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">)]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+
+    <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">rdm</span><span class="o">.</span><span class="n">setstate</span><span class="p">(</span><span class="n">rdm_original_state</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">points</span></div>
+
+
+
+<div class="viewcode-block" id="GEN_HALTON">
+<a class="viewcode-back" href="../../../codesnippets.evolution.html#codesnippets.evolution.operators.GEN_HALTON">[docs]</a>
+<span class="k">def</span> <span class="nf">GEN_HALTON</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates n random points in [0,1]^m using a Halton sequence.</span>
+<span class="sd">    :param n: Number of points.</span>
+<span class="sd">    :type n: int</span>
+<span class="sd">    :param m: Number of dimensions.</span>
+<span class="sd">    :type m: int</span>
+<span class="sd">    :param seed: The seed to use for the random number generator.</span>
+<span class="sd">    :return: The points</span>
+<span class="sd">    :rtype: list[list[float]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">halton</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">Halton</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">m</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">halton</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">points</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="GEN_SOBOL">
+<a class="viewcode-back" href="../../../codesnippets.evolution.html#codesnippets.evolution.operators.GEN_SOBOL">[docs]</a>
+<span class="k">def</span> <span class="nf">GEN_SOBOL</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a maximum of n points in [0,1]^m using the Sobol sequence. n should be a power of 2.</span>
+<span class="sd">    :param n: Number of points.</span>
+<span class="sd">    :type n: int</span>
+<span class="sd">    :param m: Number of dimensions.</span>
+<span class="sd">    :type m: int</span>
+<span class="sd">    :param seed: The seed to use for the random number generator.</span>
+<span class="sd">    :return: The points</span>
+<span class="sd">    :rtype: list[list[float]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Return an empty list if n is 0</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="c1"># Calculate the number of points that can be generated with the Sobol sequence</span>
+    <span class="n">n_base2</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+
+    <span class="c1"># Generate and return the points</span>
+    <span class="n">sobol</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">Sobol</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">m</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">sobol</span><span class="o">.</span><span class="n">random_base2</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">n_base2</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">points</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="GEN_SOBOL_HALTON">
+<a class="viewcode-back" href="../../../codesnippets.evolution.html#codesnippets.evolution.operators.GEN_SOBOL_HALTON">[docs]</a>
+<span class="k">def</span> <span class="nf">GEN_SOBOL_HALTON</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates n points in [0,1]^m using the Sobol sequence. The first points are generated using the Sobol sequence, the</span>
+<span class="sd">    remaining points are generated using a Halton sequence.</span>
+<span class="sd">    :param n: Number of points.</span>
+<span class="sd">    :type n: int</span>
+<span class="sd">    :param m: Number of dimensions.</span>
+<span class="sd">    :type m: int</span>
+<span class="sd">    :param seed: The seed to use for the random number generator.</span>
+<span class="sd">    :return: The points</span>
+<span class="sd">    :rtype: list[list[float]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">points_sobol</span> <span class="o">=</span> <span class="n">GEN_SOBOL</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+    <span class="n">points_halton</span> <span class="o">=</span> <span class="n">GEN_HALTON</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">points_sobol</span><span class="p">),</span> <span class="n">m</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">points_sobol</span> <span class="o">+</span> <span class="n">points_halton</span></div>
+
+
+
+<div class="viewcode-block" id="GEN_GRID">
+<a class="viewcode-back" href="../../../codesnippets.evolution.html#codesnippets.evolution.operators.GEN_GRID">[docs]</a>
+<span class="k">def</span> <span class="nf">GEN_GRID</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a maximum of n points in [0,1]^m using a grid that tries to maximize the number of points.</span>
+<span class="sd">    :param n: Number of points.</span>
+<span class="sd">    :type n: int</span>
+<span class="sd">    :param m: Number of dimensions.</span>
+<span class="sd">    :type m: int</span>
+<span class="sd">    :param seed: The seed has no effect because the grid is deterministic.</span>
+<span class="sd">    :return: The points</span>
+<span class="sd">    :rtype: list[list[float]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># calculate the number of points per dimension (log)</span>
+    <span class="n">points_per_dim</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">n</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">m</span><span class="p">))</span>
+
+    <span class="c1"># create a grid and return the points</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">points_per_dim</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="GEN_GRID_HALTON">
+<a class="viewcode-back" href="../../../codesnippets.evolution.html#codesnippets.evolution.operators.GEN_GRID_HALTON">[docs]</a>
+<span class="k">def</span> <span class="nf">GEN_GRID_HALTON</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates n points in [0,1]^m. The first points are generated using a grid, the remaining points are generated</span>
+<span class="sd">    using the Halton sequence.</span>
+<span class="sd">    :param n: Number of points.</span>
+<span class="sd">    :type n: int</span>
+<span class="sd">    :param m: Number of dimensions.</span>
+<span class="sd">    :type m: int</span>
+<span class="sd">    :param seed: The seed to use for the random number generator.</span>
+<span class="sd">    :return: The points</span>
+<span class="sd">    :rtype: list[list[float]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">points_grid</span> <span class="o">=</span> <span class="n">GEN_GRID</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+    <span class="n">points_sobol</span> <span class="o">=</span> <span class="n">GEN_HALTON</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">points_grid</span><span class="p">),</span> <span class="n">m</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">points_grid</span> <span class="o">+</span> <span class="n">points_sobol</span></div>
+
+
+
+<div class="viewcode-block" id="EVAL_FITNESS">
+<a class="viewcode-back" href="../../../codesnippets.evolution.html#codesnippets.evolution.operators.EVAL_FITNESS">[docs]</a>
+<span class="k">def</span> <span class="nf">EVAL_FITNESS</span><span class="p">(</span><span class="n">individuals</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluates individuals based on their fitness.</span>
+<span class="sd">    :param individuals: The individuals.</span>
+<span class="sd">    :type individuals: list[Individual]</span>
+<span class="sd">    :return: The fitness values for each individual.</span>
+<span class="sd">    :rtype: list[float or int]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">ind</span><span class="o">.</span><span class="n">get_fitness</span><span class="p">()</span> <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">individuals</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="EVAL_REL_FITNESS">
+<a class="viewcode-back" href="../../../codesnippets.evolution.html#codesnippets.evolution.operators.EVAL_REL_FITNESS">[docs]</a>
+<span class="k">def</span> <span class="nf">EVAL_REL_FITNESS</span><span class="p">(</span><span class="n">individuals</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluates individuals based on their relative fitness.</span>
+<span class="sd">    :param individuals: The individuals.</span>
+<span class="sd">    :type individuals: list[Individual]</span>
+<span class="sd">    :return: The fitness values for each individual.</span>
+<span class="sd">    :rtype: list[float or int]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">ind</span><span class="o">.</span><span class="n">get_relative_fitness</span><span class="p">()</span> <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">individuals</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="EVAL_PARETO">
+<a class="viewcode-back" href="../../../codesnippets.evolution.html#codesnippets.evolution.operators.EVAL_PARETO">[docs]</a>
+<span class="k">def</span> <span class="nf">EVAL_PARETO</span><span class="p">(</span><span class="n">individuals</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluates individuals based on Pareto dominance. The value of an individual will be the number of individuals that</span>
+<span class="sd">    it is not dominated by.</span>
+<span class="sd">    :param individuals: The individuals.</span>
+<span class="sd">    :type individuals: list[Individual]</span>
+<span class="sd">    :return: The Pareto dominance ranks for each individual (attention: the interpretation of the values is inverted so</span>
+<span class="sd">        that a higher value means a better individual).</span>
+<span class="sd">    :rtype: list[int]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># get the goals</span>
+    <span class="n">goals</span> <span class="o">=</span> <span class="n">individuals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_goals</span><span class="p">()</span>
+
+    <span class="c1"># calculate the pareto ranks</span>
+    <span class="n">pareto_ranks</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">individuals</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ind_a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">individuals</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">ind_b</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">individuals</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">phenotype_a</span> <span class="o">=</span> <span class="n">ind_a</span><span class="o">.</span><span class="n">get_phenotype</span><span class="p">()</span>
+            <span class="n">phenotype_b</span> <span class="o">=</span> <span class="n">ind_b</span><span class="o">.</span><span class="n">get_phenotype</span><span class="p">()</span>
+            <span class="n">b_gt_a</span> <span class="o">=</span> <span class="p">[(</span><span class="n">g</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">p_b</span> <span class="o">&gt;</span> <span class="n">p_a</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">g</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">p_b</span> <span class="o">&lt;</span> <span class="n">p_a</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span><span class="p">,</span> <span class="n">p_a</span><span class="p">,</span> <span class="n">p_b</span> <span class="ow">in</span>
+                      <span class="nb">zip</span><span class="p">(</span><span class="n">goals</span><span class="p">,</span> <span class="n">phenotype_a</span><span class="p">,</span> <span class="n">phenotype_b</span><span class="p">)]</span>
+            <span class="n">b_gte_a</span> <span class="o">=</span> <span class="p">[(</span><span class="n">g</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">p_b</span> <span class="o">&gt;=</span> <span class="n">p_a</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">g</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">p_b</span> <span class="o">&lt;=</span> <span class="n">p_a</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span><span class="p">,</span> <span class="n">p_a</span><span class="p">,</span> <span class="n">p_b</span> <span class="ow">in</span>
+                       <span class="nb">zip</span><span class="p">(</span><span class="n">goals</span><span class="p">,</span> <span class="n">phenotype_a</span><span class="p">,</span> <span class="n">phenotype_b</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">any</span><span class="p">(</span><span class="n">b_gt_a</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="n">b_gte_a</span><span class="p">)):</span>
+                <span class="n">pareto_ranks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="c1"># return the result</span>
+    <span class="k">return</span> <span class="n">pareto_ranks</span></div>
+
+
+
+<div class="viewcode-block" id="SEL_BEST">
+<a class="viewcode-back" href="../../../codesnippets.evolution.html#codesnippets.evolution.operators.SEL_BEST">[docs]</a>
+<span class="k">def</span> <span class="nf">SEL_BEST</span><span class="p">(</span><span class="n">individuals</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pressure</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eval_funct</span><span class="o">=</span><span class="n">EVAL_FITNESS</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Selects the best n individuals.</span>
+<span class="sd">    :param individuals: The individuals.</span>
+<span class="sd">    :type individuals: list[Individual]</span>
+<span class="sd">    :param n: The number of individuals to select.</span>
+<span class="sd">    :type n: int</span>
+<span class="sd">    :param pressure: The pressure won&#39;t have any effect to this selection method.</span>
+<span class="sd">    :type pressure: float or int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># calculate the values using the evaluation function</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">eval_funct</span><span class="p">(</span><span class="n">individuals</span><span class="p">)</span>
+
+    <span class="c1"># sort the individuals by their values in descending order</span>
+    <span class="n">sorted_individuals</span> <span class="o">=</span> <span class="p">[</span><span class="n">individuals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">values</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+
+    <span class="c1"># duplicate the first individual if necessary to ensure that the list is long enough</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">sorted_individuals</span><span class="p">):</span>
+        <span class="n">sorted_individuals</span> <span class="o">=</span> <span class="n">sorted_individuals</span> <span class="o">+</span> <span class="p">[</span><span class="n">sorted_individuals</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">sorted_individuals</span><span class="p">))</span>
+
+    <span class="c1"># return the best n individuals</span>
+    <span class="k">return</span> <span class="n">sorted_individuals</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="SEL_ROULETTE">
+<a class="viewcode-back" href="../../../codesnippets.evolution.html#codesnippets.evolution.operators.SEL_ROULETTE">[docs]</a>
+<span class="k">def</span> <span class="nf">SEL_ROULETTE</span><span class="p">(</span><span class="n">individuals</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pressure</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eval_funct</span><span class="o">=</span><span class="n">EVAL_FITNESS</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Selects n individuals using roulette wheel selection.</span>
+<span class="sd">    :param individuals: The individuals.</span>
+<span class="sd">    :type individuals: list[Individual]</span>
+<span class="sd">    :param n: The number of individuals to select.</span>
+<span class="sd">    :type n: int</span>
+<span class="sd">    :param pressure: The pressure to apply to the selection. Expected to be in range [0, 1]. A low pressure will result</span>
+<span class="sd">        in a more uniform selection, a high pressure will result into the untouched roulette wheel selection.</span>
+<span class="sd">    :type pressure: float or int</span>
+<span class="sd">    :param eval_funct: The evaluation function to use. The evaluation function should take a list of individuals</span>
+<span class="sd">        as input and return a list of floats or ints as output. The output values should be proportional to the</span>
+<span class="sd">        probability of the corresponding individual being selected. If no evaluation function is given, the fitness</span>
+<span class="sd">        values of the individuals will be used.</span>
+<span class="sd">    :type eval_funct: function</span>
+<span class="sd">    :return: The selected individuals.</span>
+<span class="sd">    :rtype: list[Individual]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># raise an error if pressure is not in range [0, 1]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">pressure</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;pressure must be in range [0, 1].&quot;</span><span class="p">)</span>
+
+    <span class="c1"># calculate the values using the evaluation function</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">eval_funct</span><span class="p">(</span><span class="n">individuals</span><span class="p">)</span>
+
+    <span class="c1"># set the probabilities by normalizing the values</span>
+    <span class="n">v_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">uniform_prob</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">individuals</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">v_sum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">probabilities</span> <span class="o">=</span> <span class="p">[</span><span class="n">uniform_prob</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">individuals</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">probabilities</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="o">/</span> <span class="n">v_sum</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
+
+    <span class="c1"># apply pressure</span>
+    <span class="n">probabilities</span> <span class="o">=</span> <span class="p">[</span><span class="n">pressure</span> <span class="o">*</span> <span class="n">p</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pressure</span><span class="p">)</span> <span class="o">*</span> <span class="n">uniform_prob</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">probabilities</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_roulette_wheel_selection</span><span class="p">():</span>
+        <span class="c1"># select an individual using roulette wheel selection</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">rdm</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+        <span class="n">cumulative_fitness</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">individuals</span><span class="p">,</span> <span class="n">probabilities</span><span class="p">):</span>
+            <span class="n">cumulative_fitness</span> <span class="o">+=</span> <span class="n">prob</span>
+            <span class="k">if</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="n">cumulative_fitness</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ind</span>
+
+        <span class="c1"># return the last individual if no individual was selected (should never happen)</span>
+        <span class="k">return</span> <span class="n">individuals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># select the individuals using roulette wheel selection</span>
+    <span class="n">selected_individuals</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">selected_individuals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_roulette_wheel_selection</span><span class="p">())</span>
+
+    <span class="c1"># return the selected individuals</span>
+    <span class="k">return</span> <span class="n">selected_individuals</span></div>
+
+
+
+<div class="viewcode-block" id="REC_CROSS_UNIFORM">
+<a class="viewcode-back" href="../../../codesnippets.evolution.html#codesnippets.evolution.operators.REC_CROSS_UNIFORM">[docs]</a>
+<span class="k">def</span> <span class="nf">REC_CROSS_UNIFORM</span><span class="p">(</span><span class="o">*</span><span class="n">parents</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recombines the given parents using a uniform crossover.</span>
+<span class="sd">    :param parents: The parents.</span>
+<span class="sd">    :type parents: tuple(Individual)</span>
+<span class="sd">    :return: The offspring as an Individual.</span>
+<span class="sd">    :rtype: Individual</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># randomize the order of the parents</span>
+    <span class="n">parents</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">parents</span><span class="p">)</span>
+
+    <span class="c1"># get the genotypes of the parents</span>
+    <span class="n">genotypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">parent</span><span class="o">.</span><span class="n">get_genotype</span><span class="p">()</span> <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">]</span>
+
+    <span class="c1"># check if genotypes are of equal length</span>
+    <span class="n">gen_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">genotypes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">genotype</span><span class="p">)</span> <span class="o">==</span> <span class="n">gen_length</span> <span class="k">for</span> <span class="n">genotype</span> <span class="ow">in</span> <span class="n">genotypes</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All genotypes must be of equal length.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># recombine the genotypes</span>
+    <span class="n">offspring_genotype</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">gen_length</span><span class="p">):</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">parents</span><span class="p">)</span>  <span class="c1"># Choose a random parent</span>
+        <span class="n">offspring_genotype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">get_genotype</span><span class="p">()[</span><span class="n">j</span><span class="p">]))</span>  <span class="c1"># Append the allele to the offspring genotype</span>
+
+    <span class="c1"># return the offspring</span>
+    <span class="k">return</span> <span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="o">*</span><span class="n">offspring_genotype</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="REC_CROSS_POINT">
+<a class="viewcode-back" href="../../../codesnippets.evolution.html#codesnippets.evolution.operators.REC_CROSS_POINT">[docs]</a>
+<span class="k">def</span> <span class="nf">REC_CROSS_POINT</span><span class="p">(</span><span class="o">*</span><span class="n">parents</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recombines the given parents using an n point crossover. The default number of crossover points will be calculated</span>
+<span class="sd">    so that, if possible, each parent will be used once. The number of crossover points can also be set manually using</span>
+<span class="sd">    the keyword argument &#39;n&#39;.</span>
+<span class="sd">    :param parents: The parents.</span>
+<span class="sd">    :type parents: tuple(Individual)</span>
+<span class="sd">    :return: The offspring.</span>
+<span class="sd">    :return: The offspring as tuple of Individuals.</span>
+<span class="sd">    :rtype: Individual</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># randomize the order of the parents</span>
+    <span class="n">parents</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">parents</span><span class="p">)</span>
+
+    <span class="c1"># get the genotypes of the parents</span>
+    <span class="n">genotypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">parent</span><span class="o">.</span><span class="n">get_genotype</span><span class="p">()</span> <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">]</span>
+
+    <span class="c1"># get the length of the genotypes and check if they are of equal length</span>
+    <span class="n">gen_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">genotypes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">genotype</span><span class="p">)</span> <span class="o">==</span> <span class="n">gen_length</span> <span class="k">for</span> <span class="n">genotype</span> <span class="ow">in</span> <span class="n">genotypes</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All genotypes must be of equal length.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># determine the number of crossover points</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">gen_length</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">parents</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># generate the crossover points</span>
+    <span class="n">crossover_points</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">gen_length</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+    <span class="c1"># recombine the genotypes</span>
+    <span class="n">offspring_genotype</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">gen_length</span><span class="p">):</span>
+        <span class="c1"># switch to the next parent if the crossover point is reached</span>
+        <span class="k">if</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">crossover_points</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">parents</span><span class="p">)</span>
+
+        <span class="c1"># append the allele to the offspring genotype</span>
+        <span class="n">offspring_genotype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="p">(</span><span class="n">genotypes</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]))</span>
+
+    <span class="c1"># return the offspring</span>
+    <span class="k">return</span> <span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="o">*</span><span class="n">offspring_genotype</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="REC_CROSS_ARITHMETIC">
+<a class="viewcode-back" href="../../../codesnippets.evolution.html#codesnippets.evolution.operators.REC_CROSS_ARITHMETIC">[docs]</a>
+<span class="k">def</span> <span class="nf">REC_CROSS_ARITHMETIC</span><span class="p">(</span><span class="o">*</span><span class="n">parents</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recombines the given parents using an arithmetic crossover.</span>
+<span class="sd">    :param parents: The parents.</span>
+<span class="sd">    :type parents: tuple(Individual)</span>
+<span class="sd">    :return: The offspring as an Individual.</span>
+<span class="sd">    :rtype: Individual</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Get the genotypes of the parents</span>
+    <span class="n">genotypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">parent</span><span class="o">.</span><span class="n">get_genotype</span><span class="p">()</span> <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">]</span>
+
+    <span class="c1"># Check if genotypes are of equal length</span>
+    <span class="n">gen_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">genotypes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">genotype</span><span class="p">)</span> <span class="o">==</span> <span class="n">gen_length</span> <span class="k">for</span> <span class="n">genotype</span> <span class="ow">in</span> <span class="n">genotypes</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All genotypes must be of equal length.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Recombine the genotypes using arithmetic crossover</span>
+    <span class="n">offspring_genotype</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">parents</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">gen_length</span><span class="p">):</span>
+        <span class="n">avg</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parents</span><span class="p">)):</span>
+            <span class="n">avg</span> <span class="o">+=</span> <span class="n">weight</span> <span class="o">*</span> <span class="n">genotypes</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">calculated_allele</span> <span class="o">=</span> <span class="n">genotypes</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">avg</span><span class="p">)</span>  <span class="c1"># create a new allele with the calculated value</span>
+        <span class="n">offspring_genotype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">calculated_allele</span><span class="p">)</span>  <span class="c1"># append the allele to the offspring genotype</span>
+
+    <span class="c1"># Return the offspring</span>
+    <span class="k">return</span> <span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="o">*</span><span class="n">offspring_genotype</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="MUT_FLIP">
+<a class="viewcode-back" href="../../../codesnippets.evolution.html#codesnippets.evolution.operators.MUT_FLIP">[docs]</a>
+<span class="k">def</span> <span class="nf">MUT_FLIP</span><span class="p">(</span><span class="n">allele</span><span class="p">,</span> <span class="n">heat</span><span class="o">=</span><span class="mf">.5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Flips the given allele.</span>
+<span class="sd">    :param allele: The allele.</span>
+<span class="sd">    :type allele: Allele</span>
+<span class="sd">    :param heat: The likelihood of flipping the allele.</span>
+<span class="sd">    :type heat: float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># raise an error if heat is not in range [0, 1]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">heat</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;heat must be in range [0, 1].&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">rdm</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">heat</span><span class="p">:</span>
+        <span class="n">allele</span><span class="o">.</span><span class="n">set</span><span class="p">((</span><span class="o">-</span><span class="n">allele</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">())</span></div>
+
+
+
+<div class="viewcode-block" id="MUT_UNIFORM">
+<a class="viewcode-back" href="../../../codesnippets.evolution.html#codesnippets.evolution.operators.MUT_UNIFORM">[docs]</a>
+<span class="k">def</span> <span class="nf">MUT_UNIFORM</span><span class="p">(</span><span class="n">allele</span><span class="p">,</span> <span class="n">heat</span><span class="o">=</span><span class="mf">.5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Mutates the given allele using a uniform distribution.</span>
+<span class="sd">    :param allele: The allele.</span>
+<span class="sd">    :type allele: Allele</span>
+<span class="sd">    :param heat: The normalized range of the uniform distribution around the old value.</span>
+<span class="sd">    :type heat: float or int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># raise an error if heat is not in range [0, 1]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">heat</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;heat must be in range [0, 1].&quot;</span><span class="p">)</span>
+
+    <span class="c1"># calculate the new value</span>
+    <span class="n">old</span> <span class="o">=</span> <span class="n">allele</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">normalized</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">min_value</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">old</span> <span class="o">-</span> <span class="n">heat</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">max_value</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">old</span> <span class="o">+</span> <span class="n">heat</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">new</span> <span class="o">=</span> <span class="n">rdm</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">min_value</span><span class="p">,</span> <span class="n">max_value</span><span class="p">)</span>
+
+    <span class="c1"># set the new value</span>
+    <span class="n">allele</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="MUT_GAUSS">
+<a class="viewcode-back" href="../../../codesnippets.evolution.html#codesnippets.evolution.operators.MUT_GAUSS">[docs]</a>
+<span class="k">def</span> <span class="nf">MUT_GAUSS</span><span class="p">(</span><span class="n">allele</span><span class="p">,</span> <span class="n">heat</span><span class="o">=</span><span class="mf">.5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Mutates the given allele using a Gaussian distribution.</span>
+<span class="sd">    :param allele: The allele.</span>
+<span class="sd">    :type allele: Allele</span>
+<span class="sd">    :param heat: The normalized mutation range (approx. 99.7% of the values will be in the range</span>
+<span class="sd">        [old - heat/2, old + heat/2]).</span>
+<span class="sd">    :type heat: float or int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># raise an error if heat is not in range [0, 1]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">heat</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;heat must be in range [0, 1].&quot;</span><span class="p">)</span>
+
+    <span class="c1"># calculate the new value</span>
+    <span class="n">old</span> <span class="o">=</span> <span class="n">allele</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">normalized</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">min_value</span> <span class="o">=</span> <span class="n">old</span> <span class="o">-</span> <span class="n">heat</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">max_value</span> <span class="o">=</span> <span class="n">min_value</span> <span class="o">+</span> <span class="n">heat</span>
+    <span class="n">new</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">new</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">new</span> <span class="o">=</span> <span class="n">rdm</span><span class="o">.</span><span class="n">gauss</span><span class="p">(</span><span class="n">old</span><span class="p">,</span> <span class="p">(</span><span class="n">max_value</span> <span class="o">-</span> <span class="n">min_value</span><span class="p">)</span> <span class="o">/</span> <span class="mi">6</span><span class="p">)</span>
+
+    <span class="c1"># set the new value</span>
+    <span class="n">allele</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Genetic Algorithms Backend</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">backend</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;1980, Thomas Kottenhahn, Christian Maul, Sambou Kinteh, Patrick Radau, Janik Rostami-Abandansari, Anton Schönfeld, Paul Seidel, Simon Laubersheimer.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
