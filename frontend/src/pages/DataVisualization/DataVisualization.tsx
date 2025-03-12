@@ -42,6 +42,10 @@ interface GenerationData {
 
 function DataVisualization() {
     const navigate = useNavigate();
+    const easySpeech = cookies.getCookies().easy_speech
+
+    const normalText = "In the genetic algorithm we start with a population of entities. This population is the first generation. Every generation is the base of the following generation. This is archived by selecting and multiplying good entities and deleting bad ones. Each entity represents a set of input values and their corresponding results for consumption and elasticity. First the input values will be randomly set. After all results are computed, the entities will be ranked depending on their result values. Good performing entities with slightly modified values are used to generate a new population. The best performing entities are called elites. Elites are not modified, but copied to the next generation. The worst performing entities will not be used for future generations.";
+    const easyText = "In the genetic algorithm, we start with a group of entities. This group is the first generation. Every generation is the base for the next one. Good entities are chosen and multiplied, while bad ones are removed. Each entity represents a set of values and their results for fuel usage and elasticity. The values are first set randomly. After computing the results, the entities are ranked based on their performance. Good performing entities are slightly changed and used to create a new group. The best performing entities are called elites. Elites are not changed but copied to the next group. The worst entities are not used in future generations.";
 
     useEffect(() => {
         if (!cookies.isLoggedIn()) {
@@ -235,17 +239,7 @@ function DataVisualization() {
                 <Card>
                     <h2>Description</h2>
                     <p>
-                        In the genetic algorithm we start with a population of entities.
-                        This population is the first generation.
-                        Every generation is the base of the following generation.
-                        This is archived by selecting and multiplying good entities and deleting bad ones.
-                        Each entity represents a set of input values and their corresponding results for consumption and elasticity.
-                        First the input values will be randomly set.
-                        After all results are computed, the entities will be ranked depending on their result values.
-                        Good performing entities with slightly modified values are used to generate a new population.
-                        The best performing entities are called elites.
-                        Elites are not modified, but copied to the next generation.
-                        The worst performing entities will not be used for future generations.
+                        {easySpeech ? easyText : normalText}
                     </p>
                 </Card>
 

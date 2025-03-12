@@ -15,6 +15,7 @@ interface UserData {
 
 function Settings() {
     const navigate = useNavigate();
+    const initialChecked = cookies.getCookies().easy_speech || false;
 
     useEffect(() => {
         if (!cookies.isLoggedIn()) {
@@ -212,11 +213,10 @@ function Settings() {
                     {selectedTab === "speech" && (
                         <>
                             <h2 className={styles.header}>Easy Speech</h2>
-                            <ToggleButton></ToggleButton>
 
+                            <ToggleButton initialChecked={initialChecked}/>
                         </>
                     )}
-
 
                     {selectedTab === "user-management" && role === "administrator" && (
                         <>

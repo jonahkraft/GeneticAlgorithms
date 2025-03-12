@@ -116,8 +116,7 @@ function logIn(username: string, password: string): Promise<boolean> {
             .then(response => {
                 const token = response.data.access_token;
                 const role = response.data.role;
-                cookies.saveCookies({ "username": username, "role": role, "signed_in": true, "token": token });
-                console.log("erfolg");
+                cookies.saveCookies({ "username": username, "role": role, "signed_in": true, "easy_speech": false, "token": token });
                 resolve(true);
             })
             .catch(error => {
