@@ -1443,17 +1443,18 @@ function DataVisualization() {
     // Display the transmitted Parameters
     const [transmittedData, setTransmittedData] = useState("Transmitted Data: Placeholder");
 
-
+    //const token = 'bla'
     // load CSV Files
     useEffect(() => {
-        console.log('DataVisualization');
+        console.log('DataVisualization vor axios get');
         // call backend-API
-        axios.get("/api/get_simulation_data")
+        //        axios.post("/api/get_simulation_data", {columns: [], row_constraints: []}, {"Content-Type": "application/json", "Authorization": `Bearer ${token}`})
+        axios.post("/api/get_simulation_data")
             .then((response) => {
-                console.log('DataVisualization');
+                console.log('DataVisualization NACH axios get');
+                console.log('Result von AXIOS GET', response.data, 'Result von AXIOS GET', response);
                 const result = Papa.parse(response.data, { header: true, skipEmptyLines: true });
                 setData(result.data);
-                console.log(result);
             })
             .catch((error) => console.error("Fehler beim Laden der CSV:", error));
     }, []);
@@ -1549,11 +1550,11 @@ function DataVisualization() {
     }
 
     // For Debugging Purpose/ Test Purpose
-    console.log('Data: ', data, typeof (data))
-    console.log('Generations: ', generations, typeof (generations))
-    console.log('SelectedGeneration: ', selectedGeneration, typeof (selectedGeneration))
-    console.log('GeneratedElement: ', generatedElement, typeof (generatedElement))
-    console.log(document.cookie)
+    //console.log('Data: ', data, typeof (data))
+    //console.log('Generations: ', generations, typeof (generations))
+    //console.log('SelectedGeneration: ', selectedGeneration, typeof (selectedGeneration))
+    //console.log('GeneratedElement: ', generatedElement, typeof (generatedElement))
+    //console.log(document.cookie)
     const tmpList = generateResultList(data)
 
     return (
