@@ -1,13 +1,9 @@
-.container{
-
-}
-
-.debugButton{
+.visualizationButton{
     color: black;
     border: 2px solid black;
 }
 
-.debugButton:hover {
+.visualizationButton:hover {
     background: linear-gradient(135deg, #3c79ba, #296098);
     transform: scale(1.05);
 }

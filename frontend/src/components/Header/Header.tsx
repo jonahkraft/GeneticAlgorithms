@@ -37,7 +37,7 @@ function Header() {
                         <Link to="/settings" className={styles.navbarListItem}>Settings</Link>
                     </li>
 
-                    {/*Button für Login bzw. Logout je nach aktuellem Zustand*/}
+                    {/*VisualizationButton für Login bzw. Logout je nach aktuellem Zustand*/}
 
                     {signed_in ? (
                         <li>

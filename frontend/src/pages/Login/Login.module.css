@@ -89,7 +89,7 @@
     gap: 10px;
 }
 
-.button {
+.visualizationButton {
     width: 50%;
     background: linear-gradient(135deg, #007BFF, #0056b3);
     color: white;
@@ -101,7 +101,7 @@
     transition: 0.3s;
 }
 
-.button:hover {
+.visualizationButton:hover {
     background: linear-gradient(135deg, #0056b3, #003f7f);
 }
 
