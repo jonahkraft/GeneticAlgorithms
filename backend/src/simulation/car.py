@@ -1,5 +1,5 @@
-from codesnippets.evolution.interfaces import Allele, Individual
-from codesnippets.utilities import consumption_model as cm
+from simulation.evolution.interfaces import Allele, Individual
+from simulation.utilities import consumption_model as cm
 
 
 class FinalDrive(Allele):

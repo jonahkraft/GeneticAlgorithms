@@ -5,7 +5,7 @@ import os
 
 from matplotlib import pyplot as plt
 
-import codesnippets.evolution as evo
+import simulation.evolution as evo
 
 
 def export_generations_to_csv(generations, name="generations", directory=None, header=True, delimiter=","):

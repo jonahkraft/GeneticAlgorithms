@@ -9,7 +9,7 @@ from flask_jwt_extended import JWTManager
 from app import app as api
 
 import database as db
-from codesnippets import main as sim
+from simulation import main as sim
 
 api.config["JWT_SECRET_KEY"] = "please-remember-to-change-me"
 jwt = JWTManager(api)

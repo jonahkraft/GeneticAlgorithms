@@ -1,8 +1,8 @@
-from codesnippets.car import Car
-from codesnippets.evolution.interfaces.population import Population
-from codesnippets.evolution.operators import EVAL_PARETO, REC_CROSS_POINT
-from codesnippets.evolution.strategies import STRAT_B
-from codesnippets.utilities.helper import import_generations_from_csv, plot_generations, export_generations_to_csv, export_generations_to_list
+from simulation.car import Car
+from simulation.evolution.interfaces.population import Population
+from simulation.evolution.operators import EVAL_PARETO, REC_CROSS_POINT
+from simulation.evolution.strategies import STRAT_B
+from simulation.utilities.helper import import_generations_from_csv, plot_generations, export_generations_to_csv, export_generations_to_list
 
 '''
 Übergebbare Parameter:
