@@ -1,5 +1,3 @@
-import Header from "../../components/Header/Header.tsx";
-import Footer from "../../components/Footer/Footer.tsx";
 import axios from 'axios';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
@@ -1560,7 +1558,6 @@ function DataVisualization() {
 
     return (
         <div className={styles.wrapper}>
-            <Header/>
             <div className={styles.toolbar}>Toolbar</div>
 
             <div className={styles.container}>
@@ -1701,7 +1698,6 @@ function DataVisualization() {
 
             {/*<div className="sidebar right" id="rightSidebar">Right Sidebar Content</div>*/}
             {/*<button className="toggle-btn right-btn" onClick={() => toggleSidebar('right')}>☰</button>*/}
-            <Footer/>
         </div>
     );
 }

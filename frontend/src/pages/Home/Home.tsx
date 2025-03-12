@@ -1,8 +1,6 @@
 import styles from './Home.module.css';
-import logIn from '../Login/LoginExport.ts'
+import logIn from '../Login/LoginExport.ts';
 import { useNavigate } from "react-router-dom";
-import Header from "../../components/Header/Header.tsx";
-import Footer from "../../components/Footer/Footer.tsx";
 import cookies from "../../cookies.ts";
 
 function Home() {
@@ -23,7 +21,6 @@ function Home() {
 
     return (
         <div className={styles.wrapper}>
-            <Header/>
             <br/><br/>
             <div className={styles.mainContent}>
                 <h2 className={styles.header}>Welcome to the Simulation</h2>
@@ -60,7 +57,6 @@ function Home() {
                     <p className={styles.detailsText}>The overview graph displays all members of the population, organized by generation and consumption. The generation-specific graph provides a more detailed view, where each member of a generation is represented by three points—one for each of the three gears. These points are positioned based on their gear and elasticity.</p>
                 </details>
             </div>
-            <Footer/>
         </div>
     );
 }

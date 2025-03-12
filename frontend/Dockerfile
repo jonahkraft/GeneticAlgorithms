@@ -1,5 +1,5 @@
 # Basis-Image mit Node.js
-FROM node:18 AS build
+FROM node:18-alpine
 
 WORKDIR /frontend
 
@@ -15,4 +15,4 @@ RUN npm run build
 
 # Serve installieren und starten
 RUN npm install -g serve
-CMD ["serve", "-s", "build"]
+CMD ["serve", "-s", "dist"]
