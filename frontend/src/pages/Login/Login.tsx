@@ -49,6 +49,7 @@ function Login() {
 
     return (
         <>
+            <div className={styles.container}>
             <div className={styles.center}>
                 <h1 className={styles.header}>Login</h1>
                 <form onSubmit={getUserdata}>
@@ -87,6 +88,7 @@ function Login() {
                         Continue as Simulator
                     </div>
                 </form>
+            </div>
             </div>
         </>
     );
