@@ -4,7 +4,7 @@ import cookies from '../../cookies.ts'
 import UserLabel from "../UserLabel/UserLabel.tsx";
 
 function Header() {
-    const signed_in = cookies.getCookies()["signed_in"];
+    const signed_in = cookies.isLoggedIn()
     const navigate = useNavigate();
 
     function logOut() {
@@ -33,16 +33,18 @@ function Header() {
                         <Link to="/data_visualization" className={styles.navbarListItem}>Data Visualization</Link>
                     </li>
 
-                    <li>
-                        <Link to="/settings" className={styles.navbarListItem}>Settings</Link>
-                    </li>
-
-                    {/*VisualizationButton für Login bzw. Logout je nach aktuellem Zustand*/}
+                    {/*VisualizationButton für Login bzw. Logout bzw. Settings je nach aktuellem Zustand*/}
 
                     {signed_in ? (
-                        <li>
-                            <a onClick={logOut} className={styles.navbarListItem}>Logout</a>
-                        </li>
+                        <>
+                            <li>
+                                <Link to="/settings" className={styles.navbarListItem}>Settings</Link>
+                            </li>
+
+                            <li>
+                                <a onClick={logOut} className={styles.navbarListItem}>Logout</a>
+                            </li>
+                        </>
                     ) : (
                         <li>
                             <Link to="/login" className={styles.navbarListItem}>Login</Link>
