@@ -25,8 +25,47 @@ function Settings() {
     const handleTabClick = (tab: string) => {
         setSelectedTab(tab);
     };
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [roleSet, setRole] = useState("simulator");
+
+    const [users, setUsers] = useState([
+        { username: "John Doe", password: "**********", role: "Admin" },
+        { username: "Jane Smith", password: "**********", role: "Data Analyst" }
+    ]);
 
     // TODO: Nutzer aus Datenbank laden für Admin-Funktionen
+    function addUser(username: string, password: string, role: string) {
+        console.log("username in addUser", username)
+        console.log("password in addUser", password)
+        console.log("role in addUser", role)
+        const token = cookies.getCookies().token
+        console.log(token)
+        //const token = ''
+        axios.post('/api/register',
+            { "username": username, "password": password, "role": role },
+            { headers: { "Authorization": `Bearer ${token}`,
+                         "Content-Type": "application/json" }
+            })
+            .then(response => {
+                console.log(response)
+                setUsers([...users, { username, password: "**********", role }]);
+
+                /*
+                axios.post('/api/protected_test', {},
+                    {
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            "Content-Type": "application/json"  // Ensure JSON data format
+                        }
+                    }
+                )
+                 */
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
 
     return (
         <div className={styles.settingsPage}>
@@ -122,17 +161,43 @@ function Settings() {
                             {/* Eingabemaske zum Hinzufügen eines neuen Benutzers, derzeit ohne Funktionalität */}
                             <div>
                                 <h3 className={styles.header}>Add New User</h3>
-                                <form>
-                                    <input className={styles.userFormInput} type="text" placeholder="Enter username" required />
-                                    <input className={styles.userFormInput} type="password" placeholder="Enter password" required />
+                                <form onSubmit={(e) => e.preventDefault()}>
+                                    <input
+                                        className={styles.userFormInput}
+                                        type="text"
+                                        placeholder="Enter username"
+                                        required
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                    />
 
-                                    <select className={styles.userFormSelect} required>
+                                    <input
+                                        className={styles.userFormInput}
+                                        type="password"
+                                        placeholder="Enter password"
+                                        required
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                    />
+
+                                    <select
+                                        className={styles.userFormSelect}
+                                        required
+                                        value={roleSet}
+                                        onChange={(e) => setRole(e.target.value)}
+                                    >
                                         <option value="simulator">Simulator</option>
                                         <option value="data-analyst">Data Analyst</option>
                                         <option value="administrator">Admin</option>
                                     </select>
 
-                                    <button type="submit" className={styles.userFormButton} onClick={() => addUser()}>Add User</button>
+                                    <button
+                                        type="button"
+                                        className={styles.userFormButton}
+                                        onClick={() => addUser(username, password, roleSet)}
+                                    >
+                                        Add User
+                                    </button>
                                 </form>
                             </div>
 
@@ -149,68 +214,26 @@ function Settings() {
                                     </tr>
                                     </thead>
                                     <tbody>
-
-                                    {/* Daten derzeit hardgecoded, anpassen! */}
-
-                                    <tr>
-                                        <td className={styles.td}>John Doe</td>
-                                        <td className={styles.td}>**********</td>
-                                        <td className={styles.td}>Admin</td>
-                                        <td className={styles.td}>
-                                            <button className={styles.userListButton}>Edit</button>
-                                            <button className={styles.userListButton}>Delete</button>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td className={styles.td}>Jane Smith</td>
-                                        <td className={styles.td}>**********</td>
-                                        <td className={styles.td}>Data Analyst</td>
-                                        <td className={styles.td}>
-                                            <button className={styles.userListButton}>Edit</button>
-                                            <button className={styles.userListButton}>Delete</button>
-                                        </td>
-                                    </tr>
+                                    {users.map((user, index) => (
+                                        <tr key={index}>
+                                            <td className={styles.td}>{user.username}</td>
+                                            <td className={styles.td}>{user.password}</td>
+                                            <td className={styles.td}>{user.role}</td>
+                                            <td className={styles.td}>
+                                                <button className={styles.userListButton}>Edit</button>
+                                                <button className={styles.userListButton}>Delete</button>
+                                            </td>
+                                        </tr>
+                                    ))}
                                     </tbody>
                                 </table>
                             </div>
                         </>
                     )}
-
                 </div>
             </div>
         </div>
     );
-}
-
-function addUser(username: string | File | null, password: string | File | null, role: string | File | null) {
-    console.log("username in logIN", username)
-    console.log("passwird in lOGIN", password)
-    //const token = ''
-    axios.post('/api/register',
-        { "username": username, "password": password, "role": role },
-        { headers: { "Content-Type": "application/json" } }
-    )
-        .then(response => {
-            const token = response.data.access_token
-            const role = response.data.role
-            console.log('Token', token)
-            console.log('Role', response.data.role)
-            cookies.saveCookies({"username": username, "role": role, "signed_in": true})
-            /*
-            axios.post('/api/protected_test', {},
-                {
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json"  // Ensure JSON data format
-                    }
-                }
-            )
-             */
-        })
-        .catch(error => {
-            console.error(error);
-        });
 }
 
 export default Settings;
