@@ -51,7 +51,7 @@ function Header() {
                         </li>
                     )}
                 </ul>
-                <UserLabel></UserLabel>
+                <UserLabel/>
             </nav>
         </header>
     );

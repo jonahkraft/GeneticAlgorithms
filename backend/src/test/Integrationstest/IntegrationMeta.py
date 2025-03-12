@@ -1,6 +1,6 @@
 import sqlite3
 
-from backend.Test.MetaTest import MetaTest
+from backend.src.test.MetaTest import MetaTest
 from typing import Callable, Sequence, Any, Union
 from sqlite3 import Connection, Cursor
 
@@ -27,9 +27,6 @@ class IntegrationMeta(MetaTest):
         # return checkingFunc(connectionInterface(**kwargs))
         return self
 
-    def disconnect(self):
-        return self
-
     def isinterfaceDefiniert(self):
         return self
 
@@ -53,6 +50,15 @@ class IntegrationMeta(MetaTest):
 
         cursor.execute('DELETE FROM users WHERE ?= user_name', ["TestUser"])
         database.close()
+
+
+    def disconnect(self, **kwargs):
+        self.deleteUserData(database_path=kwargs['database_path'])
+
+    def databaseConnection(self, database_path: str) -> Connection:
+
+        pass
+
 
 
 
