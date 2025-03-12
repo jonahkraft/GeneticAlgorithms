@@ -103,7 +103,7 @@ class ExperiementalDataTests(UnitMeta.UnitMeta):
             for _ in range(3):
                 testCols.append(random.choices(ALL_COLS, k = k))
         # Jetzt jeder Operator + 2 Cols / Real vergleichen (<, <=, >, >= in einer EQ Klasse)
-        ops = ["<", ">", "==", "<>"]
+        ops = ["<", ">", "=", "<>"]
         funcs = [(lambda x, y: x < y), (lambda x, y: x > y), (lambda x, y: x == y), (lambda x, y: not (x == y))]
         leftCols = [random.choice(ALL_COLS) for _ in range(len(ops))]
         rightCols = [random.choice(ALL_COLS) for _ in range(len(ops))]
@@ -200,10 +200,10 @@ class ExperiementalDataTests(UnitMeta.UnitMeta):
         con.close()
     @staticmethod
     def StressTestAddTestData():
-        """
+       """
         Added paralell die Testdaten mit der add_experiement_data Funktion zur Datenbank
         :return:
-        """
+       """
        def pApplied(data : list) -> None:
            database.add_experiment_data(data, testConnection)
        with ThreadPoolExecutor() as executor:
