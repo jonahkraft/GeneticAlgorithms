@@ -1,14 +1,11 @@
 import styles from './Login.module.css';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-//import cookies from '../cookies.ts'
 import displayWarning from "./displayWarninig.ts";
 import WarningComponent from "./warning.tsx";
 //import TestlogIn from './LoginExport.ts'
 import axios from "axios";
 import cookies from "../../cookies.ts";
-//import cookies from "../../cookies.ts";
-import logIn from './LoginExport.ts'
 import GenericButton from "../../components/GenericButton/GenericButton.tsx";
 
 
@@ -17,7 +14,7 @@ function Login() {
     const [password, setPassword] = useState('');
     const [text, setText] = useState('')
     const [displaysWarning, setDisplaysWarning] = useState(false);
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
 
     function getUserdata(event: any) {
         event.preventDefault();
@@ -26,9 +23,9 @@ function Login() {
         const formData = new FormData(form);
         const username = formData.get("username");
         const password = formData.get("password")
-        console.log("Username:", username, "Password:", password);
-        logIn(
-            username, password)
+
+        logIn(username, password)
+        navigate("/data_visualization")
     }
 
     // function triggerWarning() {
@@ -55,14 +52,11 @@ function Login() {
         }
     }
 
-    /*
+    // change ggf
     function enter(username: string) {
-        logIn(username);
-        navigate("/data_visualization")
+        console.log(username)
+        //navigate("/data_visualization")
     }
-
-     */
-
 
     return (
         <>
@@ -101,7 +95,7 @@ function Login() {
 
                     <GenericButton title = "Login" onClick={() => enter(username)}></GenericButton>
                     <p><br/></p>
-                    <div className={styles.signupLink} onClick={() => enter("placeholder")}>
+                    <div className={styles.signupLink}>
                         Continue as Simulator
                     </div>
                 </form>
@@ -140,7 +134,6 @@ export function logIn(username: string | File | null, password: string | File | 
          .catch(error => {
              console.error(error);
          });
-    //cookies.saveCookies({"username": username, "role": role, "signed_in": true})
 }
 
 export default Login;
