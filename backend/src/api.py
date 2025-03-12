@@ -20,7 +20,7 @@ def login(username: str, password: str):
         "registered": False,
         "password_correct": False,
         "access_token": "",
-        "role": "simulation_expert"
+        "role": "simulator"
     }
 
     if not db.user_exists(username):
@@ -39,7 +39,7 @@ def login(username: str, password: str):
     return jsonify(response), 200
 
 def register(username: str, password: str, role: str):
-    possible_roles = {"data_analyst", "administrator", "simulation_expert"}
+    possible_roles = {"data_analyst", "administrator", "simulator"}
 
     response = {
         "success": False,
@@ -61,19 +61,9 @@ def register(username: str, password: str, role: str):
 
     return jsonify(response), 200
 
-@api.route("/api/echo", methods=["POST"])
-@jwt_required()
-def api_echo():
-    """Echo the received message back to client"""
-    current_user = get_jwt_identity()
-
-    msg = request.json
-    print(f"Echo sent by {current_user}: {msg}")
-    return jsonify(msg), 200
-
 @api.route("/api/login", methods=["POST"])
 def api_login():
-    """Handles login request
+    """Handles login request (No Authorization required)
 
     :param JSON
     {
@@ -86,7 +76,7 @@ def api_login():
         "registered": bool,
         "password_correct": bool,
         "access_token": "<token>",
-        "role": "data_analyst | simulation_expert | administrator"
+        "role": "data_analyst | simulator | administrator"
     }
 
     """
@@ -101,13 +91,13 @@ def api_login():
 @api.route("/api/register", methods=["POST"])
 @jwt_required()
 def api_register():
-    """Handles register request
+    """Handles register request (Authorization required: administrator)
 
     :param JSON
     {
         "username": "<username>",
         "password": "<password>",
-        "role": "<data_analyst | simulation_expert | administrator>"
+        "role": "<data_analyst | simulator | administrator>"
     }
 
     :returns JSON
@@ -132,10 +122,13 @@ def api_register():
 
     return register(username, password, role)
 
+
+
+
 @api.route("/api/delete_user", methods=["POST"])
 @jwt_required()
 def api_delete_user():
-    """Handles register request
+    """Deletes a user (Authorization required: administrator)
 
     :param JSON
     {
@@ -165,16 +158,18 @@ def api_delete_user():
 @api.route("/api/change_password", methods=["POST"])
 @jwt_required()
 def api_change_password():
-    """Changes the users password 
+    """Changes the users password  
 
     :param JSON
     {
+        "username": "<username>",
+        "old_password": "<old password>",
         "new_password": "<new password>"
     }
 
     :returns JSON
     {
-        "success": bool
+        "msg": "<error message, if failed>"
     }
 
     """
@@ -182,17 +177,31 @@ def api_change_password():
     current_user = get_jwt_identity()
     data = request.get_json()
 
+    username = data["username"]
+    old_password = data["old_password"]
     new_password = data["new_password"]
 
-    if db.change_password(current_user, new_password):
-        return jsonify({}, 200)
-    return jsonify({}, 404)
-
+    if current_user == username:
+        if db.check_password(username,old_password):
+            if db.change_password(username,new_password):
+                return jsonify({}, 200)
+            else:
+                return jsonify({"msg": f"Cannot find user '{username}'"}, 404)
+        else:
+            return jsonify({"msg": "Invalid old password"}, 401)
+    else:
+        if db.get_role(current_user) == "administrator":
+            if db.change_password(username,new_password):
+                return jsonify({}, 200)
+            else:
+                return jsonify({"msg": f"Cannot find user '{username}'"}, 404)
+        else:
+            return jsonify({"msg": f"Only administrators can change other users passwords"}, 401)
 
 @api.route("/api/start_simulation", methods=["POST"])
 @jwt_required()
 def api_start_simulation():
-    """Starts a simulation with the given parameters
+    """Starts a simulation with the given parameters (Authorization required: administrator, data_analyst, simulator)
 
     :param JSON
     {
@@ -215,7 +224,7 @@ def api_start_simulation():
     current_user = get_jwt_identity()
 
     role = db.get_role(current_user)
-    allowed_roles = {"data_analyst", "administrator", "simulation_expert"}
+    allowed_roles = {"data_analyst", "administrator", "simulator"}
 
     if role not in allowed_roles:
         return jsonify({}), 401
@@ -236,15 +245,15 @@ def api_start_simulation():
     simulation_interface.evolute(generation_count, strategy, aep, elite_count, alien_count)
 
     simulation_results = simulation_interface.results()
-    exp_id = db.add_experiment_data(current_user, simulation_results)
+    exp_id = db.add_experiment_data(simulation_results)
 
     return jsonify({"experiment_id": exp_id}), 200
-
 
 @api.route("/api/get_simulation_data", methods=["POST"])
 @jwt_required()
 def api_get_simulation_data():
-    """Requests historic simulation data for further analysis
+    """Requests historic simulation data for further analysis (Authorization required: administrator, data_analyst, simulator (only their own data))
+
 
     :param JSON
     {
@@ -261,21 +270,15 @@ def api_get_simulation_data():
     current_user = get_jwt_identity()
 
     role = db.get_role(current_user)
-    allowed_roles = {"data_analyst", "administrator", "simulation_expert"}
+    allowed_roles = {"data_analyst", "administrator"}
 
     if role not in allowed_roles:
         return jsonify({}), 401
 
     data = request.get_json()
 
-    columns: list[str] = data["columns"]
-    row_constraints: list[str] = data["row_constraints"]
-
-    if role == "simulation_expert":
-        allowed_ids = db.get_users_experiments(current_user)
-        added_constraints = [f"experiment_id = {id}" for id in allowed_ids]
-        for c in added_constraints:
-            row_constraints.append(c)
+    columns = data["columns"]
+    row_constraints = data["row_constraints"]
 
     try:
         db.export_experiment_data_to_csv("./results/export_data.csv", columns, row_constraints)
@@ -286,3 +289,25 @@ def api_get_simulation_data():
         return jsonify({"content": file.read()}), 200
 
     return jsonify({}), 404
+
+@api.route("/api/get_users", methods=["GET"])
+@jwt_required()
+def api_get_users():
+    """Get name and role for every user.
+
+    :returns JSON
+    {
+        "users" : [ { "username": "<username>", "role": "<role>" } ]
+    }
+
+    """
+    current_user = get_jwt_identity()
+
+    role = db.get_role(current_user)
+    allowed_roles = {"administrator"}
+
+    if role not in allowed_roles:
+        return jsonify({}), 401
+    
+    data = db.get_users()
+    return jsonify({"users": [{"username": user, "role": role} for user,role in data]}, 200)

@@ -7,7 +7,6 @@ import generateResultList from "./generate_result_list.ts";
 import Papa from 'papaparse';
 import { useEffect, useState } from "react";
 import { Dropdown } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import graph from "./graph.tsx";
 import graphGen from "./graphGen.tsx";
 import styles from './DataVisualization.module.css';
@@ -46,6 +45,7 @@ function DataVisualization() {
 
     useEffect(() => {
         if (!cookies.isLoggedIn()) {
+            console.log("redirect")
             navigate("/login");
         }
     }, [navigate]);
@@ -250,48 +250,49 @@ function DataVisualization() {
                 </Card>
 
                 <Card>
-                    <div className={styles.paraContent}>
-                        <div>
-                            <label>Mutationsrate: </label>
-                            <input type="text" name="aep" value={paraInputs.aep} onChange={handleParaChange} />
-                            <label>rate of mutation. A higher value results in less mutation (values between 0 and 1)</label>
-                        </div>
-                        <div>
-                            <label>Generation Count: </label>
-                            <input type="text" name="generation_count" value={paraInputs.generation_count} onChange={handleParaChange} />
-                            <label>Number of computaded generations</label>
-                        </div>
-                        <div>
-                            <label>Population Size: </label>
-                            <input type="text" name="population_size" value={paraInputs.population_size} onChange={handleParaChange} />
-                            <label>Size of a population</label>
-                        </div>
-                        <div>
-                            <label>Given Seed: </label>
-                            <input type="text" name="given_seed" value={paraInputs.given_seed} onChange={handleParaChange} />
-                            <label>Seed for random generation of the first population</label>
-                        </div>
-                        <div>
-                            <label>Elite Count: </label>
-                            <input type="text" name="elite_count" value={paraInputs.elite_count} onChange={handleParaChange} />
-                            <label>Number of elites. Elites are the top entities that will remain unchanged for the next generation</label>
-                        </div>
-                        <div>
-                            <label>Alien Count: </label>
-                            <input type="text" name="alien_count" value={paraInputs.alien_count} onChange={handleParaChange} />
-                            <label>Number of Entities that will be randomly generated in every generation</label>
-                        </div>
-                        <div>
-                            <label>Weigths: </label>
-                            <input type="text" name="weights" value={paraInputs.weights} onChange={handleParaChange} />
-                            <label>Weights of the result-values: consumption, elasticity (values between 3-5)</label>
-                        </div>
+                    <table>
+                        <tr>
+                            <td>Mutationsrate</td>
+                            <td><input type="text" name="aep" value={paraInputs.aep} onChange={handleParaChange} /></td>
+                            <td>rate of mutation. A higher value results in less mutation (values between 0 and 1)</td>
+                        </tr>
+                        <tr>
+                            <td>Generation Count</td>
+                            <td><input type="text" name="generation_count" value={paraInputs.generation_count} onChange={handleParaChange} /></td>
+                            <td>Number of computaded generations</td>
+                        </tr>
+                        <tr>
+                            <td>Population Size</td>
+                            <td><input type="text" name="population_size" value={paraInputs.population_size} onChange={handleParaChange} /></td>
+                            <td>Size of a population</td>
+                        </tr>
+                        <tr>
+                            <td>Given Seed</td>
+                            <td><input type="text" name="given_seed" value={paraInputs.given_seed} onChange={handleParaChange} /></td>
+                            <td>Seed for random generation of the first population</td>
+                        </tr>
+                        <tr>
+                            <td>Elite Count</td>
+                            <td><input type="text" name="elite_count" value={paraInputs.elite_count} onChange={handleParaChange} /></td>
+                            <td>Number of elites. Elites are the top entities that will remain unchanged for the next generation</td>
+                        </tr>
+                        <tr>
+                            <td>Alien Count</td>
+                            <td><input type="text" name="alien_count" value={paraInputs.alien_count} onChange={handleParaChange} /></td>
+                            <td>Number of Entities that will be randomly generated in every generation</td>
+                        </tr>
+                        <tr>
+                            <td>Weigths</td>
+                            <td><input type="text" name="weights" value={paraInputs.weights} onChange={handleParaChange} /></td>
+                            <td>Weights of the result-values: consumption, elasticity (values between 3-5)</td>
+                        </tr>
+                    </table>
+                       
 
                         <GenericButton title='Start Simulation' onClick={() => {
                             transmitParameters(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights);
                             handleTransmit(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights)
                         }} />
-                    </div>
                     <hr/>
                     <a id="transData">{transmittedData}</a>
                 </Card>

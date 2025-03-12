@@ -15,11 +15,14 @@ function Home() {
     }
 
     return (
+
+        
         <div className={styles.wrapper}>
             <br/><br/>
             <div className={styles.mainContent}>
-                <h2 className={styles.header}>Welcome to the Simulation</h2>
-                <p className={styles.introText}>
+            <div className={styles.wrapper}>
+    <img src="/intro.png" className={styles.fullWidthImage}/>
+    <p className={styles.introText}>
                     Evolution: The driving force for diversity and adaptation on our planet. Natural selection ensures that only the strongest survive and pass on the secret of their success to their children.
                 </p>
                 <div className={styles.pictureContainer}>
@@ -31,7 +34,8 @@ function Home() {
 
                 </p>
                 <GenericButton title="Proceed to Simulation" onClick={clickButton}></GenericButton>
-            </div>
+</div>
+</div>
 
             <div className={styles.faq}>
                 <h3 className={styles.smallHeader}>FAQ</h3>
