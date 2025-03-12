@@ -220,6 +220,9 @@ def api_start_simulation():
     if role not in allowed_roles:
         return jsonify({}), 401
 
+    if role == "simulator":
+        
+
     data = request.get_json()
 
     population_size = data["population_size"]
