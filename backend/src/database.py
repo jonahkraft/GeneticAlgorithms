@@ -119,9 +119,7 @@ def change_password(user_name: str, new_password: str, connection_path: str = "d
     h.update(str.encode(new_password))
 
     if user_exists(user_name,connection_path):
-        cur.execute("""UPDATE users
-                    SET hashed_password = ?
-                    WHERE user_name=?""",[h.hexdigest,user_name])
+        cur.execute("UPDATE users SET hashed_password = ? WHERE user_name=?",[h.hexdigest(),user_name])
 
         connection.commit()
         connection.close()
