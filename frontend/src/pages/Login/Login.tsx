@@ -24,9 +24,8 @@ function Login() {
         const username = formData.get("username") as string;
         const password = formData.get("password") as string;
 
-        const suc = logIn(username, password)
-        console.log(suc)
-        if (suc) {
+        logIn(username, password)
+        if (cookies.isLoggedIn()) {
             navigate("/data_visualization")
         }
     }
@@ -110,7 +109,6 @@ function Login() {
 
 // Check for User
 function logIn(username: string, password: string) {
-    let success = false;
 
     console.log("username in logIN", username)
     console.log("passwird in lOGIN", password)
@@ -126,7 +124,6 @@ function logIn(username: string, password: string) {
              console.log('Role', response.data.role)
              cookies.saveCookies({"username": username, "role": role, "signed_in": true, "token": token})
              console.log("erfolg")
-             success = true;
              /*
              axios.post('/api/protected_test', {},
                  {
@@ -141,8 +138,6 @@ function logIn(username: string, password: string) {
          .catch(error => {
              console.error(error);
          });
-
-    return success;
 }
 
 export default Login;

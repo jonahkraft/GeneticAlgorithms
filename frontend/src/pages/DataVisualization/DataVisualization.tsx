@@ -45,6 +45,7 @@ function DataVisualization() {
 
     useEffect(() => {
         if (!cookies.isLoggedIn()) {
+            console.log("redirect")
             navigate("/login");
         }
     }, [navigate]);
