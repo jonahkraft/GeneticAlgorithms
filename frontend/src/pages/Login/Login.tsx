@@ -6,6 +6,7 @@ import displayWarning from "./displayWarninig.ts";
 import WarningComponent from "./warning.tsx";
 //import TestlogIn from './LoginExport.ts'
 import axios from "axios";
+import cookies from "../../cookies.ts";
 //import cookies from "../../cookies.ts";
 
 
@@ -117,8 +118,10 @@ export function logIn(username: string | File | null, password: string | File | 
     )
          .then(response => {
              const token = response.data.access_token
-             console.log('response', response.data.access_token, response.headers.access_token)
+             const role = response.data.role
              console.log('Token', token)
+             console.log('Role', response.data.role)
+             cookies.saveCookies({"username": username, "role": role, "signed_in": true})
              /*
              axios.post('/api/protected_test', {},
                  {

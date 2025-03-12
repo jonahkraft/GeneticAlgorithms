@@ -23,7 +23,7 @@ function getCookies(): CookieData {
         }, standardValue);
 }
 
-function saveCookies(obj: CookieData, days = 7) {
+function saveCookies(obj: { username: string | File | null; role: any; signed_in: boolean }, days = 7) {
     const expires = new Date();
     expires.setDate(expires.getDate() + days);
 
