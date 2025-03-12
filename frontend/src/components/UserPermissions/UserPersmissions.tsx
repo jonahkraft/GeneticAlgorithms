@@ -5,7 +5,6 @@ import {placeholderButtonFunction} from "../../pages/DataVisualization/ButtonFun
 
 function UserPersmissions(){
     const role = cookies.getCookies().role
-    console.log(role);
 
     if (role === 'admin') {
         return(
