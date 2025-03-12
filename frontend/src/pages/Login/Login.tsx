@@ -1,8 +1,7 @@
 import styles from './Login.module.css';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import displayWarning from "./displayWarninig.ts";
-import WarningComponent from "./warning.tsx";
+import Warning from "./Warning.tsx";
 //import TestlogIn from './LoginExport.ts'
 import axios from "axios";
 import cookies from "../../cookies.ts";
@@ -29,15 +28,18 @@ function Login() {
             console.log("Cookies gesetzt")
             navigate("/data_visualization")
         }
+        else {
+            triggerWarning()
+        }
     }
 
-    // function triggerWarning() {
-    //     displayWarning(setText, "username or password is wrong")
-    //     setDisplaysWarning(true)
-    // }
+    function triggerWarning() {
+        setText("username or password is wrong.")
+        setDisplaysWarning(true)
+    }
 
     function disableWarning() {
-        displayWarning(setText, "")
+        setText("")
         setDisplaysWarning(false)
     }
 
@@ -92,7 +94,7 @@ function Login() {
                         <label className={styles.label} htmlFor="password">Password</label>
                     </div>
 
-                    <WarningComponent text={text}/>
+                    <Warning text={text}/>
 
                     <div className={styles.pass}>Forgot Password?</div>
 

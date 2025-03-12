@@ -6,6 +6,8 @@ import GenericButton from '../../components/GenericButton/GenericButton.tsx';
 function Home() {
     const navigate = useNavigate()
 
+    console.log(cookies.getCookies())
+
     function clickButton() {
         if (!cookies.isLoggedIn()) {
             navigate("/login")
