@@ -1,9 +1,12 @@
 import styles from './UploadButton.module.css';
-import { placeholderButtonFunction } from "../../pages/DataVisualization/ButtonFunctions.ts";
+import { uploadCSV } from "../../pages/DataVisualization/ButtonFunctions.ts";
 
 function UploadButton(){
     return <div className={styles.container}>
-        <button className={styles.uploadButton} onClick={placeholderButtonFunction}>Upload</button>
+        <label className={styles.uploadLabel} htmlFor="csvFileInput">
+            Upload CSV-File:
+        </label>
+        <input className={styles.uploadInput} type="file" onChange={uploadCSV} accept=".csv"/>
     </div>
 }
 
