@@ -20,7 +20,7 @@ function Header() {
             <nav className={styles.navbar}>
 
                 {/* Logo */}
-                <Link to="/" className={styles.logo}><img src="/favicon.svg" alt="Logo von GeneticAlgorithms" width="20px" height="20px"/></Link>
+                <Link to="/" className={styles.logo}><img src="/favicon.svg" alt="Logo of GeneticAlgorithms" width="20px" height="20px"/></Link>
 
                 {/* Navigation */}
 
