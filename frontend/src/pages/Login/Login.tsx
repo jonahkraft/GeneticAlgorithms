@@ -26,6 +26,7 @@ function Login() {
 
         logIn(username, password)
         if (cookies.isLoggedIn()) {
+            console.log("Cookies gesetzt")
             navigate("/data_visualization")
         }
     }
@@ -120,8 +121,6 @@ function logIn(username: string, password: string) {
          .then(response => {
              const token = response.data.access_token
              const role = response.data.role
-             console.log('Token', token)
-             console.log('Role', response.data.role)
              cookies.saveCookies({"username": username, "role": role, "signed_in": true, "token": token})
              console.log("erfolg")
              /*
