@@ -91,3 +91,9 @@
   justify-content: center;
   align-items: center;
 }
+.fullWidthImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
