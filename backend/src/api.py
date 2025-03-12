@@ -40,7 +40,6 @@ def login(username: str, password: str):
 
 def register(username: str, password: str, role: str):
     possible_roles = {"data_analyst", "administrator", "simulator"}
-
     response = {
         "success": False,
         "already_registered": False,

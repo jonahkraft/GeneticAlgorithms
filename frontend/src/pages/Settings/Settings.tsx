@@ -38,7 +38,7 @@ function Settings() {
     function addUser(username: string, password: string, role: string) {
         console.log("username in addUser", username)
         console.log("password in addUser", password)
-        console.log("role in addUser", role)
+        console.log("role in addUser", role, typeof(role))
         const token = cookies.getCookies()?.token;
         if (!token) {
             console.error("Token is missing!");
@@ -46,7 +46,7 @@ function Settings() {
         }
         //const token = ''
         axios.post('/api/register',
-            { "username": username, "password": password, "role": role },
+            { "username": username, "password": password, "role": role.trim() },
             { headers: { "Authorization": token ? `Bearer ${token.trim()}` : "", "Content-Type": "application/json" } }
         )
             .then(response => {
@@ -67,7 +67,7 @@ function Settings() {
             .catch(error => {
                 if (error.response) {
                     console.error("Error Status:", error.response.status);
-                    console.error("Error Data:", error.response.data);  // 🔥 Wichtig
+                    console.error("Error Data:", error.response.data);
                     console.error("Error Headers:", error.response.headers);
                 } else {
                     console.error("Request failed:", error.message);
@@ -196,7 +196,7 @@ function Settings() {
                                         onChange={(e) => setRole(e.target.value)}
                                     >
                                         <option value="simulator">Simulator</option>
-                                        <option value="data-analyst">Data Analyst</option>
+                                        <option value="data_analyst">Data Analyst</option>
                                         <option value="administrator">Admin</option>
                                     </select>
 
