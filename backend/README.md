@@ -9,7 +9,16 @@ docker compose build
 ```bash
 docker compose up
 ```
-Docker should run the backend service for now. 
+Docker should run the backend service for now.
+
+## Using the exported container ```backend-export.tar```
+```bash
+docker load -i backend-export.tar
+```
+
+```bash
+docker run -p 5000:5000 backend-backend
+```
 
 # How to test the web api
 The web api is REST-based. To test it, we used [Postman](https://www.postman.com/downloads/).
@@ -31,6 +40,9 @@ As a test user, you may use ```username: user, password: password```. This user 
    ```Bearer <token>``` where ```<token>``` is the access token
 
 The Available endpoints and their specification can be found in the documentation in the api section.
+
+The ```start_simulation``` endpoint may take up to 6 minutes to excecute depending on the provided
+parameters.
 
 # Docstring example
 ```python

@@ -6,7 +6,6 @@ import json
 import os
 import database as db
 
-
 app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app)  # Allow frontend to communicate with backend
 

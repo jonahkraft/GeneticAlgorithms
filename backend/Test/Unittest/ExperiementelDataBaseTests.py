@@ -204,11 +204,11 @@ class ExperiementalDataTests(UnitMeta.UnitMeta):
         Added paralell die Testdaten mit der add_experiement_data Funktion zur Datenbank
         :return:
         """
-       def pApplied(data : list) -> None:
-           database.add_experiment_data(data, testConnection)
-       with ThreadPoolExecutor() as executor:
-          for _ in executor.map(pApplied, [ToList(ToDict(data)) for data in TestData]):
-              pass
+        def pApplied(data : list) -> None:
+            database.add_experiment_data(data, testConnection)
+        with ThreadPoolExecutor() as executor:
+            for _ in executor.map(pApplied, [ToList(ToDict(data)) for data in TestData]):
+                pass
     def __call__(self, *args, **kwargs):
         """
         Führt alle Tests in der Klasse auf

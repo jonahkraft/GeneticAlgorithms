@@ -188,30 +188,6 @@ def api_change_password():
         return jsonify({}, 200)
     return jsonify({}, 404)
 
-@api.route("/api/get_generations", methods=["GET"])
-@jwt_required()
-def api_get_generations():
-    """Returns the contents of generations.csv file"
-
-    :returns JSON
-    {
-        "content": "<content>"
-    }
-    """
-
-    current_user = get_jwt_identity()
-
-    role = db.get_role(current_user)
-
-    allowed_roles = {"data_analyst", "administrator"}
-
-    if role not in allowed_roles:
-        return jsonify({}), 401
-
-    with open("./results/generations.csv", "r") as file:
-        return jsonify({"content": file.read()}), 200
-
-    return jsonify({}), 404
 
 @api.route("/api/start_simulation", methods=["POST"])
 @jwt_required()
