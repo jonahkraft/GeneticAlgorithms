@@ -39,14 +39,16 @@ function Settings() {
         console.log("username in addUser", username)
         console.log("password in addUser", password)
         console.log("role in addUser", role)
-        const token = cookies.getCookies().token
-        console.log(token)
+        const token = cookies.getCookies()?.token;
+        if (!token) {
+            console.error("Token is missing!");
+            return;
+        }
         //const token = ''
         axios.post('/api/register',
             { "username": username, "password": password, "role": role },
-            { headers: { "Authorization": `Bearer ${token}`,
-                         "Content-Type": "application/json" }
-            })
+            { headers: { "Authorization": token ? `Bearer ${token.trim()}` : "", "Content-Type": "application/json" } }
+        )
             .then(response => {
                 console.log(response)
                 setUsers([...users, { username, password: "**********", role }]);
@@ -63,8 +65,15 @@ function Settings() {
                  */
             })
             .catch(error => {
-                console.error(error);
+                if (error.response) {
+                    console.error("Error Status:", error.response.status);
+                    console.error("Error Data:", error.response.data);  // 🔥 Wichtig
+                    console.error("Error Headers:", error.response.headers);
+                } else {
+                    console.error("Request failed:", error.message);
+                }
             });
+
     }
 
     return (
