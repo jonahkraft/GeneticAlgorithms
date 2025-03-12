@@ -2,7 +2,7 @@ import sqlite3
 import hashlib
 import string
 import UnitMeta
-from backend import database
+from backend.src import database
 from typing import *
 
 class UserDatabaseTests(UnitMeta.UnitMeta):

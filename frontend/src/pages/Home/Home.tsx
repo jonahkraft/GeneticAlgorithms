@@ -1,20 +1,15 @@
 import styles from './Home.module.css';
-import logIn from '../Login/LoginExport.ts';
 import { useNavigate } from "react-router-dom";
 import cookies from "../../cookies.ts";
+import GenericButton from '../../components/GenericButton/GenericButton.tsx';
 
 function Home() {
     const navigate = useNavigate()
 
     function clickButton() {
-        const role = cookies.getCookies().role
-        console.log(role)
-        if (role !== 'simulator'){
-            navigate("/data_visualization")
-        }
-        else{
-            // if proceed directly to DataVisualzation you will be signed in as "simulator"
-            logIn('')
+        if (!cookies.isLoggedIn()) {
+            navigate("/login")
+        } else {
             navigate("/data_visualization")
         }
     }
@@ -32,14 +27,10 @@ function Home() {
 
                 </div>
                 <p className={styles.introText}>
-                    Our simulation uses these same principles in the form of genetic algorithms to find the optimal balance between performance and consumption in vehicles.
+                    Our simulation uses these same principles in the form of genetic algorithms to find the optimal balance between performance and consumption in vehicles.                     For each configuration of parameters, the program returns the Pareto front, a collection of solutions where no value can be improved without worsening another.
+
                 </p>
-                <p className={styles.introText}>
-                    For each configuration of parameters, the program returns the Pareto front, a collection of solutions where no value can be improved without worsening another.
-                </p>
-                <div className={styles.buttonContainer}>
-                    <button className={styles.button} onClick={clickButton}>Proceed to Simulation</button>
-                </div>
+                <GenericButton title="Proceed to Simulation" onClick={clickButton}></GenericButton>
             </div>
 
             <div className={styles.faq}>

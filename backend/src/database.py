@@ -8,14 +8,11 @@ redis_host = os.getenv('REDIS_HOST', 'localhost')
 redis_client = Redis(host=redis_host)
 
 
-#user_connection = sqlite3.connect("backend/db/users.db")
+#user_connection = sqlite3.connect("../db/simulation_data.db")
 #cur = user_connection.cursor()
-#cur.execute("""CREATE TABLE users(
-#            id INTEGER PRIMARY KEY,
-#            user_name text NOT NULL UNIQUE,
-#            role text NOT NULL,
-#            hashed_password text NOT NULL)""")
-#
+#cur.execute("""CREATE TABLE experiment_owners(
+#             experiment_id INTEGER PRIMARY KEY,
+#             username text)""")
 #user_connection.commit()
 
 
@@ -192,33 +189,38 @@ def user_exists(user_name: str, connection_path: str = "db/users.db") -> bool:
     connection.close()
     return res
 
-def add_experiment_data(
-        data : list[float],
-        connection_path: str = "db/simulation_data.db"
-    ) -> None:
+def get_expreriment_owner(experiment_id: int, connection_path: str = "db/simulation_data.db"):
     """
-    Adds the given data to the simulation database
-    
-    :param data: The data to be added
-    :type data: list[float]
+    Returns who ran which experiment
+
+    :param experiment_id: The experiment_id
+    :type experiment_id: int
 
     :param connection_path: The path to the database
-    :type connection: str
-    """
+    :type connection_path: str
 
-
+    :returns The username of the one who ran the experiment  
+    """ 
+    
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
-    cur.execute("""INSERT INTO car_data (generation, final_drive, roll_radius, gear_3, gear_4, gear_5, consumption, elasticity_3, elasticity_4, elasticity_5) VALUES (?,?,?,?,?,?,?,?,?,?)""", data)
+    cur.execute("SELECT username FROM experiment_owners WHERE experiment_id = ?", [experiment_id])
 
-    connection.commit()
+    res = cur.fetchone()
+    
+    connection.close()
 
-def add_experiment_data(data: list[list], connection_path: str = "db/simulation_data.db") -> None:
+    return res
+
+
+def add_experiment_data(username: str, data: list[list], connection_path: str = "db/simulation_data.db") -> None:
     """
     Adds the given csv data to the given connection
 
-    :param: data: The data to enter in the form list[list[generation: int, final_drive: float, roll_radius: float, gear_3: float, gear_4: float, gear_5: float, consumption: float, elasticity_3: float, elasticity_4: float, elasticity_5: float]]
+    :param username: The user adding the experiment data
+
+    :param data: The data to enter in the form list[list[generation: int, final_drive: float, roll_radius: float, gear_3: float, gear_4: float, gear_5: float, consumption: float, elasticity_3: float, elasticity_4: float, elasticity_5: float]]
     :type file_path: list[list]
 
     :param connection_path: The path to the database
@@ -230,21 +232,24 @@ def add_experiment_data(data: list[list], connection_path: str = "db/simulation_
 
 
     cur.execute("SELECT MAX(experiment_id) FROM car_data")
-    max_exp_ind = cur.fetchone()[0]
+    experiment_id = cur.fetchone()[0]
 
-    if max_exp_ind is None:
-        max_exp_ind = 0
+    if experiment_id is None:
+        experiment_id = 0
     else:
-        max_exp_ind += 1
+        experiment_id += 1
 
-    rows = [row + [max_exp_ind] for row in data]
-    to_db = [(int(i[0]),float(i[1]),float(i[2]),float(i[3]),float(i[4]),float(i[5]),float(i[6]),float(i[7]),float(i[8]),float(i[9]),int(max_exp_ind)) for i in rows[1:]]
+    rows = [row + [experiment_id] for row in data]
+    to_db = [(int(i[0]),float(i[1]),float(i[2]),float(i[3]),float(i[4]),float(i[5]),float(i[6]),float(i[7]),float(i[8]),float(i[9]),int(experiment_id)) for i in rows[1:]]
 
     cur.executemany("INSERT INTO car_data (generation, final_drive, roll_radius, gear_3, gear_4, gear_5, consumption, elasticity_3, elasticity_4, elasticity_5,experiment_id) VALUES (?,?,?,?,?,?,?,?,?,?,?);", to_db)
+
+    cur.execute("INSERT INTO experiment_data (experiment_id, username) VALUES(?,?)", [experiment_id, username])
+
     connection.commit()
     connection.close()
-
-    return max_exp_ind
+    
+    return experiment_id
 
 def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], constraints: list[str] = [], connection_path: str = "db/simulation_data.db") -> str:
     """
@@ -276,7 +281,7 @@ def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], const
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
-    possible_operators = ["<",">","<=",">=","="]
+    possible_operators = ["<",">","<=",">=","=", "<>"]
     cur.execute("SELECT * FROM car_data")
     possible_cols = cur.description
     possible_cols = [i[0] for i in possible_cols]
@@ -315,31 +320,3 @@ def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], const
         writer = csv.writer(file)
         writer.writerow(header)
         writer.writerows(results)
-
-if __name__ == "__main__":
-    con = sqlite3.connect("backend/db/simulation_data.db")
-
-    cur = con.cursor()
-
-    cur.execute("""CREATE TABLE car_data(
-                generation INT NOT NULL,
-                final_drive REAL NOT NULL,
-                roll_radius REAL NOT NULL,
-                gear_3 REAL NOT NULL,
-                gear_4 REAL NOT NULL,
-                gear_5 REAL NOT NULL,
-                consumption REAL NOT NULL,
-                elasticity_3 REAL NOT NULL,
-                elasticity_4 REAL NOT NULL,
-                elasticity_5 REAL NOT NULL,
-                experiment_id INT NOT NULL
-                )""")
-    
-    con.commit()
-    
-    #print(add_user("user", "password", "administrator", connection_path="backend/db/users.db"))
-    #print(check_password("user","password", connection_path="backend/db/users.db"))
-    #export_experiment_data_to_csv("test.csv", ["generation","consumption","elasticity_4", "gear_3"], ["generation > 5", "gear_3 < 1.5"], connection_path="backend/db/simulation_data.db")
-    #add_experiment_data_from_csv("backend/results/generations.csv","backend/db/simulation_data.db")
-    #add_experiment_data([[112,0.1,0.1,0.2,0.6,0.8,1.4,1.5,1.6,1.2]],"backend/db/simulation_data.db")
-    pass

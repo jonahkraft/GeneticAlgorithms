@@ -236,7 +236,7 @@ def api_start_simulation():
     simulation_interface.evolute(generation_count, strategy, aep, elite_count, alien_count)
 
     simulation_results = simulation_interface.results()
-    exp_id = db.add_experiment_data(simulation_results)
+    exp_id = db.add_experiment_data(current_user, simulation_results)
 
     return jsonify({"experiment_id": exp_id}), 200
 

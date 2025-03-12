@@ -1,11 +1,11 @@
 import cookies from "../../cookies.ts";
 
-function logIn(username: string) {
+function TestlogIn(username: string) {
     let role = ''
 
-    if (username === "admin") {
+    if (username === "administrator") {
         // TODO: Nur für die Präsentation!!
-        role = "admin"
+        role = "administrator"
     }
 
     else if (username === "data_analyst"){
@@ -28,9 +28,9 @@ function logIn(username: string) {
         role = "simulator"
     }
 
-    cookies.saveCookies({"username": username, "role": role, "signed_in": true})
+    cookies.saveCookies({"username": username, "role": role, "signed_in": true, "token": ""})  // TODO
     // window.location.reload()
     // window.location.href = "../../../public/visualization.html"
 }
 
-export default logIn;
+export default TestlogIn;

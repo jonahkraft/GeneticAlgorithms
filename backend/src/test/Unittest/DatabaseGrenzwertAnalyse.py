@@ -1,10 +1,8 @@
-import sqlite3
-import hashlib
-import UnitMeta
-from UserDatabaseTests import UserDatabaseTests
-from backend import database
-from typing import *
 import random
+import sqlite3
+from backend.src import database
+import UnitMeta
+
 
 class UserDBGrenzwertAnalyse(UnitMeta.UnitMeta):
     def __init__(this):

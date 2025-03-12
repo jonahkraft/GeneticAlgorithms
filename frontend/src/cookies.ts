@@ -1,13 +1,15 @@
 const standardValue = {
     username: "could not load username",
-    role: "simulator",
+    role: "could not load role",
     signed_in: false,
+    token: "",
 }
 
 interface CookieData {
     username: string;
     role: string;
-    signed_in: boolean
+    signed_in: boolean;
+    token: string;
     [key: string]: string | boolean;
 }
 
@@ -23,7 +25,7 @@ function getCookies(): CookieData {
         }, standardValue);
 }
 
-function saveCookies(obj: CookieData, days = 7) {
+function saveCookies(obj: { username: string | File | null; role: any; signed_in: boolean }, days = 7) {
     const expires = new Date();
     expires.setDate(expires.getDate() + days);
 
@@ -40,4 +42,10 @@ function deleteCookies() {
     }
 }
 
-export default { getCookies, saveCookies, deleteCookies };
+function isLoggedIn() {
+    const data = getCookies();
+    return data.signed_in;
+}
+
+
+export default { getCookies, saveCookies, deleteCookies, isLoggedIn };
