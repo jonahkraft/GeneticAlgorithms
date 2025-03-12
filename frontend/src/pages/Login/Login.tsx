@@ -21,11 +21,14 @@ function Login() {
 
         const form = event.target as HTMLFormElement;
         const formData = new FormData(form);
-        const username = formData.get("username");
-        const password = formData.get("password")
+        const username = formData.get("username") as string;
+        const password = formData.get("password") as string;
 
-        logIn(username, password)
-        navigate("/data_visualization")
+        const suc = logIn(username, password)
+        console.log(suc)
+        if (suc) {
+            navigate("/data_visualization")
+        }
     }
 
     // function triggerWarning() {
@@ -106,7 +109,9 @@ function Login() {
 }
 
 // Check for User
-function logIn(username: string | File | null, password: string | File | null) {
+function logIn(username: string, password: string) {
+    let success = false;
+
     console.log("username in logIN", username)
     console.log("passwird in lOGIN", password)
     //const token = ''
@@ -119,7 +124,9 @@ function logIn(username: string | File | null, password: string | File | null) {
              const role = response.data.role
              console.log('Token', token)
              console.log('Role', response.data.role)
-             cookies.saveCookies({"username": username, "role": role, "signed_in": true})
+             cookies.saveCookies({"username": username, "role": role, "signed_in": true, "token": token})
+             console.log("erfolg")
+             success = true;
              /*
              axios.post('/api/protected_test', {},
                  {
@@ -134,6 +141,8 @@ function logIn(username: string | File | null, password: string | File | null) {
          .catch(error => {
              console.error(error);
          });
+
+    return success;
 }
 
 export default Login;

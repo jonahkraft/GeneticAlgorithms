@@ -25,7 +25,7 @@ function getCookies(): CookieData {
         }, standardValue);
 }
 
-function saveCookies(obj: { username: string | File | null; role: any; signed_in: boolean }, days = 7) {
+function saveCookies(obj: { username: string; role: string; signed_in: boolean, token: string }, days = 7) {
     const expires = new Date();
     expires.setDate(expires.getDate() + days);
 
