@@ -173,12 +173,14 @@ def api_change_password():
 
     :param JSON
     {
+        "username": "<username>",
+        "old_password": "<old password>",
         "new_password": "<new password>"
     }
 
     :returns JSON
     {
-        "success": bool
+        "msg": "<error message, if failed>"
     }
 
     """
@@ -186,12 +188,26 @@ def api_change_password():
     current_user = get_jwt_identity()
     data = request.get_json()
 
+    username = data["username"]
+    old_password = data["old_password"]
     new_password = data["new_password"]
 
-    if db.change_password(current_user, new_password):
-        return jsonify({}, 200)
-    return jsonify({}, 404)
-
+    if current_user == username:
+        if db.check_password(username,old_password):
+            if db.change_password(username,new_password):
+                return jsonify({}, 200)
+            else:
+                return jsonify({"msg": f"Cannot find user '{username}'"}, 404)
+        else:
+            return jsonify({"msg": "Invalid old password"}, 401)
+    else:
+        if db.get_role(current_user) == "administrator":
+            if db.change_password(username,new_password):
+                return jsonify({}, 200)
+            else:
+                return jsonify({"msg": f"Cannot find user '{username}'"}, 404)
+        else:
+            return jsonify({"msg": f"Only administrators can change other users passwords"}, 401)
 
 @api.route("/api/start_simulation", methods=["POST"])
 @jwt_required()
@@ -244,7 +260,6 @@ def api_start_simulation():
 
     return jsonify({"experiment_id": exp_id}), 200
 
-
 @api.route("/api/get_simulation_data", methods=["POST"])
 @jwt_required()
 def api_get_simulation_data():
@@ -285,3 +300,25 @@ def api_get_simulation_data():
         return jsonify({"content": file.read()}), 200
 
     return jsonify({}), 404
+
+@api.route("/api/get_users", methods=["GET"])
+@jwt_required()
+def api_get_users():
+    """Get name and role for every user.
+
+    :returns JSON
+    {
+        "users" : [ { "username": "<username>", "role": "<role>" } ]
+    }
+
+    """
+    current_user = get_jwt_identity()
+
+    role = db.get_role(current_user)
+    allowed_roles = {"administrator"}
+
+    if role not in allowed_roles:
+        return jsonify({}), 401
+    
+    data = db.get_users()
+    return jsonify({"users": [{"username": user, "role": role} for user,role in data]}, 200)
