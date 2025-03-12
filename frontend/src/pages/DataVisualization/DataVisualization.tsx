@@ -1450,7 +1450,7 @@ function DataVisualization() {
     useEffect(() => {
         console.log('DataVisualization');
         // call backend-API
-        axios.get("/api/get_generations")
+        axios.get("/api/get_simulation_data")
             .then((response) => {
                 console.log('DataVisualization');
                 const result = Papa.parse(response.data, { header: true, skipEmptyLines: true });
