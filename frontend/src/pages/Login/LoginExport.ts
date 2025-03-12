@@ -1,11 +1,11 @@
 import cookies from "../../cookies.ts";
 
-function logIn(username: string) {
+function TestlogIn(username: string) {
     let role = ''
 
-    if (username === "admin") {
+    if (username === "administrator") {
         // TODO: Nur für die Präsentation!!
-        role = "admin"
+        role = "administrator"
     }
 
     else if (username === "data_analyst"){
@@ -33,4 +33,4 @@ function logIn(username: string) {
     // window.location.href = "../../../public/visualization.html"
 }
 
-export default logIn;
+export default TestlogIn;

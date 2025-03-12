@@ -1,10 +1,11 @@
 import styles from './Login.module.css';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-//import cookies from '../cookies.ts'
 import displayWarning from "./displayWarninig.ts";
 import WarningComponent from "./warning.tsx";
-import logIn from './LoginExport.ts'
+//import TestlogIn from './LoginExport.ts'
+import axios from "axios";
+import cookies from "../../cookies.ts";
 import GenericButton from "../../components/GenericButton/GenericButton.tsx";
 
 
@@ -17,6 +18,17 @@ function Login() {
 
     function getUserdata(event: any) {
         event.preventDefault();
+
+        const form = event.target as HTMLFormElement;
+        const formData = new FormData(form);
+        const username = formData.get("username") as string;
+        const password = formData.get("password") as string;
+
+        const suc = logIn(username, password)
+        console.log(suc)
+        if (suc) {
+            navigate("/data_visualization")
+        }
     }
 
     // function triggerWarning() {
@@ -43,9 +55,10 @@ function Login() {
         }
     }
 
+    // change ggf
     function enter(username: string) {
-        logIn(username);
-        navigate("/data_visualization")
+        console.log(username)
+        //navigate("/data_visualization")
     }
 
     return (
@@ -85,7 +98,7 @@ function Login() {
 
                     <GenericButton title = "Login" onClick={() => enter(username)}></GenericButton>
                     <p><br/></p>
-                    <div className={styles.signupLink} onClick={() => enter("placeholder")}>
+                    <div className={styles.signupLink}>
                         Continue as Simulator
                     </div>
                 </form>
@@ -95,60 +108,41 @@ function Login() {
     );
 }
 
-/*
-function logIn(username: string) {
-    let role = ''
-
-    if (username === "admin") {
-        // TODO: Nur für die Präsentation!!
-        role = "admin"
-    }
-
-    else if (username === "data_analyst"){
-        // TODO: Nur für Prototyp
-        role = 'data_analyst'
-    }
-
-    else if (username !== "placeholder") {
-        // dann wurde es über login aufgerufen
-        // TODO: sollte callUser aufrufen und davon die Rolle des Benutzers erhalten
-        // dafür zusätzlich password als Argument nehmen
-        role = "simulator"
-
-        // TODO: Fehlermeldung, wenn Name oder Passwort falsch
-        // Funktion triggerWarning dafür nutzen
-
-    }
-    else {
-        // dann wurde es über "continue as simulator" aufgerufen
-        role = "simulator"
-    }
-
-    cookies.saveCookies({"username": username, "role": role, "signed_in": true})
-    window.location.reload()
-    window.location.href = "../../visualization.html"
-}
-
- */
-
 // Check for User
-// function callUser(username: string, password: string) {
-//     axios.post('/api/login', {"username": username, "password": password })
-//         .then(response => {
-//             let token = response.data.access_token
-//             console.log(token)
-//             axios.post('/api/protected_test', {},
-//                 {
-//                     headers: {
-//                         "Authorization": `Bearer ${token}`,
-//                         "Content-Type": "application/json"  // Ensure JSON data format
-//                     }
-//                 }
-//             )
-//         })
-//         .catch(error => {
-//             console.error(error);
-//         });
-// }
+function logIn(username: string, password: string) {
+    let success = false;
+
+    console.log("username in logIN", username)
+    console.log("passwird in lOGIN", password)
+    //const token = ''
+    axios.post('/api/login',
+        { "username": username, "password": password },
+        { headers: { "Content-Type": "application/json" } }
+    )
+         .then(response => {
+             const token = response.data.access_token
+             const role = response.data.role
+             console.log('Token', token)
+             console.log('Role', response.data.role)
+             cookies.saveCookies({"username": username, "role": role, "signed_in": true, "token": token})
+             console.log("erfolg")
+             success = true;
+             /*
+             axios.post('/api/protected_test', {},
+                 {
+                     headers: {
+                         "Authorization": `Bearer ${token}`,
+                         "Content-Type": "application/json"  // Ensure JSON data format
+                     }
+                 }
+             )
+              */
+         })
+         .catch(error => {
+             console.error(error);
+         });
+
+    return success;
+}
 
 export default Login;

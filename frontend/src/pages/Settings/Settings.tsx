@@ -4,6 +4,7 @@ import styles from "./Settings.module.css";
 import cookies from "../../cookies.ts";
 import DarkModeButton from "../../components/DarkModeButton/DarkModeButton.tsx"
 import ToggleButton from "../../components/ToggleButton/ToggleButton.tsx";
+import axios from "axios";
 
 function Settings() {
     const navigate = useNavigate();
@@ -15,8 +16,8 @@ function Settings() {
     }, [navigate]);
 
     const [selectedTab, setSelectedTab] = useState<string>("account");
-    const role: string = cookies.getCookies()["role"];
-    const name: string | boolean = cookies.getCookies()["username"];
+    const role: string = cookies.getCookies().role;
+    const name: string | boolean = cookies.getCookies().username;
     const [isPopupVisible,setPopupVisible] = useState(false);
     const togglePopup =() =>{
         setPopupVisible(!isPopupVisible);
@@ -48,7 +49,7 @@ function Settings() {
 
 
                         {/* Nutzerverwaltung: Nur für Admins verfügbar */}
-                        {role === "admin" && (
+                        {role === "administrator" && (
                             <a className={selectedTab === "user-management" ? styles.navigationLinkActive : styles.navigationLinkInactive} onClick={() => handleTabClick("user-management")}>
                                 User Management
                             </a>
@@ -113,7 +114,7 @@ function Settings() {
                     )}
 
 
-                    {selectedTab === "user-management" && role === "admin" && (
+                    {selectedTab === "user-management" && role === "administrator" && (
                         <>
                             <h2 className={styles.header}>User Management</h2>
                             <p className={styles.settingsText}>Manage system users and their roles. You can add, edit, or delete users.</p>
@@ -128,10 +129,10 @@ function Settings() {
                                     <select className={styles.userFormSelect} required>
                                         <option value="simulator">Simulator</option>
                                         <option value="data-analyst">Data Analyst</option>
-                                        <option value="admin">Admin</option>
+                                        <option value="administrator">Admin</option>
                                     </select>
 
-                                    <button type="submit" className={styles.userFormButton}>Add User</button>
+                                    <button type="submit" className={styles.userFormButton} onClick={() => addUser()}>Add User</button>
                                 </form>
                             </div>
 
@@ -180,6 +181,36 @@ function Settings() {
             </div>
         </div>
     );
+}
+
+function addUser(username: string | File | null, password: string | File | null, role: string | File | null) {
+    console.log("username in logIN", username)
+    console.log("passwird in lOGIN", password)
+    //const token = ''
+    axios.post('/api/register',
+        { "username": username, "password": password, "role": role },
+        { headers: { "Content-Type": "application/json" } }
+    )
+        .then(response => {
+            const token = response.data.access_token
+            const role = response.data.role
+            console.log('Token', token)
+            console.log('Role', response.data.role)
+            cookies.saveCookies({"username": username, "role": role, "signed_in": true})
+            /*
+            axios.post('/api/protected_test', {},
+                {
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"  // Ensure JSON data format
+                    }
+                }
+            )
+             */
+        })
+        .catch(error => {
+            console.error(error);
+        });
 }
 
 export default Settings;
