@@ -122,17 +122,6 @@ def api_register():
 
     return register(username, password, role)
 
-@api.route("/api/get_users", methods=["GET"])
-@jwt_required()
-def api_get_users():
-    """Get a list of all registered users with their username and role (Authorization required: administrator)
-
-    :returns JSON
-    [
-        { "username": "<username>", "role": "<role>" },
-        ...
-    ]
-    """
 
 
 
