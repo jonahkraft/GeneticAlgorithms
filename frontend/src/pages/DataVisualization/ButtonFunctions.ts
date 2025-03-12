@@ -96,11 +96,12 @@ export function uploadCSV(event: any){
 
 export function downloadCSV(data: any, filename: string){
     let csvContent = "";
+    let blocker = 0
 
     // Iterate through all generations
     Object.keys(data).forEach((generationKey) => {
         // Add Generation Row in csvContent
-        csvContent += `Generation ${generationKey}\n`;
+        //csvContent += `Generation ${generationKey}\n`;
 
         // Collect data from current generation
         const generationData = data[generationKey];
@@ -108,8 +109,14 @@ export function downloadCSV(data: any, filename: string){
         if (generationData.length > 0) {
             // Collect Column names
             const keys = Object.keys(generationData[0]);
-            // add to csvContent accordingly
-            csvContent += keys.join(";") + "\n";
+
+            if (blocker === 0){
+                // add to csvContent accordingly
+                console.log(keys)
+                csvContent += keys.join(";") + "\n";
+                blocker += 1
+            }
+
 
             // Iterate through every row
             generationData.forEach((row: any) => {
@@ -118,9 +125,6 @@ export function downloadCSV(data: any, filename: string){
                 // add to csvContent accordingly
                 csvContent += values.join(";") + "\n";
             });
-
-            // add empty row for better reading
-            csvContent += "\n";
         }
     });
 
