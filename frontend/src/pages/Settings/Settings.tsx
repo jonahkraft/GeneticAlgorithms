@@ -7,6 +7,12 @@ import ToggleButton from "../../components/ToggleButton/ToggleButton.tsx";
 import axios from "axios";
 import loadUsers from "./load_users.ts"
 
+interface UserData {
+    role: string;
+    username: string;
+    password: string;
+}
+
 function Settings() {
     const navigate = useNavigate();
 
@@ -26,16 +32,21 @@ function Settings() {
     const handleTabClick = (tab: string) => {
         setSelectedTab(tab);
     };
+
+    // für das Create-User-Fenster
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [roleSet, setRole] = useState("simulator");
 
-    const [users, setUsers] = useState([
-        { username: "John Doe", password: "**********", role: "Admin" },
-        { username: "Jane Smith", password: "**********", role: "Data Analyst" }
-    ]);
+    // für die User Tabelle
+    const [users, setUsers] = useState<UserData[]>([]);
 
-    // TODO: Nutzer aus Datenbank laden für Admin-Funktionen
+    useEffect(() => {
+        if (cookies.getCookies().role === "administrator") {
+            loadUsers().then(setUsers);
+        }
+    }, []);
+
     function addUser(username: string, password: string, role: string) {
         console.log("username in addUser", username)
         console.log("password in addUser", password)
@@ -212,11 +223,11 @@ function Settings() {
                                 </form>
                             </div>
 
-                            <button onClick={loadUsers}>User laden</button>
+                            {/*<button onClick={loadUsers}>User laden</button>*/}
 
                             {/* Benutzerliste zum Bearbeiten und Löschen von Nutzern */}
                             <div className={styles.userList}>
-                                <h3 className={styles.header}>Existing Users</h3>
+                                <h3 className={styles.header}>User List</h3>
                                 <table className={styles.table}>
                                     <thead>
                                     <tr>
