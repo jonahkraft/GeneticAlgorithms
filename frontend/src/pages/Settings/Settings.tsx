@@ -223,8 +223,6 @@ function Settings() {
                                 </form>
                             </div>
 
-                            {/*<button onClick={loadUsers}>User laden</button>*/}
-
                             {/* Benutzerliste zum Bearbeiten und Löschen von Nutzern */}
                             <div className={styles.userList}>
                                 <h3 className={styles.header}>User List</h3>
