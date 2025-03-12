@@ -5,7 +5,6 @@ import time
 from copy import copy
 
 from matplotlib import pyplot as plt
-from tqdm import tqdm
 
 from ..operators import SEL_ROULETTE, SEL_BEST, EVAL_PARETO, MUT_GAUSS, GEN_HALTON, REC_CROSS_POINT
 from ..metrics import METRIC_AVG
