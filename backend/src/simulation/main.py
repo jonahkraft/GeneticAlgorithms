@@ -17,8 +17,8 @@ given_seed := seed für die Erzeugung der ersten Population
 weights := die Gewichte der Ziehlparameter consumption, elasticity 3-5
 elite_count := nur für Strategie 2: Anzahl der Top Individuen, die für die nächste Generation behalten werden
 alien_count := nur für Strategie 2: Anzahl der Individuen, die komplett neu generiert werden für die nächste Generation
-aep := nur für Strategie 2:  Mutationsrate, eigentlich: je höher, desto geringere Mutation
-        deswegen 1-aep in Strategie 2 damit es intuitiver ist, zwischen 0 und 1
+aep := eigentlich Erforschungsrate, je höher, desto geringere Mutationsrate (bei Strategie 1, wo es sich selbst anpasst)
+        hier: Mutationsrate der Strategie 2 (beeinflusst Nichts anderes), je höher, desto höher die Mutationsrate
 i := nur für Strategie 3: aktuelle Generation
 n := nur für Strategie 3: komplette Anzahl der Simulationen
 '''
