@@ -1,10 +1,19 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
+import { useNavigate } from "react-router-dom";
 import styles from "./Settings.module.css";
 import cookies from "../../cookies.ts";
 import DarkModeButton from "../../components/DarkModeButton/DarkModeButton.tsx"
 import ToggleButton from "../../components/ToggleButton/ToggleButton.tsx";
 
 function Settings() {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!cookies.isLoggedIn()) {
+            navigate("/login");
+        }
+    }, [navigate]);
+
     const [selectedTab, setSelectedTab] = useState<string>("account");
     const role: string = cookies.getCookies()["role"];
     const name: string | boolean = cookies.getCookies()["username"];

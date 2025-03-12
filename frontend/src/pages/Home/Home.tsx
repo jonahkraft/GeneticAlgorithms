@@ -1,5 +1,4 @@
 import styles from './Home.module.css';
-import logIn from '../Login/LoginExport.ts';
 import { useNavigate } from "react-router-dom";
 import cookies from "../../cookies.ts";
 import GenericButton from '../../components/GenericButton/GenericButton.tsx';
@@ -8,14 +7,9 @@ function Home() {
     const navigate = useNavigate()
 
     function clickButton() {
-        const role = cookies.getCookies().role
-        console.log(role)
-        if (role !== 'simulator'){
-            navigate("/data_visualization")
-        }
-        else{
-            // if proceed directly to DataVisualzation you will be signed in as "simulator"
-            logIn('')
+        if (!cookies.isLoggedIn()) {
+            navigate("/login")
+        } else {
             navigate("/data_visualization")
         }
     }
