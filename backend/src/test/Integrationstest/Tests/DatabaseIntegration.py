@@ -5,10 +5,10 @@ import requests
 from typing import Optional, Any, Sequence
 from flask import jsonify
 from flask.wrappers import Response
-from backend import api                 #TODO: SHOULD NOT BE IMPORTED HERE
+from backend.src import api                 #TODO: SHOULD NOT BE IMPORTED HERE
 from sqlite3 import Connection, Cursor
 
-from backend.Test.Integrationstest.IntegrationMeta import IntegrationMeta, TestResult
+from backend.src.test.Integrationstest.IntegrationMeta import IntegrationMeta, TestResult
 
 
 class DatabaseIntegrationTest(IntegrationMeta):

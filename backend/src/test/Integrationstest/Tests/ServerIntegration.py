@@ -11,7 +11,7 @@ from sqlite3 import Connection, Cursor
 
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 
-from backend.Test.Integrationstest.IntegrationMeta import IntegrationMeta, TestResult
+from backend.src.test.Integrationstest.IntegrationMeta import IntegrationMeta, TestResult
 
 
 # TODO: INTEGRATION OF TESTING INTERFACE META WITH FLASK SERVER
@@ -218,8 +218,8 @@ class ServerIntegrationTest(IntegrationMeta):
 
 if __name__ == '__main__':
 
-    from backend.app import app
-    import backend.database as database_module
+    from backend.src.app import app
+    import backend.src.database as database_module
 
     @app.route("/api/integration/empty_ping", methods = ["GET"])
     def empty_ping() -> Response:
