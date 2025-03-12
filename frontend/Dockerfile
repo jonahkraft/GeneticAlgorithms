@@ -1,13 +1,18 @@
-FROM node:18-alpine
+# Basis-Image mit Node.js
+FROM node:18 AS build
 
 WORKDIR /frontend
 
-COPY package.json package-lock.json ./
-
-RUN npm install
-
-COPY . .
-
 EXPOSE 3000
 
-CMD ["npm", "run", "dev", "--", "--host"]
+# Abhängigkeiten installieren
+COPY package.json package-lock.json ./
+RUN npm install
+
+# Quellcode kopieren und App bauen
+COPY . .
+RUN npm run build
+
+# Serve installieren und starten
+RUN npm install -g serve
+CMD ["serve", "-s", "build"]
