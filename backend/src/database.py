@@ -15,6 +15,24 @@ redis_client = Redis(host=redis_host)
 #             username text)""")
 #user_connection.commit()
 
+def get_users(connection_path: str = "db/users.db") -> list[tuple[str, str]]:
+    """
+    Gets a list of all users with their roles.
+
+    :param connection_path: path to the database
+    :type connection_path: str
+
+    :returns A list of users with their roles
+    :type list[tuple[str, str]]
+    """
+    
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+
+    cur.execute("SELECT user_name, role FROM users")
+
+    return cur.fetchall()
+
 
 def add_user(user_name: str, password: str, role: str = "data_analyst", connection_path: str = "db/users.db")-> None:
     """
