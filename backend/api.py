@@ -230,7 +230,10 @@ def api_start_simulation():
         "weights": list[float]
     }
 
-    :returns JSON {}
+    :returns JSON 
+    {
+    "eperiment_id": int
+    }
 
     """
     current_user = get_jwt_identity()
@@ -257,9 +260,9 @@ def api_start_simulation():
     simulation_interface.evolute(generation_count, strategy, aep, elite_count, alien_count)
 
     simulation_results = simulation_interface.results()
-    db.add_experiment_data(simulation_results)
+    exp_id = db.add_experiment_data(simulation_results)
 
-    return jsonify({}), 200
+    return jsonify({"experiment_id": exp_id}), 200
 
 
 @api.route("/api/get_simulation_data", methods=["POST"])

@@ -244,6 +244,8 @@ def add_experiment_data(data: list[list], connection_path: str = "db/simulation_
     connection.commit()
     connection.close()
 
+    return max_exp_ind
+
 def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], constraints: list[str] = [], connection_path: str = "db/simulation_data.db") -> str:
     """
     Exports the data from the database to csv
