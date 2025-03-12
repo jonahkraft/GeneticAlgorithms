@@ -1,8 +1,4 @@
-body {
-  background: linear-gradient(to right, #A7C8FF, #A0D7FF);
-  margin: 0;
-  padding: 0;
-}
+
 
 .settingsPage {
   display: flex;
