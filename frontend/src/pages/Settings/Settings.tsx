@@ -3,8 +3,6 @@ import styles from "./Settings.module.css";
 import cookies from "../../cookies.ts";
 import DarkModeButton from "../../components/DarkModeButton/DarkModeButton.tsx"
 import ToggleButton from "../../components/ToggleButton/ToggleButton.tsx";
-import Header from "../../components/Header/Header.tsx";
-import Footer from "../../components/Footer/Footer.tsx";
 
 function Settings() {
     const [selectedTab, setSelectedTab] = useState<string>("account");
@@ -22,7 +20,6 @@ function Settings() {
 
     return (
         <div>
-            <Header/>
             <div className={styles.settingsPage}>
                 <div className={styles.settingsContainer}>
                     <div className={styles.leftbox}>
@@ -176,7 +173,6 @@ function Settings() {
                     </div>
                 </div>
             </div>
-            <Footer/>
         </div>
     );
 }
