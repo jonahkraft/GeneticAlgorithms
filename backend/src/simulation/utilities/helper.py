@@ -201,6 +201,61 @@ def import_generations_from_csv(cls, name="generations", directory=None, header=
     return generations
 
 
+def import_generations_from_csvfile(cls, file, header=True):
+    """
+    Imports the generations from a csv file.
+
+    :param cls: The class of the individuals.
+    :type cls: Individual
+    :param file: The generations as lists in a list.
+    :param file: list[list[float]]
+    :param header: Flag whether the file contains a header.
+    :type header: bool
+    :return: The generations.
+    :return: list[Population]
+    """
+
+    # get the blueprint of the individuals
+    blueprint = cls.get_blueprint()
+
+    # create the generations
+    generations = []
+    for line in file[header:]:
+        # extract the generation number
+        generation_number = int(line[0])
+
+        # extract the genotype
+        start = 1
+        end = len(blueprint['genotype']) + 1
+        genotype = [float(value) for value in line[start:end]]
+
+        # extract the phenotype
+        start = end
+        end = start + len(blueprint['goals'])
+        phenotype = [float(value) for value in line[start:end]]
+
+        # create a new population if necessary
+        if generation_number >= len(generations):
+            generations.append(evo.Population(cls, size=0))
+
+        # create the Alleles
+        alleles = []
+        for i, allele_cls in enumerate(blueprint['genotype']):
+            alleles.append(allele_cls(genotype[i]))
+
+        # create the individual
+        ind = cls(*alleles)
+
+        # set the phenotype
+        ind._phenotype = tuple(phenotype)  # this is a hack to prevent the phenotype from being calculated again
+
+        # add the individual to the population
+        generations[generation_number].add(ind)
+
+    # return the generations
+    return generations
+
+
 def plot_generations(generations, name='generations-plot', directory=None):
     """
     Plot the generations of an experiment.

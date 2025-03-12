@@ -59,6 +59,7 @@ parameters.
 ```
 
 # How to use main.py/ Schnittstelle
-1.  Initialise Schnittstelle object with a population size, a seed and a weight for an explanation on those see the doc.
+1.  Initialise Schnittstelle object with a population size, a seed and a weight; for an explanation on those see the doc.
 2. If you want to generate all desired generations at once, use evolute with generation_count equal to the number of generations you want and strategy 1.
-3. If you want to run one desired generation in singular increments, use evolute equal to one with strategy 2 and a desired aep value (between 0 and 1, the smaller your value is, the lower your mutationrate will be).
+3. If you want to run a number of desired generations with a constant mutationrate and want access to unused options, use evolute with strategy 2 and a desired aep value (between 0 and 1, the smaller your value is, the lower your mutationrate will be).
+4. If yo want to generate a singular generation from a given position, use strategy 3 with i equal to your current generation number and n equal to the complete number of generations you want to generate overall.
