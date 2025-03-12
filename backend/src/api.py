@@ -20,7 +20,7 @@ def login(username: str, password: str):
         "registered": False,
         "password_correct": False,
         "access_token": "",
-        "role": "simulator"
+        "role": "simulation_expert"
     }
 
     if not db.user_exists(username):
@@ -215,7 +215,7 @@ def api_start_simulation():
     current_user = get_jwt_identity()
 
     role = db.get_role(current_user)
-    allowed_roles = {"data_analyst", "administrator", "simulator"}
+    allowed_roles = {"data_analyst", "administrator", "simulation_expert"}
 
     if role not in allowed_roles:
         return jsonify({}), 401
@@ -261,15 +261,21 @@ def api_get_simulation_data():
     current_user = get_jwt_identity()
 
     role = db.get_role(current_user)
-    allowed_roles = {"data_analyst", "administrator"}
+    allowed_roles = {"data_analyst", "administrator", "simulation_expert"}
 
     if role not in allowed_roles:
         return jsonify({}), 401
 
     data = request.get_json()
 
-    columns = data["columns"]
-    row_constraints = data["row_constraints"]
+    columns: list[str] = data["columns"]
+    row_constraints: list[str] = data["row_constraints"]
+
+    if role == "simulation_expert":
+        allowed_ids = db.get_users_experiments(current_user)
+        added_constraints = [f"experiment_id = {id}" for id in allowed_ids]
+        for c in added_constraints:
+            row_constraints.append(c)
 
     try:
         db.export_experiment_data_to_csv("./results/export_data.csv", columns, row_constraints)
