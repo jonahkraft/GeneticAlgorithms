@@ -72,7 +72,7 @@ class UserDBGrenzwertAnalyse(UnitMeta.UnitMeta):
         # durch die vorherigen Invarianten wissen wir das die vals jetzt korrekt sind
         return True
 def GetRandomRole():
-    return random.choice(["administrator", "data_analyst", "simulation_expert"])
+    return random.choice(["administrator", "data_analyst", "simulator"])
 def GetRandomName():
     alphabet : str = "abcdefghijklmnopqrstuvwxyz"
     length : int = 10 # smaller 26

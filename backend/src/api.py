@@ -39,7 +39,7 @@ def login(username: str, password: str):
     return jsonify(response), 200
 
 def register(username: str, password: str, role: str):
-    possible_roles = {"data_analyst", "administrator", "simulation_expert"}
+    possible_roles = {"data_analyst", "administrator", "simulator"}
 
     response = {
         "success": False,
@@ -76,7 +76,7 @@ def api_login():
         "registered": bool,
         "password_correct": bool,
         "access_token": "<token>",
-        "role": "data_analyst | simulation_expert | administrator"
+        "role": "data_analyst | simulator | administrator"
     }
 
     """
@@ -97,7 +97,7 @@ def api_register():
     {
         "username": "<username>",
         "password": "<password>",
-        "role": "<data_analyst | simulation_expert | administrator>"
+        "role": "<data_analyst | simulator | administrator>"
     }
 
     :returns JSON
@@ -212,7 +212,7 @@ def api_change_password():
 @api.route("/api/start_simulation", methods=["POST"])
 @jwt_required()
 def api_start_simulation():
-    """Starts a simulation with the given parameters (Authorization required: administrator, data_analyst, simulation_expert)
+    """Starts a simulation with the given parameters (Authorization required: administrator, data_analyst, simulator)
 
     :param JSON
     {
@@ -263,7 +263,7 @@ def api_start_simulation():
 @api.route("/api/get_simulation_data", methods=["POST"])
 @jwt_required()
 def api_get_simulation_data():
-    """Requests historic simulation data for further analysis (Authorization required: administrator, data_analyst, simulation_expert (only their own data))
+    """Requests historic simulation data for further analysis (Authorization required: administrator, data_analyst, simulator (only their own data))
 
 
     :param JSON
