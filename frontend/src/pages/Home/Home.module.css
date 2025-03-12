@@ -1,0 +1,93 @@
+.wrapper {
+  min-height: 100vh;
+}
+
+.mainContent {
+  text-align: center;
+  padding: 50px 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin: 0 auto; 
+  margin-top: 5%; 
+  width: 80%;
+  max-width: 900px;
+  position: relative;
+  top: 0;
+}
+
+
+.header {
+  background: linear-gradient(135deg, #567df4, #9e86ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 4rem;
+  margin-bottom: -35px;
+}
+.subheader {
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: #4f5b66;
+
+}
+.introText {
+  text-align: left;
+  font-size: 1.1rem;
+  color: #4f5b66;
+  padding-left: 20px;
+  margin-right: 20px;
+  margin-top: 100px;
+  line-height: 1.6;
+}
+
+.pictureContainer {
+  color: #4f5b66;
+}
+
+.faq {
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  color: #333333;
+  max-width: 900px;
+  margin: 40px auto;
+}
+
+.smallHeader {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+}
+
+.details {
+  margin: 10px 0;
+  background-color: #f4f6fb;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.summary {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.detailsText {
+  margin-top: 5px;
+  color: #607d8b;
+}
+.pictureContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  height: auto;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  justify-content: center;
+  align-items: center;
+}
