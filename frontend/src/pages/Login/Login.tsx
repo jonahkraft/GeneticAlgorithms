@@ -1,6 +1,6 @@
 import styles from './Login.module.css';
 import { useState } from 'react';
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 //import cookies from '../cookies.ts'
 import displayWarning from "./displayWarninig.ts";
 import WarningComponent from "./warning.tsx";
@@ -8,6 +8,8 @@ import WarningComponent from "./warning.tsx";
 import axios from "axios";
 import cookies from "../../cookies.ts";
 //import cookies from "../../cookies.ts";
+import logIn from './LoginExport.ts'
+import GenericButton from "../../components/GenericButton/GenericButton.tsx";
 
 
 function Login() {
@@ -55,8 +57,8 @@ function Login() {
 
     /*
     function enter(username: string) {
-        //TestlogIn(username);
-        //navigate("/data_visualization")
+        logIn(username);
+        navigate("/data_visualization")
     }
 
      */
@@ -64,6 +66,7 @@ function Login() {
 
     return (
         <>
+            <div className={styles.container}>
             <div className={styles.center}>
                 <h1 className={styles.header}>Login</h1>
                 <form onSubmit={getUserdata}>
@@ -94,14 +97,15 @@ function Login() {
 
                     <WarningComponent text={text}/>
 
-                    <div className={styles.pass}>Forget Password?</div>
+                    <div className={styles.pass}>Forgot Password?</div>
 
-                    <button className={styles.button} type="submit">Login</button>
+                    <GenericButton title = "Login" onClick={() => enter(username)}></GenericButton>
                     <p><br/></p>
-                    <div className={styles.signupLink}>
+                    <div className={styles.signupLink} onClick={() => enter("placeholder")}>
                         Continue as Simulator
                     </div>
                 </form>
+            </div>
             </div>
         </>
     );

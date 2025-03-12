@@ -4,6 +4,7 @@ FROM node:18-alpine
 WORKDIR /frontend
 
 EXPOSE 3000
+EXPOSE 5000
 
 # Abhängigkeiten installieren
 COPY package.json package-lock.json ./

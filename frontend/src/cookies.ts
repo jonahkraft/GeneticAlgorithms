@@ -1,13 +1,15 @@
 const standardValue = {
     username: "could not load username",
-    role: "simulator",
+    role: "could not load role",
     signed_in: false,
+    token: "",
 }
 
 interface CookieData {
     username: string;
     role: string;
-    signed_in: boolean
+    signed_in: boolean;
+    token: string;
     [key: string]: string | boolean;
 }
 
@@ -40,4 +42,10 @@ function deleteCookies() {
     }
 }
 
-export default { getCookies, saveCookies, deleteCookies };
+function isLoggedIn() {
+    const data = getCookies();
+    return data.signed_in;
+}
+
+
+export default { getCookies, saveCookies, deleteCookies, isLoggedIn };

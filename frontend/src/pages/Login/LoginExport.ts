@@ -28,7 +28,7 @@ function TestlogIn(username: string) {
         role = "simulator"
     }
 
-    cookies.saveCookies({"username": username, "role": role, "signed_in": true})
+    cookies.saveCookies({"username": username, "role": role, "signed_in": true, "token": ""})  // TODO
     // window.location.reload()
     // window.location.href = "../../../public/visualization.html"
 }
