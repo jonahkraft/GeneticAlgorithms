@@ -41,6 +41,9 @@ function Settings() {
     // für die User Tabelle
     const [users, setUsers] = useState<UserData[]>([]);
 
+    // zum Löschen
+    const [userToBeDeleted, SetUserToBeDeleted] = useState("")
+
     useEffect(() => {
         if (cookies.getCookies().role === "administrator") {
             loadUsers().then(setUsers);
@@ -89,6 +92,33 @@ function Settings() {
 
     }
 
+    function deleteUser(username: string) {
+        console.log("lösche", username)
+        const token = cookies.getCookies()?.token;
+        if (!token) {
+            console.error("Token is missing!");
+            return;
+        }
+
+        axios.post(
+            '/api/delete_user',
+            { username },
+            { headers: { "Authorization": `Bearer ${token.trim()}`, "Content-Type": "application/json" } }
+        )
+            .then(response => {
+                console.log("User deleted:", response);
+                setUsers(users.filter(user => user.username !== username));
+            })
+            .catch(error => {
+                if (error.response) {
+                    console.error("Error Status:", error.response.status);
+                    console.error("Error Data:", error.response.data);
+                } else {
+                    console.error("Request failed:", error.message);
+                }
+            });
+    }
+
     return (
         <div className={styles.settingsPage}>
             <div className={styles.settingsContainer}>
@@ -107,7 +137,6 @@ function Settings() {
                             Accesibility
 
                         </a>
-
 
                         {/* Nutzerverwaltung: Nur für Admins verfügbar */}
                         {role === "administrator" && (
@@ -223,7 +252,6 @@ function Settings() {
                                 </form>
                             </div>
 
-                            {/* Benutzerliste zum Bearbeiten und Löschen von Nutzern */}
                             <div className={styles.userList}>
                                 <h3 className={styles.header}>User List</h3>
                                 <table className={styles.table}>
@@ -232,7 +260,6 @@ function Settings() {
                                         <th className={styles.th}>Username</th>
                                         <th className={styles.th}>Password</th>
                                         <th className={styles.th}>Role</th>
-                                        <th className={styles.th}>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -241,15 +268,32 @@ function Settings() {
                                             <td className={styles.td}>{user.username}</td>
                                             <td className={styles.td}>{user.password}</td>
                                             <td className={styles.td}>{user.role}</td>
-                                            <td className={styles.td}>
-                                                <button className={styles.userListButton}>Edit</button>
-                                                <button className={styles.userListButton}>Delete</button>
-                                            </td>
                                         </tr>
                                     ))}
                                     </tbody>
                                 </table>
                             </div>
+
+                            <h3 className={styles.header}>Delete User</h3>
+
+                            <form onSubmit={(e) => e.preventDefault()}>
+                                <input
+                                    className={styles.userFormInput}
+                                    type="text"
+                                    placeholder="Enter username"
+                                    required
+                                    value={userToBeDeleted}
+                                    onChange={(e) => SetUserToBeDeleted(e.target.value)}
+                                />
+                                <button
+                                    type="button"
+                                    className={styles.userFormButton}
+                                    onClick={() => deleteUser(userToBeDeleted)}
+                                >
+                                    Delete User
+                                </button>
+                            </form>
+
                         </>
                     )}
                 </div>

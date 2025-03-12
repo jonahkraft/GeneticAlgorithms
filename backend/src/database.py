@@ -93,6 +93,7 @@ def delete_user(user_name:str, connection_path: str = "db/users.db") -> bool:
     cur.execute("DELETE FROM users WHERE user_name=?",[user_name])
     connection.commit()
     connection.close()
+    return True
 
 def change_password(user_name: str, new_password: str, connection_path: str = "db/users.db") -> bool:
     """
