@@ -1,13 +1,15 @@
 const standardValue = {
     username: "could not load username",
-    role: "simulator",
+    role: "could not load role",
     signed_in: false,
+    token: "",
 }
 
 interface CookieData {
     username: string;
     role: string;
-    signed_in: boolean
+    signed_in: boolean;
+    token: string;
     [key: string]: string | boolean;
 }
 
