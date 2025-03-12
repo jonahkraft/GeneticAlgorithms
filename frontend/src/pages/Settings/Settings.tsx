@@ -4,6 +4,7 @@ import styles from "./Settings.module.css";
 import cookies from "../../cookies.ts";
 import DarkModeButton from "../../components/DarkModeButton/DarkModeButton.tsx"
 import ToggleButton from "../../components/ToggleButton/ToggleButton.tsx";
+import GenericButton from "../../components/GenericButton/GenericButton.tsx";
 
 function Settings() {
     const navigate = useNavigate();
@@ -24,7 +25,9 @@ function Settings() {
     const handleTabClick = (tab: string) => {
         setSelectedTab(tab);
     };
-
+    const toggleAccountdeletion =()=>{
+        setPopupVisible(false);{/*TODO anpassen!!*/}
+    }
     // TODO: Nutzer aus Datenbank laden für Admin-Funktionen
 
     return (
@@ -68,7 +71,8 @@ function Settings() {
                                 <h2 className={styles.header}>Account</h2>
                                 <span className={styles.settingsText}>username: {name}</span>
                                 <span className={styles.settingsText}>role: {role}</span>
-                                <button onClick={togglePopup} className = {styles.accountbutton}>Change Password</button> {/*TODO Funktion implementieren und schöner*/}
+                                <GenericButton title = "Change Password" onClick={togglePopup}></GenericButton>
+                                 {/*TODO Funktion implementieren und schöner*/}
                                 {isPopupVisible && (
                                     <div>
                                         <p style={{ color: "black" }}>Enter your old Password:</p>
@@ -94,7 +98,8 @@ function Settings() {
                                         />
                                     </div>
                                 )}
-                                <button className = {styles.accountbutton}>Delete Account </button> {/*TODO implizierter logout/aus Datenbank löschen und schöner machen*/}
+                                {/*TODO implizierter logout/aus Datenbank löschen und schöner machen*/}
+                                <GenericButton title = "Delete Account" onClick={toggleAccountdeletion}></GenericButton>
 
 
                             </>
@@ -104,7 +109,8 @@ function Settings() {
                         {selectedTab === "color" && (
                             <>
                                 <h2 className={styles.header}>Appearance</h2>
-                                <p className={styles.settingsText}> Switch to dark mode <DarkModeButton /> </p>
+                                <p className={styles.settingsText}> Switch to dark mode  </p>
+                                <DarkModeButton />
                             </>
                         )}
 
