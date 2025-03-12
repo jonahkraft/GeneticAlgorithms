@@ -3,9 +3,10 @@ import sqlite3
 from concurrent.futures import ThreadPoolExecutor
 import csv
 import UnitMeta
-from backend.Test import MetaTest
+
 import asyncio
-from backend import database
+from backend.src import  database
+from backend.src.test import MetaTest
 import copy
 import random;
 """ Helper Functions """
@@ -206,7 +207,7 @@ class ExperiementalDataTests(UnitMeta.UnitMeta):
         :return:
        """
        def pApplied(data : list) -> None:
-           database.add_experiment_data(data, testConnection)
+           database.add_experiment_data("SampleUser", [data], testConnection)
        with ThreadPoolExecutor() as executor:
           for _ in executor.map(pApplied, [ToList(ToDict(data)) for data in TestData]):
               pass
@@ -221,6 +222,7 @@ class ExperiementalDataTests(UnitMeta.UnitMeta):
         self.StressTestAddTestData()
         self.TestExportData()
         self.TestAddExperiementDataFromCSV()
+
     def StressTestAdd(self):
         """
         Nutzt die paralelle StressTestAddTestData Funktion um einen Stresstest durchzuführen
@@ -244,7 +246,7 @@ class ExperiementalDataTests(UnitMeta.UnitMeta):
         self.ClearTestDB()
         for data in TestData:
             try:
-                database.add_experiment_data(data, testConnection)
+                database.add_experiment_data("SampleUser", [data], testConnection)
             except:
                 return "Fehler bei add_experiement_data, exception wurde gethrowed wo keine sein darf!"
         res : list[list[int | float]] = []
