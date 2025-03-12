@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import displayWarning from "./displayWarninig.ts";
 import WarningComponent from "./warning.tsx";
 import logIn from './LoginExport.ts'
-import Header from "../../components/Header/Header.tsx";
 
 
 function Login() {
@@ -50,7 +49,6 @@ function Login() {
 
     return (
         <>
-            <Header/>
             <div className={styles.center}>
                 <h1 className={styles.header}>Login</h1>
                 <form onSubmit={getUserdata}>
