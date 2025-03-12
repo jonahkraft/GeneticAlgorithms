@@ -1558,7 +1558,7 @@ function DataVisualization() {
 
     return (
         <div className={styles.wrapper}>
-            <div className={styles.toolbar}>Toolbar</div>
+            {/*<div className={styles.toolbar}>Toolbar</div><*/}
 
             <div className={styles.container}>
                 {/*<button className="toggle-btn left-btn" onClick={() => toggleSidebar('left')}>☰</button>*/}
