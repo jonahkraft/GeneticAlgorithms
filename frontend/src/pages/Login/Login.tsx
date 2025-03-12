@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import displayWarning from "./displayWarninig.ts";
 import WarningComponent from "./warning.tsx";
 import logIn from './LoginExport.ts'
+import GenericButton from "../../components/GenericButton/GenericButton.tsx";
 
 
 function Login() {
@@ -80,9 +81,9 @@ function Login() {
 
                     <WarningComponent text={text}/>
 
-                    <div className={styles.pass}>Forget Password?</div>
+                    <div className={styles.pass}>Forgot Password?</div>
 
-                    <button className={styles.button} type="submit" onClick={() => enter(username)}>Login</button>
+                    <GenericButton title = "Login" onClick={() => enter(username)}></GenericButton>
                     <p><br/></p>
                     <div className={styles.signupLink} onClick={() => enter("placeholder")}>
                         Continue as Simulator

@@ -11,7 +11,7 @@ from sqlite3 import Connection, Cursor
 
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 
-from backend.Test.Integrationstest.IntegrationMeta import IntegrationMeta, TestResult
+from backend.src.test.Integrationstest.IntegrationMeta import IntegrationMeta, TestResult
 
 
 # TODO: INTEGRATION OF TESTING INTERFACE META WITH FLASK SERVER
@@ -61,8 +61,7 @@ class ServerIntegrationTest(IntegrationMeta):
         serverResponseForAdmin = requests.post(f"{kwargs['server_address']}/login",
                                        json={"username": test_username, "password": test_password})
 
-        print(serverResponseForAdmin.text)
-        serverResponseForAdmin = json.loads(serverResponseForAdmin.text)
+        # serverResponseForAdmin = json.loads(serverResponseForAdmin.text)
         print(serverResponseForAdmin)
 
         server_address : str = kwargs['server_address'] if kwargs['server_address'] is not None else "http://localhost:5000/api"
@@ -212,16 +211,15 @@ class ServerIntegrationTest(IntegrationMeta):
         """
 
         #TODO run tests and delete all test user data from database
-        self.deleteUserData(database_path=kwargs['database_path'])
         return (self.connect(**kwargs) is self.serverToServer(**kwargs) is self.serverToDatabase(**kwargs)
-                is self.serverToUserRendering(**kwargs) is self.disconnect())
+                is self.serverToUserRendering(**kwargs) is self.disconnect(**kwargs))
 
 
 
 if __name__ == '__main__':
 
-    from backend.app import app
-    import backend.database as database_module
+    from backend.src.app import app
+    import backend.src.database as database_module
 
     @app.route("/api/integration/empty_ping", methods = ["GET"])
     def empty_ping() -> Response:

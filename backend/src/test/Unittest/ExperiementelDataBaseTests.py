@@ -3,9 +3,10 @@ import sqlite3
 from concurrent.futures import ThreadPoolExecutor
 import csv
 import UnitMeta
-from backend.Test import MetaTest
+
 import asyncio
-from backend import database
+from backend.src import  database
+from backend.src.test import MetaTest
 import copy
 import random;
 """ Helper Functions """
@@ -46,7 +47,7 @@ def ToTuple(vals : dict[str, int | float]) -> tuple[int, float, float, float, fl
     :param vals: Der Dictionary<string, double/int> der die passenden Attribute enthält.
     :return: Die Simulationsdaten vom Dictionary als Tupel.
     """
-    return (vals["generation"], vals["final_drive"], vals["roll_radius"], vals["gear_3"], vals["gear_4"], vals["gear_5"], vals["consumption"], vals["elasticity_3"], vals["elasticity_4"], vals["elasticity_5"])
+    return (vals["generation"], vals["final_drive"], vals["roll_radius"], vals["gear_3"], vals["gear_4"], vals["gear_5"], vals["consumption"], vals["elasticity_3"], vals["elasticity_4"], vals["elasticity_5"], vals["experiement_id"])
 
 def ToDict(vals : list[int | float]) -> dict[str, int | float]:
     """
@@ -65,7 +66,8 @@ def ToDict(vals : list[int | float]) -> dict[str, int | float]:
         "consumption": vals[6],
         "elasticity_3": vals[7],
         "elasticity_4": vals[8],
-        "elasticity_5": vals[9]
+        "elasticity_5": vals[9],
+        "experiement_id": vals[10]
     };
 def ToList(vals : dict[str, int | float]) -> list[int | float]:
     """
@@ -73,7 +75,7 @@ def ToList(vals : dict[str, int | float]) -> list[int | float]:
     :param vals: Der Dictionary.
     :return: Die Liste mit den Simulationsdaten
     """
-    return [vals["generation"], vals["final_drive"], vals["roll_radius"], vals["gear_3"], vals["gear_4"], vals["gear_5"], vals["consumption"], vals["elasticity_3"], vals["elasticity_4"], vals["elasticity_5"]]
+    return [vals["generation"], vals["final_drive"], vals["roll_radius"], vals["gear_3"], vals["gear_4"], vals["gear_5"], vals["consumption"], vals["elasticity_3"], vals["elasticity_4"], vals["elasticity_5"], vals["experiement_id"]]
 
 
 
@@ -103,7 +105,7 @@ class ExperiementalDataTests(UnitMeta.UnitMeta):
             for _ in range(3):
                 testCols.append(random.choices(ALL_COLS, k = k))
         # Jetzt jeder Operator + 2 Cols / Real vergleichen (<, <=, >, >= in einer EQ Klasse)
-        ops = ["<", ">", "==", "<>"]
+        ops = ["<", ">", "=", "<>"]
         funcs = [(lambda x, y: x < y), (lambda x, y: x > y), (lambda x, y: x == y), (lambda x, y: not (x == y))]
         leftCols = [random.choice(ALL_COLS) for _ in range(len(ops))]
         rightCols = [random.choice(ALL_COLS) for _ in range(len(ops))]
@@ -200,15 +202,15 @@ class ExperiementalDataTests(UnitMeta.UnitMeta):
         con.close()
     @staticmethod
     def StressTestAddTestData():
-        """
+       """
         Added paralell die Testdaten mit der add_experiement_data Funktion zur Datenbank
         :return:
-        """
-        def pApplied(data : list) -> None:
-            database.add_experiment_data(data, testConnection)
-        with ThreadPoolExecutor() as executor:
-            for _ in executor.map(pApplied, [ToList(ToDict(data)) for data in TestData]):
-                pass
+       """
+       def pApplied(data : list) -> None:
+           database.add_experiment_data("SampleUser", [data], testConnection)
+       with ThreadPoolExecutor() as executor:
+          for _ in executor.map(pApplied, [ToList(ToDict(data)) for data in TestData]):
+              pass
     def __call__(self, *args, **kwargs):
         """
         Führt alle Tests in der Klasse auf
@@ -220,6 +222,7 @@ class ExperiementalDataTests(UnitMeta.UnitMeta):
         self.StressTestAddTestData()
         self.TestExportData()
         self.TestAddExperiementDataFromCSV()
+
     def StressTestAdd(self):
         """
         Nutzt die paralelle StressTestAddTestData Funktion um einen Stresstest durchzuführen
@@ -243,7 +246,7 @@ class ExperiementalDataTests(UnitMeta.UnitMeta):
         self.ClearTestDB()
         for data in TestData:
             try:
-                database.add_experiment_data(data, testConnection)
+                database.add_experiment_data("SampleUser", [data], testConnection)
             except:
                 return "Fehler bei add_experiement_data, exception wurde gethrowed wo keine sein darf!"
         res : list[list[int | float]] = []
@@ -265,6 +268,7 @@ if __name__ == "__main__":
         data : list[int | float] = [random.randint(0, 100)]
         for _ in range(9):
             data.append(random.random() * 100)
+        data.append(random.randint(0, 100))
         TestData.append(ToTuple(ToDict(data)))
     inst = ExperiementalDataTests()
     print(inst.TestAddData())
