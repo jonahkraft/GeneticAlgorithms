@@ -1,4 +1,6 @@
+import cookies from "../../cookies.ts";
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 import generateResultList from "./generate_result_list.ts";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
@@ -40,6 +42,14 @@ interface GenerationData {
 
 
 function DataVisualization() {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!cookies.isLoggedIn()) {
+            navigate("/login");
+        }
+    }, [navigate]);
+
     // data speichert Datensatz vom backend Server, funktioniert aktell noch nicht, daher ist data Null
     const [data, setData] = useState<object[]>([]);
 
