@@ -70,7 +70,7 @@ class ServerIntegrationTest(IntegrationMeta):
                                        headers={"Authorization": serverResponseForAdmin['access_token']}).status_code
 
         cursor : Cursor = database.cursor()
-        cursor.execute("SELECT * FROM users WHERE ?= user_name", [test_username])
+        cursor.execute("SELECT * FROM users WHERE ?= username", [test_username])
 
         databaseResponse : Any = cursor.fetchone()
         if databaseResponse is Sequence: databaseResponse = databaseResponse[0]
@@ -200,8 +200,6 @@ class ServerIntegrationTest(IntegrationMeta):
 
         return True
 
-    def integrationInDocker(self, **kwargs) -> IntegrationMeta:
-        pass
 
     def __call__(self, *args, **kwargs) -> IntegrationMeta:
 

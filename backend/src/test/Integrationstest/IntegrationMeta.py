@@ -48,7 +48,7 @@ class IntegrationMeta(MetaTest):
         database : Connection = sqlite3.connect(kwargs['database_path'])
         cursor : Cursor = database.cursor()
 
-        cursor.execute('DELETE FROM users WHERE ?= user_name', ["TestUser"])
+        cursor.execute('DELETE FROM users WHERE ?= username', ["TestUser"])
         database.close()
 
 
