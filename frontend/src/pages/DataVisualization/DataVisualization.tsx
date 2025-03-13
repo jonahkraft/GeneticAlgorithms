@@ -95,13 +95,20 @@ function DataVisualization() {
 
     // Anzeige Graph aller Generationen
     useEffect(() => {
-        if( data && data.length > 0 && selectedGeneration) {
-            graphGen(data.filter(entity => entity.generation === selectedGeneration));
+        console.log(data)
+        console.log(selectedGeneration)
+        console.log(Boolean(data))
+        console.log(Boolean(selectedGeneration))
+        if( data && selectedGeneration) {
+            const filtereddata = data.filter(entity => entity.generation === selectedGeneration);
+            console.log(filtereddata)
+            graphGen(filtereddata);
         }
-    }, [data]);
+    }, [data, generatedElement]);
 
     // Change Drop Down Element
     function handleDropdownSelect(index: number) {
+        console.log("handleDD")
         // Saves selected generation in state
         setSelectedGeneration(generations[index]);
 
@@ -111,6 +118,10 @@ function DataVisualization() {
                 <div style={{ width: "800px" }}><canvas id="my_graph_gen"></canvas></div>
             </div>
         );
+
+        if( data && data.length > 0 && selectedGeneration) {
+            graphGen(data.filter(entity => entity.generation === selectedGeneration));
+        }
     }
 
     // Überprüfe, ob gegebener Input eine gültige Dezimalzahl ist (zB 1234.5678). Die Funktion erlaubt auch nur ein Komma (.)
@@ -271,6 +282,16 @@ function DataVisualization() {
             const parsedList = parseCSVToList(csvContent);
             // TODO: Usage for pasedList (backend i.e)
             getGenertations(parsedList)
+
+            console.log("daten sind spaß")
+            console.log(parsedList)
+
+            setData(Object.values(parsedList).flat())
+
+            console.log(Object.values(parsedList).flat())
+
+
+
             // @ts-ignore
             graph(Object.values(parsedList).flat())
             //graph(parsedList);
