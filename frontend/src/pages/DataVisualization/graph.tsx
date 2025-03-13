@@ -1,6 +1,20 @@
 import Chart from 'chart.js/auto'
 
-const graph = () => {
+export interface HistoricalDataType {
+    generation: string;
+    'Final Drive': string;
+    'Roll Radius': string;
+    'Gear 3': string;
+    'Gear 4': string;
+    'Gear 5': string;
+    Consumption: string;
+    'Elasticity 3': string;
+    'Elasticity 4': string;
+    'Elasticity 5': string;
+    'experiment_id': string;
+}
+
+const graph = (data: HistoricalDataType[]) => {
     
     const testList = {
         '0': [
@@ -1347,31 +1361,33 @@ const graph = () => {
         ]
     }
 
-    type ObjectKey = keyof typeof testList;
+    console.log(data)
+
+    type ObjectKey = keyof typeof data;
     // List with all consumptions of all generations
     const list : {gen: string, consumption: string}[] = [];
     // List with the average consumption for all generationsa
     const avg : {gen: string, genAvg: string}[] = [];
-
+/*
     for (let i=0; i< Object.keys(testList).length; i++) {
         
         const generationIndex = String(i) as ObjectKey;
         let sum = 0;
         let count = 0;
 
-        for (let j=0; j< testList[generationIndex].length; j++) {
+        for (let j=0; j< data[generationIndex].length; j++) {
 
-            const verbrauch = testList[generationIndex][j].Consumption;
+            const verbrauch = data[generationIndex][j].Consumption;
 
             sum += Number(verbrauch);
             count += 1;
             
-            list.push({gen: generationIndex, consumption: verbrauch})
+            list.push({gen: String(generationIndex), consumption: verbrauch})
         }
         
         avg.push({gen: String(i), genAvg: String((sum / count))});
     }
-
+*/
     const ctx = document.getElementById("my_graph") as HTMLCanvasElement;
     if (!ctx) return;
 
