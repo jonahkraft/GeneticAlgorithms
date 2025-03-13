@@ -180,7 +180,7 @@ function Settings() {
                     {selectedTab === "account" && (
                         <>
                             <span className={styles.settingsText} id={"settings_username"}>username: {name}</span>
-                            <span className={styles.settingsText}id={"settings_role"}>role: {role}</span>
+                            <span className={styles.settingsText} id={"settings_role"}>role: {role}</span>
                             <button onClick={togglePopup} className = {styles.accountbutton}>Change Password</button> {/*TODO Funktion implementieren und schöner*/}
                             {isPopupVisible && (
                                 <div>
@@ -305,6 +305,7 @@ function Settings() {
                             <form onSubmit={(e) => e.preventDefault()}>
                                 <input
                                     className={styles.userFormInput}
+                                    id={"settings_OldUser"}
                                     type="text"
                                     placeholder="Enter username"
                                     required
@@ -315,6 +316,7 @@ function Settings() {
                                     type="button"
                                     className={styles.userFormButton}
                                     onClick={() => deleteUser(userToBeDeleted)}
+                                    id={"settings_DeleteUser"}
                                 >
                                     Delete User
                                 </button>
