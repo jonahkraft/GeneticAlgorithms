@@ -3,13 +3,37 @@
 Generic Buttons ist eine Komponente welche für
 den genormten Button sorgt.
 
-```interface Probs```
+## Import
 
-```title: string``` Text welcher auf dem Button angezeigt wird
+```
+import styles from './GenericButton.module.css';
+```
+styles beschreibt den Style des genormten Buttons
 
+## Interface
 
-```onClick:() =>``` Funktion welche der Button ausführen soll
+```
+interface Probs{
 
-```function GenericButton({ title,onClick}):Probs)```
+title: string;
 
-Die Funktion gibt einen HTML Button zurück, welcher die gewünschte Funktion ausführt
+onClick:() =>void;
+}
+``` 
+Probs ist ein Interface welches die Struktur fpr title und onClick festlegt.
+title beschreibt den Text welcher auf dem Button angezeigt wird, onClick beinhaltet die Funktion welche der Button ausführen soll.
+
+## Funktionen
+
+```
+function GenericButton({ title,onClick}):Probs){}
+```
+
+Die Funktion nimmt die Variablen title und onClick und gibt einen HTML button zurück mit dem gewünschten Titel und der gewünschten Funktion.
+
+```
+return(
+<button className={styles.GenericButton} onClick={onClick}>{title}</button>
+      )
+```
+Rückgabe des genormten Buttons in HTML

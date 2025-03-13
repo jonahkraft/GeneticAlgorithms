@@ -24,6 +24,10 @@ function transmitParameters(aep: string, generation_count: string, population_si
     console.log(elite_count, typeof(elite_count))
     console.log(alien_count, typeof(alien_count))
     console.log(weights, typeof(weights))
+    const transmitWeights = [weights]
+    // TODO: sort weights
+
+    // TODO: startegy kanan 1,2 oder 3 sein
 
     //const strategy = '2' laut backend
     // TODO: given_seed fest oder random
@@ -32,15 +36,22 @@ function transmitParameters(aep: string, generation_count: string, population_si
     const token = cookies.getCookies().token
     // call backend-API
     //        axios.post("/api/get_simulation_data", {columns: [], row_constraints: []}, {"Content-Type": "application/json", "Authorization": `Bearer ${token}`})
-    axios.post("/api/get_simulation_data", { "population_size": population_size, "simulation_seed": given_seed, "strategy": 2, "aep": aep, "elite_count": elite_count, "alien_count": alien_count, "weights": weights },
+    axios.post("/api/get_simulation_data", { "population_size": population_size, "simulation_seed": given_seed, "generation_count": generation_count ,"strategy": '2', "aep": aep, "elite_count": elite_count, "alien_count": alien_count, "weights": transmitWeights },
         { headers: { "Authorization": `Bearer ${token.trim()}`, "Content-Type": "application/json" } })
         .then((response) => {
             console.log('DataVisualization NACH axios get');
-            console.log('Result von AXIOS GET', response.data, 'Result von AXIOS GET', response);
             //const result = Papa.parse(response.data, { header: true, skipEmptyLines: true });
             console.log(response.data)
         })
-        .catch((error) => console.error(error));
+        .catch(error => {
+            if (error.response) {
+                console.error("Error Status:", error.response.status);
+                console.error("Error Data:", error.response.data);
+                console.error("Error Headers:", error.response.headers);
+            } else {
+                console.error("Request failed:", error.message);
+            }
+        });
 
 
     return `AEP: ${aep}, Generation Count: ${generation_count}, Population Size: ${population_size}, Given Seed: ${given_seed}, Elite Count: ${elite_count}, Alien Count: ${alien_count}, Weights: ${weights}`;
