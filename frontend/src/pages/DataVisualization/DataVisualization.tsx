@@ -246,37 +246,37 @@ function DataVisualization() {
                         <tbody>
                             <tr>
                                 <td>Mutationsrate</td>
-                                <td><input type="text" name="aep" value={paraInputs.aep} onChange={handleParaChange} /></td>
+                                <td><input className={styles.userFormSelect} type="text" name="aep" value={paraInputs.aep} onChange={handleParaChange} /></td>
                                 <td>Rate of mutation. A higher value results in less mutation (values between 0 and 1)</td>
                             </tr>
                             <tr>
                                 <td>Generation Count</td>
-                                <td><input type="text" name="generation_count" value={paraInputs.generation_count} onChange={handleParaChange} /></td>
+                                <td><input className={styles.userFormSelect} type="text" name="generation_count" value={paraInputs.generation_count} onChange={handleParaChange} /></td>
                                 <td>Number of computaded generations</td>
                             </tr>
                             <tr>
                                 <td>Population Size</td>
-                                <td><input type="text" name="population_size" value={paraInputs.population_size} onChange={handleParaChange} /></td>
+                                <td><input className={styles.userFormSelect} type="text" name="population_size" value={paraInputs.population_size} onChange={handleParaChange} /></td>
                                 <td>Size of a population</td>
                             </tr>
                             <tr>
                                 <td>Given Seed</td>
-                                <td><input type="text" name="given_seed" value={paraInputs.given_seed} onChange={handleParaChange} /></td>
+                                <td><input className={styles.userFormSelect} type="text" name="given_seed" value={paraInputs.given_seed} onChange={handleParaChange} /></td>
                                 <td>Seed for random generation of the first population</td>
                             </tr>
                             <tr>
                                 <td>Elite Count</td>
-                                <td><input type="text" name="elite_count" value={paraInputs.elite_count} onChange={handleParaChange} /></td>
+                                <td><input className={styles.userFormSelect} type="text" name="elite_count" value={paraInputs.elite_count} onChange={handleParaChange} /></td>
                                 <td>Number of elites. Elites are the top entities that will remain unchanged for the next generation</td>
                             </tr>
                             <tr>
                                 <td>Alien Count</td>
-                                <td><input type="text" name="alien_count" value={paraInputs.alien_count} onChange={handleParaChange} /></td>
+                                <td><input className={styles.userFormSelect} type="text" name="alien_count" value={paraInputs.alien_count} onChange={handleParaChange} /></td>
                                 <td>Number of Entities that will be randomly generated in every generation</td>
                             </tr>
                             <tr>
                                 <td>Weigths</td>
-                                <td><input type="text" name="weights" value={paraInputs.weights} onChange={handleParaChange} /></td>
+                                <td><input className={styles.userFormSelect} type="text" name="weights" value={paraInputs.weights} onChange={handleParaChange} /></td>
                                 <td>Weights of the result-values: consumption, elasticity (values between 3-5)</td>
                             </tr>
                         </tbody>
@@ -290,9 +290,9 @@ function DataVisualization() {
                     <label id="transData">{transmittedData}</label>
                 </Card>
 
-                <hr />
-
                 <DropDown text={generations} callBack={new CallBack((index:number) => handleDropdownSelect(index))}></DropDown>
+
+                <hr />
 
                 {selectedGeneration ? (
                     <Card>

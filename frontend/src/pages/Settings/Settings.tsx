@@ -249,8 +249,8 @@ function Settings() {
                                         className={styles.userFormSelect}
                                         required
                                         value={roleSet}
-                                        onChange={(e) => setRole(e.target.value)}
-                                    >
+                                        onChange={(e) => setRole(e.target.value)}>
+
                                         <option value="simulator">Simulator</option>
                                         <option value="data_analyst">Data Analyst</option>
                                         <option value="administrator">Admin</option>
@@ -259,8 +259,7 @@ function Settings() {
                                     <button
                                         type="button"
                                         className={styles.userFormButton}
-                                        onClick={() => addUser(username, password, roleSet)}
-                                    >
+                                        onClick={() => addUser(username, password, roleSet)}>
                                         Add User
                                     </button>
                                 </form>
