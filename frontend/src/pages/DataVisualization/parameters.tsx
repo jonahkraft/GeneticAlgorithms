@@ -26,6 +26,8 @@ function transmitParameters(aep: string, generation_count: string, population_si
     console.log(alien_count, typeof(alien_count))
     console.log(weights, typeof(weights))
 
+    const transmitWeights = [weights]
+    transmitWeights.sort()
     // TODO: startegy kanan 1,2 oder 3 sein
 
     //const strategy = '2' laut backend
@@ -33,7 +35,7 @@ function transmitParameters(aep: string, generation_count: string, population_si
     // given_seed = ''
     const token = cookies.getCookies().token
     // call backend-API
-    axios.post("/api/start_simulation", { "population_size": population_size, "simulation_seed": given_seed, "generation_count": generation_count ,"strategy": '2', "aep": aep, "elite_count": elite_count, "alien_count": alien_count, "weights": weights },
+    axios.post("/api/start_simulation", { "population_size": population_size, "simulation_seed": given_seed, "generation_count": generation_count ,"strategy": '2', "aep": aep, "elite_count": elite_count, "alien_count": alien_count, "weights": transmitWeights },
         { headers: { "Authorization": `Bearer ${token.trim()}`, "Content-Type": "application/json" } })
         .then((response) => {
             console.log(response.data.experiment_id)
