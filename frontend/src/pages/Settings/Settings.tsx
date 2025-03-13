@@ -128,16 +128,19 @@ function Settings() {
     }
 
     async function editUserAdmin(oldUsername: string, newUsername: string, newPassword: string, newRole: string) {
+        const futureName = newUsername !== "" ? newUsername : oldUsername;
+
         if (newUsername !== "") {
             await changeUsername(oldUsername, newUsername);
         }
 
-        const futureName = (newUsername !== "") ? newUsername: oldUsername
-
         if (newPassword !== "") {
             await changePassword(futureName, "", newPassword);
         }
+
         await changeUserRole(futureName, newRole);
+
+        loadUsers().then(setUsers);
     }
 
     return (
