@@ -327,6 +327,7 @@ function Settings() {
                             <form onSubmit={(e) => e.preventDefault()}>
                                 <input
                                     className={styles.userFormInput}
+                                    id={"settings_OldUsername"}
                                     type="text"
                                     placeholder="Enter old username"
                                     required
@@ -335,6 +336,7 @@ function Settings() {
                                 />
                                 <input
                                     className={styles.userFormInput}
+                                    id={"settings_ChangedUsername"}
                                     type="text"
                                     placeholder="Enter new username"
                                     value={newName}
@@ -343,6 +345,7 @@ function Settings() {
 
                                 <input
                                     className={styles.userFormInput}
+                                    id={"settings_ChangedPassword"}
                                     type="password"
                                     placeholder="Enter new password"
                                     value={newPW}
@@ -354,16 +357,18 @@ function Settings() {
                                     required
                                     value={newRole}
                                     onChange={(e) => setNewRole(e.target.value)}
+                                    id={"settings_ChooseRole2"}
                                 >
-                                    <option value="simulator">Simulator</option>
-                                    <option value="data_analyst">Data Analyst</option>
-                                    <option value="administrator">Admin</option>
+                                    <option value="simulator" id={"settings_NewSimulator"} >Simulator</option>
+                                    <option value="data_analyst" id={"settings_NewData"} >Data Analyst</option>
+                                    <option value="administrator" id={"settings_NewAdmin"} >Admin</option>
                                 </select>
 
                                 <button
                                     type="button"
                                     className={styles.userFormButton}
                                     onClick={() => editUserAdmin(oldName, newName, newPW,newRole)}
+                                    id={"settings_ApplyChanges"}
                                 >
                                     Apply
                                 </button>
