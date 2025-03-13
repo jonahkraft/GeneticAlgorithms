@@ -329,7 +329,7 @@ function DataVisualization() {
                         ) : <></>}
 
                         <UploadButton></UploadButton>
-                        {/* TODO temporär <DownloadButton onClick={() => downloadCSV(tmpList, 'Frontendtest')}></DownloadButton> */}
+                        <DownloadButton onClick={() => downloadCSV('Frontendtest')}></DownloadButton>
                     </div>
                 </Card>
             </div>
