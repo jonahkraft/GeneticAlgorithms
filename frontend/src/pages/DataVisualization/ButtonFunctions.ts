@@ -80,42 +80,32 @@ export function uploadCSV(event: any){
     reader.readAsText(file); // Liest die Datei als Text
 }
 
-export async function downloadCSV(data: any, filename: string){
+export async function downloadCSV(filename: string){
     let csvContent = "";
     let blocker = 0;
     const data = await getSimulationData(["generation", "final_drive", "roll_radius", "gear_3", "gear_4", "gear_5", "consumption", "elasticity_3", "elasticity_4", "elasticity_5", "experiment_id"], [])
 
-    // Iterate through all generations
     Object.keys(data).forEach((generationKey) => {
 
-        // Collect data from current generation
         const generationData = data[generationKey];
 
         if (generationData.length > 0) {
-            // Collect Column names, excluding "experiment_id"
-            const keys = Object.keys(generationData[0]) //.filter(key => key !== "experiment_id");
+            const keys = Object.keys(generationData[0])
 
             if (blocker === 0) {
-                // add to csvContent accordingly
                 csvContent += keys.join(";") + "\n";
                 blocker += 1;
             }
 
-            // Iterate through every row
             generationData.forEach((row: any) => {
-                // Collect row data, excluding "experiment_id"
                 const values = keys.map((key) => row[key]);
-                // add to csvContent accordingly
                 csvContent += values.join(";") + "\n";
             });
         }
     });
 
-    // Save and download file
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     saveAs(blob, filename);
 }
-
-
 
 export default { placeholderButtonFunction, showProtocol, showDebug, uploadCSV, downloadCSV}
