@@ -2,7 +2,6 @@ import styles from './Login.module.css';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Warning from "./Warning.tsx";
-//import TestlogIn from './LoginExport.ts'
 import axios from "axios";
 import cookies from "../../cookies.ts";
 import GenericButton from "../../components/GenericButton/GenericButton.tsx";
