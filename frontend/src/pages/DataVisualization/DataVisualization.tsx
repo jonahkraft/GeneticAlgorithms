@@ -184,18 +184,16 @@ function DataVisualization() {
             }
         }
         if (name === "weights") {
-            // Entferne Leerzeichen und trenne die Werte
+            // Entferne unnötige Leerzeichen und trenne an ","
             const values = value.split(",").map((v) => v.trim());
 
-            // Regex für gültige Float-Zahlen
-            const floatRegex = /^\d*\.?\d+$/;
-
-            // Prüfe, ob ALLE Werte gültige Floats zwischen 3 und 5 sind
+            // Prüfe, ob jede Zahl ein Float ist und zwischen 3 und 5 liegt
             const isValid = values.every(
-                (num) => floatRegex.test(num) && parseFloat(num) >= 3 && parseFloat(num) <= 5
+                (num) => num === "" || (!isNaN(Number(num)) && Number(num) >= 3 && Number(num) <= 5)
             );
 
-            if (isValid || value === "") {
+            // Falls gültig, setze den State
+            if (isValid) {
                 setParaInputs((prev) => ({ ...prev, [name]: value }));
             }
         }
