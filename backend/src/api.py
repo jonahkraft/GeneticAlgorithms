@@ -356,8 +356,6 @@ def api_start_simulation():
         alien_count = int(data["alien_count"])
         weights = data["weights"]
 
-        print(weights)
-
     except NameError as e:
         db.write_log(f"Failed to start simulation, because of missing parameter: {e}")
         return jsonify({"msg": f"{e}"}, 400)
