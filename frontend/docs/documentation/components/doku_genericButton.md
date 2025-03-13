@@ -3,14 +3,14 @@
 Generic Buttons ist eine Komponente welche für
 den genormten Button sorgt.
 
-## Import
+#### Import
 
 ```
 import styles from './GenericButton.module.css';
 ```
 styles beschreibt den Style des genormten Buttons
 
-## Interface
+#### Interface
 
 ```
 interface Probs{
@@ -23,7 +23,7 @@ onClick:() =>void;
 Probs ist ein Interface welches die Struktur fpr title und onClick festlegt.
 title beschreibt den Text welcher auf dem Button angezeigt wird, onClick beinhaltet die Funktion welche der Button ausführen soll.
 
-## Funktionen
+#### Funktionen
 
 ```
 function GenericButton({ title,onClick}):Probs){}

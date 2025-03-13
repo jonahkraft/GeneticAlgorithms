@@ -2,15 +2,10 @@ import sqlite3
 import csv
 import hashlib
 import os
-from redis import Redis
 
-redis_host = os.getenv('REDIS_HOST', 'localhost')
-redis_client = Redis(host=redis_host)
-
-
-#user_connection = sqlite3.connect("../db/users.db")
+#user_connection = sqlite3.connect("../db/simulation_data.db")
 #cur = user_connection.cursor()
-#cur.execute("""ALTER TABLE users RENAME COLUMN username TO username""")
+#cur.execute("ALTER TABLE experiments ADD COLUMN simulation_seed INT")
 #user_connection.commit()
 
 def get_users(connection_path: str = "db/users.db") -> list[tuple[str, str]]:
@@ -28,6 +23,24 @@ def get_users(connection_path: str = "db/users.db") -> list[tuple[str, str]]:
     cur = connection.cursor()
 
     cur.execute("SELECT username, role FROM users")
+
+    return cur.fetchall()
+
+def get_logs(connection_path: str = "db/logs.db") -> list[tuple[str, str]]:
+    """
+    Gets a list of all logs.
+
+    :param connection_path: path to the database
+    :type connection_path: str
+
+    :returns A list of logs
+    :type list[tuple[str, str]]
+    """
+    
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+
+    cur.execute("SELECT time, log FROM logs")
 
     return cur.fetchall()
 
@@ -160,7 +173,7 @@ def change_username(old_username: str, new_username: str, users_connection_path:
     connection = sqlite3.connect(simulation_data_connection_path)
     cur = connection.cursor()
 
-    cur.execute("UPDATE experiment_owners SET username = ? WHERE username = ?", [new_username, old_username])
+    cur.execute("UPDATE experiments SET username = ? WHERE username = ?", [new_username, old_username])
 
     connection.commit()
     connection.close()
@@ -295,7 +308,7 @@ def get_experiment_owner(experiment_id: int, connection_path: str = "db/simulati
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
-    cur.execute("SELECT username FROM experiment_owners WHERE experiment_id = ?", [experiment_id])
+    cur.execute("SELECT username FROM experiments WHERE experiment_id = ?", [experiment_id])
 
     res = cur.fetchone()
     
@@ -317,7 +330,7 @@ def get_users_experiments(username: str, connection_path: str = "db/simulation_d
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
-    cur.execute("SELECT experiment_id FROM experiment_owners WHERE username = ?", [username])
+    cur.execute("SELECT experiment_id FROM experiments WHERE username = ?", [username])
     ids = cur.fetchall()
     ids = [i[0] for i in ids]
 
@@ -354,7 +367,7 @@ def add_experiment_data(username: str, data: list[list], connection_path: str = 
 
     cur.executemany("INSERT INTO car_data (generation, final_drive, roll_radius, gear_3, gear_4, gear_5, consumption, elasticity_3, elasticity_4, elasticity_5,experiment_id) VALUES (?,?,?,?,?,?,?,?,?,?,?);", to_db)
 
-    cur.execute("INSERT INTO experiment_owners (experiment_id, username) VALUES(?,?)", [experiment_id, username])
+    cur.execute("INSERT INTO experiments (experiment_id, username) VALUES(?,?)", [experiment_id, username])
 
     connection.commit()
     connection.close()
@@ -439,4 +452,4 @@ def write_log(log: str, connection_path = "db/logs.db"):
     connection.commit()
     connection.close()
 
-#print(get_users_experiments("simulation_expert", "./backend/db/simulation_data.db"))
+#print(get_logs("./backend/db/logs.db"))

@@ -136,21 +136,18 @@ def api_delete_user():
         "username": "<username>"
     }
 
-    :returns JSON
-    {
-        "success": bool
-    }
+    :returns JSON { }
 
     """
 
     current_user = get_jwt_identity()
 
+    data = request.get_json()
+    username = data["username"]
+
     if db.get_role(current_user) != "administrator":
         db.write_log(f"Failed to delete user '{username}', because {current_user} is no administrator")
         return jsonify({}), 401
-
-    data = request.get_json()
-    username = data["username"]
 
     if db.delete_user(username):
         db.write_log(f"Deleted user '{username}'")
@@ -416,5 +413,29 @@ def api_get_users():
         return jsonify({}), 401
     
     data = db.get_users()
-    db.write_log(f"Got users")
+    db.write_log(f"{current_user} requested all users")
     return jsonify({"users": [{"username": user, "role": role} for user,role in data]}, 200)
+
+@api.route("/api/get_logs", methods=["GET"])
+@jwt_required()
+def api_get_logs():
+    """Get all logs
+
+    :returns JSON
+    {
+        "logs" : [ { "timestamp": "<timestamp>", "message": "<message>" } ]
+    }
+
+    """
+    current_user = get_jwt_identity()
+
+    role = db.get_role(current_user)
+    allowed_roles = {"administrator"}
+
+    if role not in allowed_roles:
+        db.write_log(f"Failed to get logs, because {current_user} is no administrator")
+        return jsonify({}), 401
+
+    data = db.get_logs()
+    db.write_log(f"{current_user} requested all logs")
+    return jsonify({"logs": [{"timestamp": timestamp, "message": message} for timestamp,message in data]}, 200)
