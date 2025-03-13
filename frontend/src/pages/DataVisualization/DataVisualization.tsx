@@ -185,9 +185,13 @@ function DataVisualization() {
         }
     }
 
+    function updateData(data: HistoricalDataType[]) {
+        setData(data)
+    }
+
     // Zeigt übermittelte Daten auf Seite an
-    function handleTransmit(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weights: string) {
-        const result = transmitParameters(aep, generation_count, population_size, given_seed, elite_count, alien_count, weights)
+     function handleTransmit(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weights: string, call: ((data: HistoricalDataType[]) => void)) {
+        const result =  transmitParameters(aep, generation_count, population_size, given_seed, elite_count, alien_count, weights, call)
         //const result = `AEP: ${aep}, Generation Count: ${generation_count}, Population Size: ${population_size}, Given Seed: ${given_seed}, Elite Count: ${elite_count}, Alien Count: ${alien_count}, Weights: ${weigths}`;
         console.log("Rückgabe parameter")
         console.log(result)
@@ -322,7 +326,7 @@ function DataVisualization() {
                     </table>
 
                         <GenericButton title='Start Simulation' onClick={() => {
-                            handleTransmit(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights)
+                            handleTransmit(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights, updateData)
                         }} idd={"data_StartSimu"}/>
                     <hr/>
                     <label id="transData">{transmittedData}</label>

@@ -17,7 +17,7 @@ import cookies from "../../cookies.ts";
 import axios from "axios";
 import getSimulationData, { HistoricalDataType } from "../../get_simulation_data.ts";
 
-function transmitParameters(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weights: string) {
+async function transmitParameters(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weights: string, call: ((data: HistoricalDataType[]) => void)) {
     //console.log(aep, typeof(aep))
     //console.log(generation_count, typeof(generation_count))
     //console.log(population_size, typeof(population_size))
@@ -39,17 +39,13 @@ function transmitParameters(aep: string, generation_count: string, population_si
     }
 
     const token = cookies.getCookies().token
-    let data: HistoricalDataType[];
     // call backend-API
     axios.post("/api/start_simulation", { "population_size": population_size, "simulation_seed": given_seed, "generation_count": generation_count, "strategy": '2', "aep": aep, "elite_count": elite_count, "alien_count": alien_count, "weights": weightsArray },
         { headers: { "Authorization": `Bearer ${token.trim()}`, "Content-Type": "application/json" } })
         .then((response) => {
             getSimulationData([], [`experiment_id = ${response.data.experiment_id}`]).then(
                 (record) => { 
-                    data = record[1]
-                    console.log("i got some data")
-                    return data;
-                    console.log("i still got some data")
+                    call(Object.values(record)[1])
                 }
             )
         })
@@ -63,7 +59,6 @@ function transmitParameters(aep: string, generation_count: string, population_si
             }
         });
     
-    return data!;
     //return `AEP: ${aep}, Generation Count: ${generation_count}, Population Size: ${population_size}, Given Seed: ${given_seed}, Elite Count: ${elite_count}, Alien Count: ${alien_count}, Weights: ${weights}`;
 }
 
