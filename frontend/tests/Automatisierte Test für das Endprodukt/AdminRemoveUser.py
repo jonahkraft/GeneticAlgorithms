@@ -1,4 +1,4 @@
-from aaa import initialize_driver1,initialize_driver2, click_button, wait_element, wait_elements
+from AlleFunktionen import initialize_driver1,initialize_driver2, click_button, wait_element, wait_elements
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.alert import Alert
 import time
