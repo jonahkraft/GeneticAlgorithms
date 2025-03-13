@@ -89,9 +89,14 @@ function DataVisualization() {
     // Anzeige Graph aller Generationen
     useEffect(() => {
         if( data != null && data!.length > 0 ) {
-            console.log("Show Graph with data:")
-            console.log(data)
             graph(data!);
+        }
+    }, [data]);
+
+    // Anzeige Graph aller Generationen
+    useEffect(() => {
+        if( data && data.length > 0 && selectedGeneration) {
+            graphGen(data.filter(entity => entity.generation === selectedGeneration));
         }
     }, [data]);
 

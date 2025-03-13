@@ -1,17 +1,23 @@
 import Chart from "chart.js/auto";
-import {HistoricalDataType} from "./graph.tsx";
 
-const graphGen = (gen: string, data: Record<string, HistoricalDataType[]>) => {
-    console.log("Generation:", gen);
+interface HistoricalDataType {
+    generation: string;
+    'Final Drive': string;
+    'Roll Radius': string;
+    'Gear 3': string;
+    'Gear 4': string;
+    'Gear 5': string;
+    Consumption: string;
+    'Elasticity 3': string;
+    'Elasticity 4': string;
+    'Elasticity 5': string;
+    'experiment_id': string;
+}
 
-    // Prüfen, ob die Generation existiert
-    if (!data[gen]) {
-        console.warn(`Keine Daten für Generation ${gen} gefunden.`);
-        return;
-    }
+const graphGen = (data: HistoricalDataType[]) => {
 
     // Liste zur Speicherung der Werte für die Scatter-Plots
-    const list = data[gen].map(entry => ({
+    const list = data.map(entry => ({
         gear3: Number(entry["Gear 3"]),
         ela3: Number(entry["Elasticity 3"]),
         gear4: Number(entry["Gear 4"]),

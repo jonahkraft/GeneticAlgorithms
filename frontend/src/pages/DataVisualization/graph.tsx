@@ -1,6 +1,6 @@
 import Chart from 'chart.js/auto'
 
-export interface HistoricalDataType {
+interface HistoricalDataType {
     generation: string;
     'Final Drive': string;
     'Roll Radius': string;
