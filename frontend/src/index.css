@@ -1,8 +1,8 @@
 body {
   font-family: Helvetica, Arial, sans-serif;
-  background: linear-gradient(135deg, #c3ecf7, #a1c4fd, #4b6cb7);
+  background: linear-gradient(135deg, #a1c4fd, #4b6cb7);
   /*background: linear-gradient(135deg, #ff99cc, #c3ecf7, #a1c4fd, #0099ff, #4b6cb7, #ff7e5f);*/
-  background-size: 400% 400%;
+  background-size: 100% 100%;
   animation: waveGradient 10s ease-in-out infinite;
 }
 
