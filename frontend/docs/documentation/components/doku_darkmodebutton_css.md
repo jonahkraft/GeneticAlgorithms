@@ -1,5 +1,9 @@
 ### Dokumentation für CSS des DarkModeButton
 
+#### Credits:
+Diese Komponente wurde von der Website universe.io übernommen, von dem User Madflows.
+https://uiverse.io/Madflows/fresh-fireant-15
+
 Das CSS für den DarkModeButton implementiert das visuelle Design eines Schalters für den Dark Mode.
 
 ```

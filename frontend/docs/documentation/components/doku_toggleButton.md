@@ -6,17 +6,6 @@ Die Funktion die es ausführen soll wurde von uns überarbeitet.
 
 https://uiverse.io/mrhyddenn/old-fish-66
 
-
-#### Import:
-
-```
-import { useState, useEffect } from 'react';
-import styles from './ToggleButton.module.css';
-import cookies from "../../cookies.ts";
-```
-...
-
-
 #### Interface
 
 ```
