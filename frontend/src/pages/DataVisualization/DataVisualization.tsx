@@ -1,5 +1,5 @@
 import cookies from "../../cookies.ts";
-import axios from 'axios';
+import HistoricalData from "../../components/HistoricalData/HistoricalData.tsx";
 import { useNavigate } from "react-router-dom";
 import generateResultList from "./generate_result_list.ts";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -7,6 +7,7 @@ import generateResultList from "./generate_result_list.ts";
 import Papa from 'papaparse';
 import { useEffect, useState } from "react";
 import { Dropdown } from 'react-bootstrap';
+import {placeholderButtonFunction} from "./ButtonFunctions.ts";
 import graph from "./graph.tsx";
 import graphGen from "./graphGen.tsx";
 import styles from './DataVisualization.module.css';
@@ -14,7 +15,6 @@ import Card from "../../components/Card/Card.tsx";
 import transmitParameters from "./parameters.tsx";
 // import {type} from "node:os";
 import DownloadButton from "../../components/DownloadButton/DownloadButton.tsx"
-import UserPersmissions from '../../components/UserPermissions/UserPersmissions.tsx'
 import UploadButton from "../../components/UploadButton/UploadButton.tsx";
 import {downloadCSV} from "./ButtonFunctions.ts";
 import GenericButton from '../../components/GenericButton/GenericButton.tsx';
@@ -46,6 +46,7 @@ interface GenerationData {
 function DataVisualization() {
     const navigate = useNavigate();
     const easySpeech = cookies.getCookies().easy_speech
+    const role = cookies.getCookies().role
 
     const normalText = "In the genetic algorithm we start with a population of entities. This population is the first generation. Every generation is the base of the following generation. This is archived by selecting and multiplying good entities and deleting bad ones. Each entity represents a set of input values and their corresponding results for consumption and elasticity. First the input values will be randomly set. After all results are computed, the entities will be ranked depending on their result values. Good performing entities with slightly modified values are used to generate a new population. The best performing entities are called elites. Elites are not modified, but copied to the next generation. The worst performing entities will not be used for future generations.";
     const easyText = "In the genetic algorithm, we start with a group of entities. This group is the first generation. Every generation is the base for the next one. Good entities are chosen and multiplied, while bad ones are removed. Each entity represents a set of values and their results for fuel usage and elasticity. The values are first set randomly. After computing the results, the entities are ranked based on their performance. Good performing entities are slightly changed and used to create a new group. The best performing entities are called elites. Elites are not changed but copied to the next group. The worst entities are not used in future generations.";
@@ -56,6 +57,12 @@ function DataVisualization() {
             navigate("/login");
         }
     }, [navigate]);
+
+    const [showHistoricalData, setShowHistoricalData] = useState(false)
+
+    function toggleHistoricalData() {
+        setShowHistoricalData(!showHistoricalData)
+    }
 
     // data speichert Datensatz vom backend Server, funktioniert aktell noch nicht, daher ist data Null
     const [data, setData] = useState<object[]>([]);
@@ -73,13 +80,13 @@ function DataVisualization() {
 
     // Parameter from Requirement
     const [paraInputs, setParaInputs] = useState({
-        aep: "",                    // Wert zwischen 0 und 1
+        aep: "",                    // Wert zwischen 0 und 1, float
         generation_count: "",       // int
         population_size: "",        // int
         given_seed: "",             // feste Vorgabe/random -> float
         elite_count: "",            // int
         alien_count: "",            // int
-        weights: ""                 // float
+        weights: ""                 // list[float]
     });
 
     // Display the transmitted Parameters
@@ -116,10 +123,8 @@ function DataVisualization() {
         }
 
         const newGenerations: string[] = [];
-        //console.log(arr);
 
         for (let i = 0; i <= arr[0].length; i++) {
-            //console.log(arr[i]);
             //newGenerations.push(`Generation ${i}`);
             newGenerations.push(String(i));
         }
@@ -130,7 +135,6 @@ function DataVisualization() {
     function handleDropdownSelect(index: number) {
         // Saves selected generation in state
         setSelectedGeneration(generations[index]);
-        //console.log("Ausgewählte Generation:", selectedGen);
 
         // Add Stuff like Update-UI
         setGeneratedElement(
@@ -213,25 +217,11 @@ function DataVisualization() {
         setTransmittedData(result);
     }
 
-
-    // For Debugging Purpose/ Test Purpose
-    //console.log('Data: ', data, typeof (data))
-    //console.log('Generations: ', generations, typeof (generations))
-    //console.log('SelectedGeneration: ', selectedGeneration, typeof (selectedGeneration))
-    //console.log('GeneratedElement: ', generatedElement, typeof (generatedElement))
-    //console.log(document.cookie)
     const tmpList = generateResultList(data)
 
     return (
         <div className={styles.wrapper}>
-            {/*<div className={styles.toolbar}>Toolbar</div><*/}
-
             <div className={styles.container}>
-                {/*<button className="toggle-btn left-btn" onClick={() => toggleSidebar('left')}>☰</button>*/}
-                {/*<div className="sidebar left" id="leftSidebar">*/}
-                {/*    <button className="close-btn" onClick={() => toggleSidebar('left')}>✖</button>*/}
-                {/*    Left Sidebar Content*/}
-                {/*</div>*/}
             </div>
 
             <div className={styles.mainContent}>
@@ -310,20 +300,34 @@ function DataVisualization() {
                     <div style={{ width: "800px" }}><canvas id="my_graph"></canvas></div>
                 </Card>
                 <hr/>
+
+                {showHistoricalData ? (
+                    <HistoricalData/>
+                ) : (
+                    <></>
+                )}
+
                 <Card>
                     <div className={styles.userButtons}>
-                        <UserPersmissions></UserPersmissions>
+
+                        {role === "administrator" ? (
+                            <>
+                                <GenericButton title="Protocol" onClick={placeholderButtonFunction}/>
+                                <GenericButton title="Debug" onClick={placeholderButtonFunction}/>
+                                <GenericButton title="History" onClick={toggleHistoricalData}/>
+                            </>
+                        ) : <></>}
+                        {role === "data_analyst" ? (
+                            <>
+                                <GenericButton title="History" onClick={placeholderButtonFunction}/>
+                            </>
+                        ) : <></>}
+
                         <UploadButton></UploadButton>
                         <DownloadButton onClick={() => downloadCSV(tmpList, 'Frontendtest')}></DownloadButton>
                     </div>
                 </Card>
-
-                {/*<h2>{selectedGeneration ? `Selected generation: ${selectedGeneration}` : "Please select a generation"}</h2>*/}
-                {/*{generatedElement}*/}
             </div>
-
-            {/*<div className="sidebar right" id="rightSidebar">Right Sidebar Content</div>*/}
-            {/*<button className="toggle-btn right-btn" onClick={() => toggleSidebar('right')}>☰</button>*/}
         </div>
     );
 }
