@@ -36,4 +36,4 @@ return(
 <button className={styles.GenericButton} onClick={onClick}>{title}</button>
       )
 ```
-Rückgabe des genormten Buttons in HTML
+Rückgabe des gewünschten Buttons in HTML
