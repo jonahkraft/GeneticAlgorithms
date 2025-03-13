@@ -399,8 +399,8 @@ def api_get_simulation_data():
     data = request.get_json()
 
     try:
-        columns: list[str] = data["columns"]
-        row_constraints: list[str] = data["row_constraints"]
+        columns: list[str] = [x for x in data["columns"][1:-1].split(",")]
+        row_constraints: list[str] = [x for x in data["row_constraints"][1:-1].split(",")]
     except NameError as e:
         db.write_log(f"Failed to get simulation data, because of: {e}")
         return jsonify({"msg": f"{e}"}, 400)
