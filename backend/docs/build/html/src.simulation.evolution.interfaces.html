@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>src.simulation.evolution.interfaces package &#8212; Genetic Algorithms Backend  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="src.simulation.utilities package" href="src.simulation.utilities.html" />
+    <link rel="prev" title="src.simulation.evolution package" href="src.simulation.evolution.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="src-simulation-evolution-interfaces-package">
+<h1>src.simulation.evolution.interfaces package<a class="headerlink" href="#src-simulation-evolution-interfaces-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-src.simulation.evolution.interfaces.allele">
+<span id="src-simulation-evolution-interfaces-allele-module"></span><h2>src.simulation.evolution.interfaces.allele module<a class="headerlink" href="#module-src.simulation.evolution.interfaces.allele" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.allele.Allele">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.simulation.evolution.interfaces.allele.</span></span><span class="sig-name descname"><span class="pre">Allele</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/allele.html#Allele"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.allele.Allele" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>An allele.
+:var _min: The minimum value of the allel.
+:var _max: The maximum value of the allel.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.allele.Allele.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/allele.html#Allele.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.allele.Allele.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Creates an allele with the given value.
+:param value: The value of the allel.
+:param normalized: Flag whether the passed value is normalized.
+:type normalized: bool</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.allele.Allele.distance">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/allele.html#Allele.distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.allele.Allele.distance" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the distance between two alleles.
+:param a: The first allele.
+:type a: Allele
+:param b: The second allele.
+:type b: Allele
+:param normalized: Whether the distance should be normalized.
+:type normalized: bool
+:return: The distance between the two alleles.
+:rtype: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.allele.Allele.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/allele.html#Allele.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.allele.Allele.get" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>normalized</strong> (<em>bool</em>) – Flag whether the value should be normalized.</p>
+</dd>
+</dl>
+<p>Returns the value of the allel.
+:return: The value of the allel.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.allele.Allele.get_max">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_max</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/allele.html#Allele.get_max"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.allele.Allele.get_max" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The maximum value that the allele can have.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.allele.Allele.get_mid">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_mid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/allele.html#Allele.get_mid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.allele.Allele.get_mid" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The middle value that the allele can have.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.allele.Allele.get_min">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_min</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/allele.html#Allele.get_min"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.allele.Allele.get_min" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The minimum value that the allele can have.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.allele.Allele.mutate">
+<span class="sig-name descname"><span class="pre">mutate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method=&lt;function</span> <span class="pre">MUT_GAUSS&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heat=1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/allele.html#Allele.mutate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.allele.Allele.mutate" title="Link to this definition">¶</a></dt>
+<dd><p>Mutates the allele.
+:param method: The mutation method.
+:type method: function
+:param heat: The heat of the mutation.
+:type heat: float or int
+:return: The mutated allele.
+:rtype: Allele</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.allele.Allele.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/allele.html#Allele.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.allele.Allele.set" title="Link to this definition">¶</a></dt>
+<dd><p>Sets the value of the allel.
+:param value: The value of the allel.
+:param normalized: Flag whether the passed value is normalized.
+:type normalized: bool</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.simulation.evolution.interfaces.individual">
+<span id="src-simulation-evolution-interfaces-individual-module"></span><h2>src.simulation.evolution.interfaces.individual module<a class="headerlink" href="#module-src.simulation.evolution.interfaces.individual" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.simulation.evolution.interfaces.individual.</span></span><span class="sig-name descname"><span class="pre">Individual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">genotype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract base class for individuals. An individual represents a potential solution to an optimization problem.
+:var _Blueprint: Blueprint for genotype and optimization goals of the phenotype.
+:type _Blueprint: dict{‘genotype’: list[Class(Allele)], ‘goals’: list[float or int]}
+:var _genotype: The genotype of the individual (tuple of Alleles according to the blueprint).
+:type _genotype: tuple(Allele)
+:var _phenotype: The phenotype of the individual.
+:type _phenotype: tuple(float) or None
+:var _instances: List of all instances of the class.
+:type _instances: list[Individual]</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.__copy__">
+<span class="sig-name descname"><span class="pre">__copy__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.__copy__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.__copy__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A copy of the individual.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.simulation.evolution.interfaces.individual.Individual" title="src.simulation.evolution.interfaces.individual.Individual">Individual</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.__eq__">
+<span class="sig-name descname"><span class="pre">__eq__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.__eq__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.__eq__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#src.simulation.evolution.interfaces.individual.Individual" title="src.simulation.evolution.interfaces.individual.Individual"><em>Individual</em></a>) – The other individual.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the individuals are equal, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.__hash__">
+<span class="sig-name descname"><span class="pre">__hash__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.__hash__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.__hash__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The hash value of the individual.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">genotype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.__init__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>genotype</strong> (<a class="reference internal" href="#src.simulation.evolution.interfaces.allele.Allele" title="src.simulation.evolution.interfaces.allele.Allele"><em>Allele</em></a>) – The genotype of the individual (list of Alleles).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.__str__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A string representation of the individual.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual._calculate_phenotype">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_calculate_phenotype</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual._calculate_phenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual._calculate_phenotype" title="Link to this definition">¶</a></dt>
+<dd><p>This abstract method should calculate the phenotype of the individual based on its genotype. The
+implementation of this method is specific to the structure of the genotype and the type of optimization
+problem. It should be overwritten in each derived class. The phenotype is the manifested form of the genotype
+and represents the characteristics of the individual that are evaluated in the evolutionary algorithm.
+:return: The calculated phenotype.
+:rtype: tuple(float)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual._clear_caches">
+<span class="sig-name descname"><span class="pre">_clear_caches</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual._clear_caches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual._clear_caches" title="Link to this definition">¶</a></dt>
+<dd><p>Clears the caches of the Class and the instance.
+:rtype: void</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual._enforce_constraints">
+<span class="sig-name descname"><span class="pre">_enforce_constraints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual._enforce_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual._enforce_constraints" title="Link to this definition">¶</a></dt>
+<dd><p>Should implement mechanisms to enforce any constraints.
+:return: void
+:rtype: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.create">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gen_funct=&lt;function</span> <span class="pre">GEN_GRID_HALTON&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_genotypes=False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.create" title="Link to this definition">¶</a></dt>
+<dd><p>Creates n individuals using the given generation method. The method is used to distribute the individuals in an
+evolutionary algorithm.
+:param n: Number of individuals to create.
+:type n: int
+:param gen_funct: The method to distribute the individuals in the search space.
+:type gen_funct: function
+:param seed: The seed of the generation method. A seed can be used to make the generation deterministic.
+:param return_genotypes: Flag whether the genotypes should be returned instead of the individuals.
+:type return_genotypes: bool
+:return: A list of individuals or genotypes (if return_genotypes is True).
+:rtype: list</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.distance">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.distance" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the distance between two individuals based on their genotype using a p-norm.
+:param p: Which p-norm to use (p=1: Manhattan distance, p=2: Euclidean distance, p=inf: maximum distance).
+:type p: int or float
+:param a: The first individual.
+:type a: Individual
+:param b: The second individual.
+:type b: Individual
+:param normalized: Whether values of the alleles should be normalized before calculating the distance.
+:type normalized: bool
+:return: The distance between the two individuals.
+:rtype: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.get_all">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.get_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.get_all" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>All instances of the class.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[Individual]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.get_blueprint">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_blueprint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.get_blueprint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.get_blueprint" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The blueprint of the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.get_diversity">
+<span class="sig-name descname"><span class="pre">get_diversity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">others=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p=2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric=&lt;function</span> <span class="pre">METRIC_AVG&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.get_diversity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.get_diversity" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the diversity of the individual compared to the passed individuals. If no individuals are given, all
+instances of the class are used.
+:param others: Other individuals. If None, all instances of the class are used.
+:type others: list[Individual] or None
+:param p: Which p-norm to use calculating the distances (p=1: Manhattan distance, p=2: Euclidean distance,</p>
+<blockquote>
+<div><p>p=inf: maximum distance).</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>normalized</strong> (<em>bool</em>) – Flag whether the calculation distance should be normalized.</p></li>
+<li><p><strong>metric</strong> (<em>function</em>) – The metric to use for calculating the diversity.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The calculated diversity.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.get_fitness">
+<span class="sig-name descname"><span class="pre">get_fitness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">others</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.get_fitness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.get_fitness" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the fitness of the individual based on the relative phenotype and the optimization goals defined in the
+blueprint.
+:param others: Other individuals.
+:type others: list[Individual] or None
+:return: The fitness of the individual.
+:rtype: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.get_genotype">
+<span class="sig-name descname"><span class="pre">get_genotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.get_genotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.get_genotype" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transform</strong> (<em>bool</em>) – Flag whether the genotype should be returned as a tuple of values.</p></li>
+<li><p><strong>normalized</strong> (<em>bool</em>) – Flag whether the values should be normalized.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The genotype of the individual.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.get_goals">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_goals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.get_goals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.get_goals" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The optimization goals for the phenotype.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.get_group_diversity">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_group_diversity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p=2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric=&lt;function</span> <span class="pre">METRIC_AVG&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.get_group_diversity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.get_group_diversity" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the diversity of the group of individuals. If no individuals are given, all instances of the class are
+used.
+:param group: The group of individuals. If None, all instances of the class are used.
+:type group: list[Individual] or None
+:param p: Which p-norm to use calculating the distances (p=1: Manhattan distance, p=2: Euclidean distance,</p>
+<blockquote>
+<div><p>p=inf: maximum distance).</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>normalized</strong> (<em>bool</em>) – Flag whether the single distances should be normalized.</p></li>
+<li><p><strong>metric</strong> (<em>function</em>) – The metric to use for calculating the diversity.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The calculated diversity.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.get_id">
+<span class="sig-name descname"><span class="pre">get_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.get_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.get_id" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The id of the individual.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.get_max_distance">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_max_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.get_max_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.get_max_distance" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the maximum possible distance between two individuals of the class.
+:param p: Which p-norm to use (p=1: Manhattan distance, p=2: Euclidean distance, p=inf: maximum distance).
+:type p: int
+:param normalized: Flag whether the axes should be normalized before calculating the distance.
+:type normalized: bool
+:return: The maximum possible distance between two individuals of the class.
+:rtype: float or int</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.get_max_fitness">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_max_fitness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">others</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.get_max_fitness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.get_max_fitness" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the maximum fitness of the given individuals. If no individuals are given, all instances of the class
+are used.
+:param others: Other individuals. If None, all instances of the class are used.
+:type others: list[Individual] or None
+:return: The maximum fitness of the given individuals.
+:rtype: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.get_max_phenotype">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_max_phenotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">others</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.get_max_phenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.get_max_phenotype" title="Link to this definition">¶</a></dt>
+<dd><p>Returns a tuple of the maximum phenotype values for each phenotype attribute of the given individuals. If no
+individuals are given, all instances of the class are used.
+:param others: Other individuals. If None, all instances of the class are used.
+:type others: list[Individual] or None
+:return: The maximum phenotype values for each phenotype attribute.
+:rtype: tuple(float)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.get_min_fitness">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_min_fitness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">others</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.get_min_fitness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.get_min_fitness" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the minimum fitness of the given individuals. If no individuals are given, all instances of the class
+are used.
+:param others: Other individuals. If None, all instances of the class are used.
+:type others: list[Individual] or None
+:return: The minimum fitness of the given individuals.
+:rtype: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.get_min_phenotype">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_min_phenotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">others</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.get_min_phenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.get_min_phenotype" title="Link to this definition">¶</a></dt>
+<dd><p>Returns a tuple of the minimum phenotype values for each phenotype attribute of the given individuals. If no
+individuals are given, all instances of the class are used.
+:param others: Other individuals. If None, all instances of the class are used.
+:type others: list[Individual] or None
+:return: The minimum phenotype values for each phenotype attribute.
+:rtype: tuple(float)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.get_phenotype">
+<span class="sig-name descname"><span class="pre">get_phenotype</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.get_phenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.get_phenotype" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The phenotype of the individual.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.get_relative_fitness">
+<span class="sig-name descname"><span class="pre">get_relative_fitness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">others</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.get_relative_fitness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.get_relative_fitness" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the relative fitness of the individual compared to the passed individuals. If no individuals are given,
+all instances of the class are used.
+:param others: Other individuals. If None, all instances of the class are used.
+:type others: list[Individual] or None
+:return: The relative fitness of the individual.
+:rtype: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.get_relative_phenotype">
+<span class="sig-name descname"><span class="pre">get_relative_phenotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">others</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.get_relative_phenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.get_relative_phenotype" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the relative phenotype of the individual compared to the passed individuals. If no individuals are
+given, all instances of the class are used.
+:param others: Other individuals. If None, all instances of the class are used.
+:type others: list[Individual] or None
+:return: The relative phenotype of the individual.
+:rtype: tuple(float)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.mutate">
+<span class="sig-name descname"><span class="pre">mutate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method=&lt;function</span> <span class="pre">MUT_GAUSS&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heat=1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.mutate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.mutate" title="Link to this definition">¶</a></dt>
+<dd><p>Performs a mutation of the individual, changing the genetic characteristics according to the specified
+mutation method and intensity. The method adjusts the alleles of the individual to create new variations in
+the population, which is an important component in exploring the solution space in evolutionary algorithms.
+:param method: The mutation method to use. A Gaussian mutation is used by default.
+:type method: function
+:param heat: The heat of the mutation.
+:type heat: float or int
+:rtype: void</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.order">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">order</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fitness'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.order"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.order" title="Link to this definition">¶</a></dt>
+<dd><p>Returns a list of all instances wich are ordered by the given attribute. The default is to order by fitness. If
+no group is given, all instances of the class are used.
+:param group: The group of individuals to order. If None, all instances of the class are used.
+:type group: list[Individual] or None
+:param by: The attribute to order by (‘id’, ‘fitness’ or ‘diversity’).
+:type by: str
+:param reverse: Flag whether the individuals should be ordered descending.
+:type reverse: bool
+:return: All instances of the class order by their fitness.
+:rtype: list[Individual]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.pseudo_class">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pseudo_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">complexity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.pseudo_class"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.pseudo_class" title="Link to this definition">¶</a></dt>
+<dd><p>Generates a pseudo individual which is a subclass of the individual class. The pseudo individual can be used
+to test algorithms without using a cost intensive simulation.
+:param complexity: The complexity of the pseudo simulation (0: simple, 1: complex).
+:type complexity: float or int
+:param seed: The seed of the pseudo simulation. A seed can be used to make the simulation deterministic.
+:type seed: int
+:return: The Pseudo Individual.
+:rtype: Class(Individual)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.individual.Individual.reset">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/individual.html#Individual.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.individual.Individual.reset" title="Link to this definition">¶</a></dt>
+<dd><p>Resets the class. All instances are removed from future calculations and the caches are cleared.
+:rtype: void</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.simulation.evolution.interfaces.population">
+<span id="src-simulation-evolution-interfaces-population-module"></span><h2>src.simulation.evolution.interfaces.population module<a class="headerlink" href="#module-src.simulation.evolution.interfaces.population" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.population.Population">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.simulation.evolution.interfaces.population.</span></span><span class="sig-name descname"><span class="pre">Population</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">individual_class=&lt;class</span> <span class="pre">'src.simulation.evolution.interfaces.individual.Individual'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gen_funct=&lt;function</span> <span class="pre">GEN_HALTON&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/population.html#Population"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.population.Population" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A population of individuals.
+:var _IndividualClass: The class of the individuals.
+:type _IndividualClass: Class
+:var _individuals: The individuals of the population.
+:type _individuals: list</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.population.Population.__getitem__">
+<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/population.html#Population.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.population.Population.__getitem__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>int</em>) – Index of the individual.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The individual at the given index.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#src.simulation.evolution.interfaces.individual.Individual" title="src.simulation.evolution.interfaces.individual.Individual">Individual</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.population.Population.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">individual_class=&lt;class</span> <span class="pre">'src.simulation.evolution.interfaces.individual.Individual'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gen_funct=&lt;function</span> <span class="pre">GEN_HALTON&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/population.html#Population.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.population.Population.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Creates a population of individuals of the given class.
+:param individual_class: The class of the individuals (subclass of Individual).
+:type individual_class: Class
+:param size: Number of individuals in the population.
+:type size: int
+:param kwargs: Keyword arguments that are passed to the individual class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.population.Population.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/population.html#Population.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.population.Population.__iter__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An iterator over the individuals of the population.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Iterator[<a class="reference internal" href="#src.simulation.evolution.interfaces.individual.Individual" title="src.simulation.evolution.interfaces.individual.Individual">Individual</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.population.Population.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/population.html#Population.__len__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.population.Population.__len__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of individuals in the population.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.population.Population.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/population.html#Population.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.population.Population.__str__" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A short string representation of the population.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.population.Population.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">individual</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/population.html#Population.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.population.Population.add" title="Link to this definition">¶</a></dt>
+<dd><p>Adds an individual to the population.
+:param individual: The individual to add.
+:type individual: Individual</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.population.Population.evolve">
+<span class="sig-name descname"><span class="pre">evolve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy=&lt;function</span> <span class="pre">STRAT_B&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/population.html#Population.evolve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.population.Population.evolve" title="Link to this definition">¶</a></dt>
+<dd><p>Evolves the population for n generations.
+:param n: Number of generations to evolve.
+:type n: int
+:param strategy: The evolution strategy to use.
+:type strategy: function
+:return: The Generations resulting from the evolution.
+:rtype: List[Population]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.population.Population.get_diversity">
+<span class="sig-name descname"><span class="pre">get_diversity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metric=&lt;function</span> <span class="pre">METRIC_AVG&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/population.html#Population.get_diversity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.population.Population.get_diversity" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates the diversity of the population using the given metric.
+:param metric: The metric to use for calculating the diversity.
+:type metric: function
+:return: The calculated diversity of the population.
+:rtype: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.population.Population.get_fitness">
+<span class="sig-name descname"><span class="pre">get_fitness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">relative=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric=&lt;function</span> <span class="pre">METRIC_AVG&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/population.html#Population.get_fitness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.population.Population.get_fitness" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates the fitness of the population based on the fitness of the individuals using the given metric.
+:param relative: Flag whether the relative fitness should be used.
+:type relative: bool
+:param metric: The metric to use for calculating the fitness.
+:type metric: function
+:return: The calculated fitness of the population.
+:rtype: float</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.population.Population.get_goals">
+<span class="sig-name descname"><span class="pre">get_goals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/population.html#Population.get_goals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.population.Population.get_goals" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The optimization goals of the individuals.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(int or float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.population.Population.get_individuals">
+<span class="sig-name descname"><span class="pre">get_individuals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">order_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'id'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/population.html#Population.get_individuals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.population.Population.get_individuals" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the individuals of the population ordered by the given attribute. The default is to order by id.
+:param order_by: The attribute to order by. Expected values are ‘id’, ‘fitness’, ‘diversity’.
+:type order_by: str
+:param reverse: Flag whether the individuals should be ordered descending.
+:type reverse: bool
+:return: The individuals of the population.
+:rtype: list</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.population.Population.get_pareto_front">
+<span class="sig-name descname"><span class="pre">get_pareto_front</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/population.html#Population.get_pareto_front"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.population.Population.get_pareto_front" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The pareto front of the population.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[<a class="reference internal" href="#src.simulation.evolution.interfaces.individual.Individual" title="src.simulation.evolution.interfaces.individual.Individual">Individual</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.population.Population.next_generation">
+<span class="sig-name descname"><span class="pre">next_generation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">aep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recombination_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_group_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/population.html#Population.next_generation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.population.Population.next_generation" title="Link to this definition">¶</a></dt>
+<dd><p>Creates the next generation of the population.
+:param aep: The assumed exploration progress. The higher the value, the more exploration is assumed and the less</p>
+<blockquote>
+<div><p>mutation will be applied. The value must be between 0 and 1.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>recombination_rate</strong> (<em>float</em>) – The probability of recombination.</p></li>
+<li><p><strong>parent_group_size</strong> (<em>int</em>) – The number of parents in each group.</p></li>
+<li><p><strong>kwargs</strong> – Keyword arguments (population_size, sel_funct, recombination_funct, mutation_funct,
+duplicate_free, elite, alien).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Population of the next generation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#src.simulation.evolution.interfaces.population.Population" title="src.simulation.evolution.interfaces.population.Population">Population</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.population.Population.order">
+<span class="sig-name descname"><span class="pre">order</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fitness'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/population.html#Population.order"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.population.Population.order" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the individuals of the population ordered by the given attribute. The default is to order by fitness.
+This method is very similar tu the get_individuals method. The difference is in the default values of the
+parameters.
+:param by: The attribute to order by. Expected values are ‘id’, ‘fitness’, ‘diversity’.
+:type by: str
+:param reverse: Flag whether the individuals should be ordered descending.
+:type reverse: bool
+:return: The best n individuals of the population.
+:rtype: List[Individual]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.simulation.evolution.interfaces.population.Population.select_parents">
+<span class="sig-name descname"><span class="pre">select_parents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sel_funct=&lt;function</span> <span class="pre">SEL_ROULETTE&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_funct=&lt;function</span> <span class="pre">EVAL_PARETO&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/simulation/evolution/interfaces/population.html#Population.select_parents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.simulation.evolution.interfaces.population.Population.select_parents" title="Link to this definition">¶</a></dt>
+<dd><p>Selects n parents from the population.
+:param n: Number of parents to select.
+:type n: int
+:param pressure: The pressure to apply to the selection function. Expected values are between 0 and 1.
+:type pressure: float
+:param sel_funct: The selection function to use.
+:type sel_funct: function
+:param eval_funct: The evaluation function to use for each individual.
+:type eval_funct: function
+:return: The selected parents.
+:rtype: list[Individual]</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.simulation.evolution.interfaces">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src.simulation.evolution.interfaces" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Genetic Algorithms Backend</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">backend</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="src.html">src package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">backend</a><ul>
+  <li><a href="src.html">src package</a><ul>
+  <li><a href="src.simulation.html">src.simulation package</a><ul>
+  <li><a href="src.simulation.evolution.html">src.simulation.evolution package</a><ul>
+      <li>Previous: <a href="src.simulation.evolution.html" title="previous chapter">src.simulation.evolution package</a></li>
+      <li>Next: <a href="src.simulation.utilities.html" title="next chapter">src.simulation.utilities package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;1980, Thomas Kottenhahn, Christian Maul, Sambou Kinteh, Patrick Radau, Janik Rostami-Abandansari, Anton Schönfeld, Paul Seidel, Simon Laubersheimer.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/src.simulation.evolution.interfaces.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

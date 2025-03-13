@@ -390,7 +390,7 @@ def add_experiment(username: str, data: list[list], population_size: int, simula
     
     return experiment_id
 
-def get_experiment_inputs(experiment_id: int, connection_path: str = "db/simulation_data.db") -> list[list]:
+def get_experiment_inputs(experiment_id: int, connection_path: str = "db/simulation_data.db") -> list:
     """
     Gets the data of the given experiment
 
