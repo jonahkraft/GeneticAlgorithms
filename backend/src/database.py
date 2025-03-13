@@ -31,7 +31,6 @@ def get_users(connection_path: str = "db/users.db") -> list[tuple[str, str]]:
 
     return cur.fetchall()
 
-
 def add_user(username: str, password: str, role: str = "data_analyst", connection_path: str = "db/users.db")-> None:
     """
     Adds a user to the user database
@@ -164,7 +163,6 @@ def change_username(old_username: str, new_username: str, users_connection_path:
     connection.close()
 
     return True
-
 
 def get_role(username: str, connection_path: str = "db/users.db")-> str:
     """
@@ -393,5 +391,13 @@ def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], const
         writer = csv.writer(file)
         writer.writerow(header)
         writer.writerows(results)
+
+def write_log(log: str, connection_path = "db/logs.db"):
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+
+    cur.execute("INSERT INTO logs(time,log) VALUES(DATETIME(),?)",[log])
+    connection.commit()
+    connection.close()
 
 #print(get_users_experiments("simulation_expert", "./backend/db/simulation_data.db"))

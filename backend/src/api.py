@@ -24,11 +24,13 @@ def login(username: str, password: str):
     }
 
     if not db.user_exists(username):
+        db.write_log(f"Failed to log in user '{username}', because user does not exists")
         return jsonify(response), 401
 
     response["registered"] = True
 
     if not db.check_password(username, password):
+        db.write_log(f"Failed to log in user '{username}', because password was incorrect")
         return jsonify(response), 401
 
     response["password_correct"] = True
@@ -36,6 +38,7 @@ def login(username: str, password: str):
     response["access_token"] = create_access_token(identity=username)
     response["role"] = db.get_role(username)
 
+    db.write_log(f"Logged in user '{username}'")
     return jsonify(response), 200
 
 def register(username: str, password: str, role: str):
@@ -52,12 +55,14 @@ def register(username: str, password: str, role: str):
         response["already_registered"] = True
 
     if response["invalid_role"] or response["already_registered"]:
+        db.write_log(f"Failed to register user '{username}', because user already exists")
         return jsonify(response), 400
 
     db.add_user(username, password, role)
 
     response["success"] = True
 
+    db.write_log(f"Registered user '{username}'")
     return jsonify(response), 200
 
 @api.route("/api/login", methods=["POST"])
@@ -121,9 +126,6 @@ def api_register():
 
     return register(username, password, role)
 
-
-
-
 @api.route("/api/delete_user", methods=["POST"])
 @jwt_required()
 def api_delete_user():
@@ -144,12 +146,14 @@ def api_delete_user():
     current_user = get_jwt_identity()
 
     if db.get_role(current_user) != "administrator":
+        db.write_log(f"Failed to delete user '{username}', because {current_user} is no administrator")
         return jsonify({}), 401
 
     data = request.get_json()
     username = data["username"]
 
     if db.delete_user(username):
+        db.write_log(f"Deleted user '{username}'")
         return jsonify({}), 200
 
     return jsonify({}), 404
@@ -183,18 +187,24 @@ def api_change_password():
     if current_user == username:
         if db.check_password(username,old_password):
             if db.change_password(username,new_password):
+                db.write_log(f"Changed password of '{username}'")
                 return jsonify({}, 200)
             else:
+                db.write_log(f"Failed change '{username}'s password, because user does not exist")
                 return jsonify({"msg": f"Cannot find user '{username}'"}, 404)
         else:
+            db.write_log(f"Failed change '{username}'s password, because old password was incorrect")
             return jsonify({"msg": "Invalid old password"}, 401)
     else:
         if db.get_role(current_user) == "administrator":
             if db.change_password(username,new_password):
+                db.write_log(f"Changed '{username}'s password")
                 return jsonify({}, 200)
             else:
+                db.write_log(f"Failed change '{username}'s password, because user does not exist")
                 return jsonify({"msg": f"Cannot find user '{username}'"}, 404)
         else:
+            db.write_log(f"Failed change '{username}'s password, because only administrators can change other users passwords")
             return jsonify({"msg": f"Only administrators can change other users passwords"}, 401)
 
 @api.route("/api/change_username", methods=["POST"])
@@ -223,16 +233,21 @@ def api_change_username():
 
     if current_user == old_username:
         if db.change_username(old_username, new_username):
+            db.write_log(f"Changed {old_username} to {new_username}")
             return jsonify({}, 200)
         else:
+            db.write_log(f"Failed to change {old_username}, because user does not exist")
             return jsonify({"msg": f"Cannot find user '{old_username}'"}, 404)
     else:
         if db.get_role(current_user) == "administrator":
             if db.change_username(old_username, new_username):
+                db.write_log(f"Changed {old_username} to {new_username}")
                 return jsonify({}, 200)
             else:
+                db.write_log(f"Failed to change {old_username}, because user does not exist")
                 return jsonify({"msg": f"Cannot find user '{old_username}'"}, 404)
         else:
+            db.write_log(f"Failed to change {old_username}, because only administrators can change other users usernames")
             return jsonify({"msg": f"Only administrators can change other users usernames"}, 401)
 
 
@@ -265,6 +280,7 @@ def api_start_simulation():
     allowed_roles = {"data_analyst", "administrator", "simulator"}
 
     if role not in allowed_roles:
+        db.write_log(f"Failed to start simulation, because {current_user} is not allowed to do start simulations")
         return jsonify({}), 401
 
     data = request.get_json()
@@ -285,6 +301,7 @@ def api_start_simulation():
     simulation_results = simulation_interface.results()
     exp_id = db.add_experiment_data(simulation_results)
 
+    db.write_log(f"Started simulation and saved results to experiment {exp_id}")
     return jsonify({"experiment_id": exp_id}), 200
 
 @api.route("/api/get_simulation_data", methods=["POST"])
@@ -311,6 +328,7 @@ def api_get_simulation_data():
     allowed_roles = {"data_analyst", "administrator", "simulator"}
 
     if role not in allowed_roles:
+        db.write_log(f"Failed to get simulation data, because {current_user} is not allowed to do so")
         return jsonify({}), 401
 
     data = request.get_json()
@@ -327,11 +345,14 @@ def api_get_simulation_data():
     try:
         db.export_experiment_data_to_csv("./results/export_data.csv", columns, row_constraints)
     except ValueError as e:
+        db.write_log(f"Failed to export data to csv: {e}")
         return jsonify({"msg": f"{e}"}), 400
 
     with open("./results/export_data.csv", "r") as file:
+        db.write_log(f"Exported data to csv")
         return jsonify({"content": file.read()}), 200
 
+    db.write_log(f"Failed to export data to csv, because path does not exist")
     return jsonify({}), 404
 
 @api.route("/api/get_users", methods=["GET"])
@@ -351,7 +372,9 @@ def api_get_users():
     allowed_roles = {"administrator"}
 
     if role not in allowed_roles:
+        db.write_log(f"Failed to get users, because {current_user} is no administrator")
         return jsonify({}), 401
     
     data = db.get_users()
+    db.write_log(f"Got users")
     return jsonify({"users": [{"username": user, "role": role} for user,role in data]}, 200)
