@@ -265,9 +265,10 @@ function DataVisualization() {
             // @ts-ignore
             const parsedList = parseCSVToList(csvContent);
             // TODO: Usage for pasedList (backend i.e)
-            console.log(parsedList)
             getGenertations(parsedList)
-            graph(parsedList);
+            // @ts-ignore
+            graph(Object.values(parsedList).flat())
+            //graph(parsedList);
             //Object.values(parsedList)[1]
         };
 
