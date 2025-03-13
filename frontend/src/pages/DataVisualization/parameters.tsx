@@ -24,8 +24,9 @@ function transmitParameters(aep: string, generation_count: string, population_si
     console.log(elite_count, typeof(elite_count))
     console.log(alien_count, typeof(alien_count))
     console.log(weights, typeof(weights))
+    // weights to string array and after sort
     const transmitWeights = [weights]
-    // TODO: sort weights
+    transmitWeights.sort();
 
     // TODO: startegy kanan 1,2 oder 3 sein
 
