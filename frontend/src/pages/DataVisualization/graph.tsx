@@ -1,6 +1,6 @@
 import Chart from 'chart.js/auto'
 
-const graph = () => {
+function graph(arr: any){
     
     const testList = {
         '0': [
@@ -1346,7 +1346,6 @@ const graph = () => {
             }
         ]
     }
-
     type ObjectKey = keyof typeof testList;
     // List with all consumptions of all generations
     const list : {gen: string, consumption: string}[] = [];
