@@ -17,7 +17,8 @@ export interface HistoricalDataType {
 
 function parseCSV(csv: string): Record<string, HistoricalDataType[]> {
     const lines = csv.trim().split("\n");
-    const headers = lines[0].split(",");
+    const headers = lines[0].trim().split(",");
+
     const data: Record<string, HistoricalDataType[]> = {};
 
     for (let i = 1; i < lines.length; i++) {
