@@ -19,7 +19,16 @@ Dieser Test soll zeigen, dass Admins vorhandene Useraccounts manuell löschen k�
 3. Der Admin geht nun in die Einstellungen und löscht den zuvor eingeloggten User aus der Datenbank.
 4. Der User versucht erneut sich mit seinen zuvor genutzten Daten einzuloggen, nur diesmal werden die Eingabedaten abgelehnt.
 
-
+```
+AdminEditUser.py
+```
+Test soll zeigen, dass Admins vorhandene Userdaten bearbeiten können
+1. User meldet sich mit seinen Daten an, um zu zeigen, dass der Account in der Datenbank hinterlegt ist.
+2. Nun meldet sich der User ab und ein Admin loggt sich ein.
+3. Admin geht nun in die Einstellungen und gibt den Alten Username und danach den neuen Username und ein neues passwort ein.
+4. Nachdem er auf den Apply-Button drückt meldet er sich ab.
+5. Der User versucht erneut sich mit seinen alten Userdaten anzumelden, nur diesmal nicht erfolgreich.
+6. User versucht es erneut mit den neuen Daten, die der Admin zuvor festgelegt hatte. -> Diesmal erfolgreich.
 
 
 
