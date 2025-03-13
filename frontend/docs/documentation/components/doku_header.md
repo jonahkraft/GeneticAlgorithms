@@ -1,21 +1,49 @@
 ### Dokumentation der Komponente Header.tsx
 
-Die Headerkomponente beschreibt die leiste Oben welche auf jeder
-Seite der Website sichtbar ist, mit den "Funktionen": Home, Datavisualizatiom, Settings, Login/Logout
+Die Headerkomponente beschreibt die Navigationsleiste und ermöglicht das Wechseln zwischen den verschiedenen
+Seiten sowie das Ein- und Ausloggen
 
-```function Header()```
+```
+import { Link, useNavigate } from "react-router-dom";
+import styles from './Header.module.css';
+import cookies from '../../cookies.ts';
+import UserLabel from "../UserLabel/UserLabel.tsx";
+```
+link ermöglicht die Navigation zwischen den Seiten
 
-... Mit den folgenden Variablen und Funktionen:
+useNavigate aus dem React Router dient zur programmgesteuerten Naviagation zwischen den Seiten
 
-```const signed_in = cookies.isLoggedIn()```
+styles wird für das Design der einzelnen Elemente importiert
 
-nutzt cookies.isLoggedIn um zu speichern ob der User momentan eingeloggt ist
+cookies wird zur Verwaltung der Cookie Dateien genutzt
 
-```const navigate = useNavigate()```
+UserLabel ist eine zusätzliche Komponente zur Anzeige des Nutzernamens.
 
-Variable welche genutzt wird um zwischen verschiedenen Seiten der Website zu navigieren
+```
+function Header() {
+```
+???
 
-```function logOut()```
+```
+const signed_in = cookies.isLoggedIn()
+```
 
-Falls auf den logout Button gedrückt wird kommt eine Nachricht ob man sich wirklich ausloggen will. Falls ja werden
-alle gespeicherten Cookies gelöscht und die Seite neugeladen.
+signed_in nutzt die cookies um zu speichern, ob der User momentan eingeloggt ist
+
+```
+const navigate = useNavigate()
+```
+
+navigate wird zur naviagtion innerhalb der Website verwendet
+
+```
+function logOut()
+```
+
+Falls auf den Logout-Button gedrückt wird kommt eine Nachricht ob man sich wirklich ausloggen will. Falls ja, werden
+alle gespeicherten Cookies gelöscht und die Seite neugeladen. Sonst passiert nichts
+
+```
+return()
+```
+Der entsprechende HTML-Header wird zurückgegeben.

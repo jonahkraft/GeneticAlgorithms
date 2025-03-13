@@ -135,17 +135,20 @@ def change_username(old_username: str, new_username: str, users_connection_path:
     :param new_username: The users new username
     :type new_username: str
 
-    :param connection_path: path to the database
-    :type connection_path: str
+    :param users_connection_path: path to the users database
+    :type users_connection_path: str
 
-    :returns: returns True if the password has been changed successfully, False otherwise
+    :param simulation_data_connection_path: path to the simulation data database
+    :type simulation_data_connection_path: str
+
+    :returns: returns True if the username has been changed successfully, False otherwise
     :rytpe: bool
     """
 
     connection = sqlite3.connect(users_connection_path)
     cur = connection.cursor()
 
-    if not user_exists(old_username):
+    if not user_exists(old_username, users_connection_path):
         connection.close()
         return False
 
@@ -158,6 +161,42 @@ def change_username(old_username: str, new_username: str, users_connection_path:
     cur = connection.cursor()
 
     cur.execute("UPDATE experiment_owners SET username = ? WHERE username = ?", [new_username, old_username])
+
+    connection.commit()
+    connection.close()
+
+    return True
+
+def change_role(username: str, role: str, connection_path: str = "db/users.db"):
+    """
+    Changes a users name in the user database
+
+    :param username: The name of the User to change the role of
+    :type username: str
+
+    :param role: The users new role (simulator | data_analyst | administrator)
+    :type role: str
+
+    :param connection_path: path to the database
+    :type connection_path: str
+
+    :returns: returns True if the role has been changed successfully, False otherwise
+    :rytpe: bool
+    """
+
+    allowed_roles = {"data_analyst", "administrator", "simulator"}
+
+    if role not in allowed_roles:
+        return False
+
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+
+    if not user_exists(username, connection_path):
+        connection.close()
+        return False
+
+    cur.execute("UPDATE users SET role = ? WHERE username = ?", [role, username])
 
     connection.commit()
     connection.close()

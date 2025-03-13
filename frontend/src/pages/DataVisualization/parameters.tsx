@@ -13,23 +13,37 @@ function transmitParameters(finaldrive: string, rollradius: string, gear3: strin
 }
 */
 
-function transmitParameters(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weights: string){
-    console.log(aep)
-    console.log(generation_count)
-    console.log(population_size)
-    console.log(given_seed)
-    console.log(elite_count)
-    console.log(alien_count)
-    console.log(weights)
+import cookies from "../../cookies.ts";
+import axios from "axios";
 
-    //const strategy = '1'
+function transmitParameters(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weights: string){
+    console.log(aep, typeof(aep))
+    console.log(generation_count, typeof(generation_count))
+    console.log(population_size, typeof(population_size))
+    console.log(given_seed, typeof(given_seed))
+    console.log(elite_count, typeof(elite_count))
+    console.log(alien_count, typeof(alien_count))
+    console.log(weights, typeof(weights))
+
+    //const strategy = '2' laut backend
     // TODO: given_seed fest oder random
     // given_seed = ''
+    console.log('DataVisualization vor axios get');
+    const token = cookies.getCookies().token
+    // call backend-API
+    //        axios.post("/api/get_simulation_data", {columns: [], row_constraints: []}, {"Content-Type": "application/json", "Authorization": `Bearer ${token}`})
+    axios.post("/api/get_simulation_data", { "population_size": population_size, "simulation_seed": given_seed, "strategy": 2, "aep": aep, "elite_count": elite_count, "alien_count": alien_count, "weights": weights },
+        { headers: { "Authorization": `Bearer ${token.trim()}`, "Content-Type": "application/json" } })
+        .then((response) => {
+            console.log('DataVisualization NACH axios get');
+            console.log('Result von AXIOS GET', response.data, 'Result von AXIOS GET', response);
+            //const result = Papa.parse(response.data, { header: true, skipEmptyLines: true });
+            console.log(response.data)
+        })
+        .catch((error) => console.error(error));
 
-    // TODO: Funktionalität implementieren, die die Daten ans Backend schickt, dort die Funktionen auswertet und zurück ans Frontend schickt
 
     return `AEP: ${aep}, Generation Count: ${generation_count}, Population Size: ${population_size}, Given Seed: ${given_seed}, Elite Count: ${elite_count}, Alien Count: ${alien_count}, Weights: ${weights}`;
 }
-
 
 export default transmitParameters;
