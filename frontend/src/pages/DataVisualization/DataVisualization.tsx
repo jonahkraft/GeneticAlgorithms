@@ -18,6 +18,8 @@ import UserPersmissions from '../../components/UserPermissions/UserPersmissions.
 import UploadButton from "../../components/UploadButton/UploadButton.tsx";
 import {downloadCSV} from "./ButtonFunctions.ts";
 import GenericButton from '../../components/GenericButton/GenericButton.tsx';
+import DropDown from "../../components/DropdownMenu/DropDown.tsx";
+import CallBack from "../../components/DropdownMenu/CallBack.tsx";
 // import {send} from "vite";
 
 //
@@ -126,11 +128,6 @@ function DataVisualization() {
 
     // Change Drop Down Element
     function handleDropdownSelect(index: number) {
-        const selectedGen = 'Generation ' + generations[index];
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        document.getElementById("dropdown-basic").innerHTML = selectedGen;
-
         // Saves selected generation in state
         setSelectedGeneration(generations[index]);
         //console.log("Ausgewählte Generation:", selectedGen);
@@ -250,7 +247,7 @@ function DataVisualization() {
                             <tr>
                                 <td>Mutationsrate</td>
                                 <td><input type="text" name="aep" value={paraInputs.aep} onChange={handleParaChange} /></td>
-                                <td>rate of mutation. A higher value results in less mutation (values between 0 and 1)</td>
+                                <td>Rate of mutation. A higher value results in less mutation (values between 0 and 1)</td>
                             </tr>
                             <tr>
                                 <td>Generation Count</td>
@@ -293,25 +290,10 @@ function DataVisualization() {
                     <label id="transData">{transmittedData}</label>
                 </Card>
 
-                <hr/>
+                <hr />
 
-                <Dropdown id={styles.dropdownWrapper}>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">
-                        Select Generation
-                    </Dropdown.Toggle>
+                <DropDown text={generations} callBack={new CallBack((index:number) => handleDropdownSelect(index))}></DropDown>
 
-                    <Dropdown.Menu id="dropdown-basic">
-                        {generations.length > 0 ? (
-                            generations.map((gen, index) => (
-                                <Dropdown.Item key={index} onClick={() => handleDropdownSelect(index)}>
-                                    {'Generation ' + gen}
-                                </Dropdown.Item>
-                            ))
-                        ) : (
-                            <Dropdown.Item disabled>Load generations...</Dropdown.Item>
-                        )}
-                    </Dropdown.Menu>
-                </Dropdown>
                 {selectedGeneration ? (
                     <Card>
                         <h2>Selected generation: {selectedGeneration}</h2>
