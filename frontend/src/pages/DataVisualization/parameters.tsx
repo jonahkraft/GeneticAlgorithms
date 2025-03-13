@@ -18,34 +18,26 @@ import axios from "axios";
 import getSimulationData from "../../get_simulation_data.ts";
 
 function transmitParameters(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weights: string){
-    console.log(aep, typeof(aep))
-    console.log(generation_count, typeof(generation_count))
-    console.log(population_size, typeof(population_size))
-    console.log(given_seed, typeof(given_seed))
-    console.log(elite_count, typeof(elite_count))
-    console.log(alien_count, typeof(alien_count))
-    console.log(weights, typeof(weights))
+    //console.log(aep, typeof(aep))
+    //console.log(generation_count, typeof(generation_count))
+    //console.log(population_size, typeof(population_size))
+    //console.log(given_seed, typeof(given_seed))
+    //console.log(elite_count, typeof(elite_count))
+    //console.log(alien_count, typeof(alien_count))
+    //console.log(weights, typeof(weights))
 
     const weightsArray = weights.split(",");
-    console.log(weightsArray)
 
     if (weightsArray.length !== 4){
         alert("Weigths benötigt 4 Eingabewerte, sonst werden die Daten nicht an den Server gesendet")
         return "Transmitted Data: None"
     }
 
-    console.log(given_seed)
     if (given_seed === ""){
         const randomInt = Math.floor(Math.random() * 1000) + 1;
         given_seed = randomInt.toString();
-        console.log(given_seed, typeof(given_seed))
     }
 
-    // TODO: startegy kanan 1,2 oder 3 sein
-
-    //const strategy = '2' laut backend
-    // TODO: given_seed fest oder random
-    // given_seed = ''
     const token = cookies.getCookies().token
     // call backend-API
     axios.post("/api/start_simulation", { "population_size": population_size, "simulation_seed": given_seed, "generation_count": generation_count ,"strategy": '2', "aep": aep, "elite_count": elite_count, "alien_count": alien_count, "weights": weightsArray },
