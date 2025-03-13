@@ -6,6 +6,7 @@ import DarkModeButton from "../../components/DarkModeButton/DarkModeButton.tsx"
 import ToggleButton from "../../components/ToggleButton/ToggleButton.tsx";
 import axios from "axios";
 import loadUsers from "./load_users.ts"
+import {changeUsername, changeUserRole, changePassword} from "./edit_user_functions.ts"
 
 interface UserData {
     role: string;
@@ -126,12 +127,17 @@ function Settings() {
             });
     }
 
-    function editUser(oldUsername: string, newUsername: string, newPassword: string, newRole: string) {
-        console.log(oldUsername);
-        console.log(newUsername);
-        console.log(newPassword);
-        console.log(newRole);
-        // TODO !!!!!!
+    async function editUserAdmin(oldUsername: string, newUsername: string, newPassword: string, newRole: string) {
+        if (newUsername !== "") {
+            await changeUsername(oldUsername, newUsername);
+        }
+
+        const futureName = (newUsername !== "") ? newUsername: oldUsername
+
+        if (newPassword !== "") {
+            await changePassword(futureName, "", newPassword);
+        }
+        await changeUserRole(futureName, newRole);
     }
 
     return (
@@ -348,7 +354,7 @@ function Settings() {
                                 <button
                                     type="button"
                                     className={styles.userFormButton}
-                                    onClick={() => editUser(oldName, newName, newPW,newRole)}
+                                    onClick={() => editUserAdmin(oldName, newName, newPW,newRole)}
                                 >
                                     Apply
                                 </button>
