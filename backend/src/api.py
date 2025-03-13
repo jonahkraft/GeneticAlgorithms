@@ -206,8 +206,8 @@ def api_change_password():
                 db.write_log(f"Failed change '{username}'s password, because user does not exist")
                 return jsonify({"msg": f"Cannot find user '{username}'"}, 404)
         else:
-            db.write_log(f"Failed change '{username}'s password, because old password was incorrect")
-            return jsonify({"msg": "Invalid old password"}, 401)
+            db.write_log(f"Failed change '{username}'s password, because old password was incorrect or user does not exist")
+            return jsonify({"msg": "Invalid old password or user does not exist"}, 401)
     else:
         if db.get_role(current_user) == "administrator":
             if db.change_password(username,new_password):
@@ -354,7 +354,7 @@ def api_start_simulation():
         aep = float(data["aep"])
         elite_count = int(data["elite_count"])
         alien_count = int(data["alien_count"])
-        weights = data["weights"]
+        weights = [float(weight) for weight in data["weights"]]
 
     except NameError as e:
         db.write_log(f"Failed to start simulation, because of missing parameter: {e}")
@@ -404,7 +404,7 @@ def api_get_simulation_data():
         row_constraints: list[str] = [x for x in data["row_constraints"][1:-1].split(",")]
     except NameError as e:
         db.write_log(f"Failed to get simulation data, because of: {e}")
-        return jsonify({"msg": f"{e}"}, 400)
+        return jsonify({"msg": f"{e}"}), 400
 
     if role == "simulator":
         allowed_ids = db.get_users_experiments(current_user)
@@ -421,6 +421,58 @@ def api_get_simulation_data():
     db.write_log(f"Exported data to csv")
     return jsonify({"content": data}), 200
 
+
+@api.route("/api/get_experiment_inputs", methods=["POST"])
+@jwt_required()
+def api_get_experiment_inputs():
+    """Requests experiment inputs for further analysis (Authorization required: administrator, data_analyst, simulator (only their own data))
+
+    :param JSON
+    {
+        "experiment_id": int
+    }
+
+    :returns JSON
+    {
+        "population_size": int,
+        "simulation_seed": int,
+        "generation_count": int,
+        "strategy": int,
+        "aep": float,
+        "elite_count": int,
+        "alien_count": int,
+        "weights": list[float]
+    }
+
+    """
+
+    current_user = get_jwt_identity()
+
+    role = db.get_role(current_user)
+    allowed_roles = {"data_analyst", "administrator", "simulator"}
+
+    if role not in allowed_roles:
+        db.write_log(f"Failed to get experiment inputs, because {current_user} is not allowed to do so")
+        return jsonify({}), 401
+
+    data = request.get_json()
+
+    try:
+        experiment_id = int(data["experiment_id"])
+    except NameError as e:
+        db.write_log(f"Failed to get experiment inputs, because of: {e}")
+        return jsonify({"msg": f"{e}"}), 400
+
+    if role == "simulator":
+        allowed_ids = db.get_users_experiments(current_user)
+        if experiment_id not in allowed_ids:
+            db.write_log(f"Failed to get experiment inputs, because {current_user} is not allowed to do so")
+            return jsonify({}), 401
+
+    data = db.get_experiment_inputs(experiment_id)
+
+    db.write_log(f"Requested experiment inputs for experiment {experiment_id}")
+    return jsonify({"generation_count": data[0], "simulation_seed": data[1], "population_size": data[2], "strategy": data[3], "aep": data[4], "elite_count": data[5], "alien_count": data[6], "weights": data[7:]}), 200
 
 @api.route("/api/get_users", methods=["GET"])
 @jwt_required()

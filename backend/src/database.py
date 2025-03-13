@@ -352,7 +352,7 @@ def get_users_experiments(username: str, connection_path: str = "db/simulation_d
 
     return ids
 
-def add_experiment(username: str, data: list[list], population_size: int, simulation_seed: int, generation_count: int, strategy: float, aep: float, elite_count: int, alien_count: int, weights: list[int], connection_path: str = "db/simulation_data.db") -> None:
+def add_experiment(username: str, data: list[list], population_size: int, simulation_seed: int, generation_count: int, strategy: int, aep: float, elite_count: int, alien_count: int, weights: list[int], connection_path: str = "db/simulation_data.db") -> None:
     """
     Adds the given csv data to the given connection
 
@@ -390,7 +390,29 @@ def add_experiment(username: str, data: list[list], population_size: int, simula
     
     return experiment_id
 
-def export_experiment_data(columns: list[str] = [], constraints: list[str] = [], connection_path: str = "db/simulation_data.db") -> str:
+def get_experiment_inputs(experiment_id: int, connection_path: str = "db/simulation_data.db") -> list:
+    """
+    Gets the data of the given experiment
+
+    :param experiment_id: The id of the experiment
+    :type experiment_id: int
+
+    :param connection_path: The path to the database
+    :type connection_path: str
+
+    :returns: The imputs of the experiment
+    :rtype: list[list]
+    """
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+
+    cur.execute("SELECT generation_count,simulation_seed, population_size, strategy, aep, elite_count, alien_count, consumption_weight, elasticity_3_weight, elasticity_4_weight, elasticity_5_weight FROM experiments WHERE experiment_id = ?", [experiment_id])
+    data = cur.fetchone()
+    connection.close()
+
+    return data
+
+def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], constraints: list[str] = [], connection_path: str = "db/simulation_data.db") -> str:
     """
     Exports the data from the database to csv
 
@@ -471,4 +493,4 @@ def write_log(log: str, connection_path = "db/logs.db"):
     connection.commit()
     connection.close()
 
-#print(get_logs("./backend/db/logs.db"))
+#print(get_experiment_inputs(7,"./backend/db/simulation_data.db"))
