@@ -38,11 +38,6 @@ function transmitParameters(aep: string, generation_count: string, population_si
         given_seed = randomInt.toString();
     }
 
-    // TODO: startegy kanan 1,2 oder 3 sein
-
-    //const strategy = '2' laut backend
-    // TODO: given_seed fest oder random
-    // given_seed = ''
     const token = cookies.getCookies().token
     // call backend-API
     axios.post("/api/start_simulation", { "population_size": population_size, "simulation_seed": given_seed, "generation_count": generation_count ,"strategy": '2', "aep": aep, "elite_count": elite_count, "alien_count": alien_count, "weights": weightsArray },

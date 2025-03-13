@@ -247,12 +247,12 @@ function DataVisualization() {
                             <tr>
                                 <td>Population Size</td>
                                 <td><input className={styles.userFormSelect} type="text" name="population_size" value={paraInputs.population_size} onChange={handleParaChange} /></td>
-                                <td>Size of a population</td>
+                                <td>Size of a population (Population Size &gt; Elite Count + Alien Count) </td>
                             </tr>
                             <tr>
                                 <td>Given Seed</td>
                                 <td><input className={styles.userFormSelect} type="text" name="given_seed" value={paraInputs.given_seed} onChange={handleParaChange} /></td>
-                                <td>Seed for random generation of the first population</td>
+                                <td>Seed for random generation of the first population Number between 1-1000. If kept empty, it will generate a random one between 1-1000</td>
                             </tr>
                             <tr>
                                 <td>Elite Count</td>
@@ -267,7 +267,10 @@ function DataVisualization() {
                             <tr>
                                 <td>Weigths</td>
                                 <td><input className={styles.userFormSelect} type="text" name="weights" value={paraInputs.weights} onChange={handleParaChange} /></td>
-                                <td>Weights of the result-values: consumption, elasticity (values between 3-5)</td>
+                                <td>Weights of the result-values: Has to be 4 Values (x,x,x,x an x can be y.y or -y.y)</td>
+                            </tr>
+                            <tr>
+                                <td>All parameters have a cap at 20 chars</td>
                             </tr>
                         </tbody>
                     </table>

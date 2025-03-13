@@ -19,7 +19,7 @@ function HistoricalData() {
     const [resultData, setResultData] = useState<HistoricalDataType[]>([]);
 
     useEffect(() => {
-        getSimulationData(["generation", "final_drive", "roll_radius", "gear_3", "gear_4", "gear_5", "consumption", "elasticity_3", "elasticity_4", "elasticity_5", "experiment_id"], [])
+        getSimulationData([], [])
             .then(data => {
                 const flattenedData = Object.values(data).flat();
                 setResultData(flattenedData);
