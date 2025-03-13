@@ -243,9 +243,8 @@ function DataVisualization() {
                     <p>
                         {easySpeech ? easyText : normalText}
                     </p>
-                </Card>
-
-                <Card>
+                
+                    <h2>Simulation Parameter</h2>
                     <table>
                         <tbody>
                             <tr>
