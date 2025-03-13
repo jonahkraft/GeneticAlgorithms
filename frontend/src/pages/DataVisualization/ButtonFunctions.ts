@@ -1,4 +1,5 @@
 import { saveAs } from 'file-saver';
+import graph from "./graph.tsx";
 
 export function placeholderButtonFunction(){
     alert('Diese Funktionalität wird fertig implementiert, sobald das Einbinden mit dem Backend funktioniert')
@@ -76,7 +77,8 @@ export function uploadCSV(event: any){
         // @ts-ignore
         const parsedList = parseCSVToList(csvContent);
         // TODO: Usage for pasedList (backend i.e)
-        console.log(parsedList);
+        console.log(parsedList)
+        graph(parsedList);
     };
 
     reader.readAsText(file); // Liest die Datei als Text
