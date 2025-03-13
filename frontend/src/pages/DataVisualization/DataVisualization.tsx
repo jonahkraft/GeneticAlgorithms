@@ -6,7 +6,6 @@ import generateResultList from "./generate_result_list.ts";
 // @ts-expect-error
 import Papa from 'papaparse';
 import { useEffect, useState } from "react";
-import { Dropdown } from 'react-bootstrap';
 import {placeholderButtonFunction} from "./ButtonFunctions.ts";
 import graph from "./graph.tsx";
 import graphGen from "./graphGen.tsx";
