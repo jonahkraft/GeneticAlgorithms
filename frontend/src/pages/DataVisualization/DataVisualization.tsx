@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import generateResultList from "./generate_result_list.ts";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
-import Papa from 'papaparse';
 import { useEffect, useState } from "react";
 import {placeholderButtonFunction} from "./ButtonFunctions.ts";
 import graph from "./graph.tsx";
@@ -20,12 +19,6 @@ import GenericButton from '../../components/GenericButton/GenericButton.tsx';
 import DropDown from "../../components/DropdownMenu/DropDown.tsx";
 import CallBack from "../../components/DropdownMenu/CallBack.tsx";
 // import {send} from "vite";
-
-//
-
-// function toggleSidebar(side: any) {
-//     document.getElementById(side + 'Sidebar')?.classList.toggle('open')
-// }
 
 // Interface für Datentyp in functions loadGenerations
 interface GenerationData {
@@ -63,8 +56,8 @@ function DataVisualization() {
         setShowHistoricalData(!showHistoricalData)
     }
 
-    // data speichert Datensatz vom backend Server, funktioniert aktell noch nicht, daher ist data Null
-    const [data, setData] = useState<object[]>([]);
+    // data speichert Datensatz vom backend Server, funktioniert aktuell noch nicht, daher ist data Null
+    // const [data, setData] = useState<object[]>([]);
 
     // generations erstellt eine Liste aller Generations von 0 - x (in Test Liste 0-10)
     const [generations, setGenerations] = useState<string[]>([]);
@@ -90,19 +83,6 @@ function DataVisualization() {
 
     // Display the transmitted Parameters
     const [transmittedData, setTransmittedData] = useState("Transmitted Data: None");
-
-    // Verarbeitung der Daten (generateResultList & loadGenerations)
-    useEffect(() => {
-        if (data.length > 0) {
-            const generations = generateResultList(data);
-            loadGenerations(generations);
-        } else {
-            // do it anyway for testing
-            // TODO: else Fall abändern, wenn backend Abfrage funktioniert
-            const generations = generateResultList(data);
-            loadGenerations(generations);
-        }
-    }, [data]);
 
     // Anzeige Graph aller Generationen
     useEffect(() => {
@@ -214,10 +194,26 @@ function DataVisualization() {
         const result = transmitParameters(aep, generation_count, population_size, given_seed, elite_count, alien_count, weights)
         //const result = `AEP: ${aep}, Generation Count: ${generation_count}, Population Size: ${population_size}, Given Seed: ${given_seed}, Elite Count: ${elite_count}, Alien Count: ${alien_count}, Weights: ${weigths}`;
         // @ts-ignore
-        setTransmittedData(result);
+        if (
+            result &&
+            typeof result === 'object' &&
+            'aep' in result &&
+            'generation_count' in result &&
+            'population_size' in result &&
+            'given_seed' in result &&
+            'elite_count' in result &&
+            'alien_count' in result &&
+            'weights' in result
+        ) {
+            setTransmittedData(result);
+        }
+        if (result === "Transmitted Data: None"){
+            setTransmittedData(result)
+        }
+        // loadGenerations(result)
     }
 
-    const tmpList = generateResultList(data)
+    const tmpList = generateResultList([])
 
     return (
         <div className={styles.wrapper}>
