@@ -352,7 +352,7 @@ def get_users_experiments(username: str, connection_path: str = "db/simulation_d
 
     return ids
 
-def add_experiment(username: str, data: list[list], population_size: int, simulation_seed: int, generation_count: int, strategy: int, aep: float, elite_count: int, alien_count: int, weights: list[int], connection_path: str = "db/simulation_data.db") -> None:
+def add_experiment(username: str, data: list[list], population_size: int, simulation_seed: int, generation_count: int, strategy: float, aep: float, elite_count: int, alien_count: int, weights: list[int], connection_path: str = "db/simulation_data.db") -> None:
     """
     Adds the given csv data to the given connection
 
