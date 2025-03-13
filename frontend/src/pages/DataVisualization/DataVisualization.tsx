@@ -145,33 +145,62 @@ function DataVisualization() {
 
     // Überprüfe, ob gegebener Input eine gültige Dezimalzahl ist (zB 1234.5678). Die Funktion erlaubt auch nur ein Komma (.)
     function handleParaChange(e: React.ChangeEvent<HTMLInputElement>) {
-        // TODO: Eingabefeld begrenzen, damit man nicht zu lange zahlen eintragen kann
         const { name, value } = e.target;
-        if (name === 'generation_count' || name === 'population_size' || name === 'elite_count' || name === 'alien_count') {
+
+        // Begrenzung der Eingabe auf 20 Zeichen
+        if (value.length > 20) return;
+
+        if(name === "generation_count"){
             // Erlaubt nur int-Zahlen
             if (/^\d+$|^$/.test(value)) {
                 setParaInputs((prev) => ({ ...prev, [name]: value }));
             }
         }
-        if (name === 'given_seed') {
-            // Erlaubt nur float-Zahlen
-            if (/^\d*\.?\d*$/.test(value)) {
-                setParaInputs((prev) => ({ ...prev, [name]: value }));
+
+        if (["population_size", "elite_count", "alien_count"].includes(name)) {
+            // Erlaubt nur int-Zahlen
+            if (/^\d+$|^$/.test(value)) {
+                setParaInputs((prev) => {
+                    const updatedValues = { ...prev, [name]: value };
+
+                    // Validierung: Alien + Elite dürfen Population nicht übersteigen
+                    const populationSize = parseInt(updatedValues.population_size || "0", 10);
+                    const eliteCount = parseInt(updatedValues.elite_count || "0", 10);
+                    const alienCount = parseInt(updatedValues.alien_count || "0", 10);
+
+                    if (eliteCount + alienCount >= populationSize) {
+                        return prev; // Verhindert ungültige Werte
+                    }
+
+                    return updatedValues;
+                });
             }
         }
+
+        if (name === 'given_seed') {
+            // Erlaubt nur float-Zahlen
+            if (/^\d*$/.test(value)) {
+                const num = parseInt(value, 10);
+                if (value === "" || (num >= 1 && num <= 1000)) {
+                    setParaInputs((prev) => ({ ...prev, [name]: value }));
+                }
+            }
+        }
+
         if (name === 'aep') {
             // Erlaubt nur 0-1 Zahlen
             if (/^0(\.\d*)?$|^1$|^$/.test(value)) {
                 setParaInputs((prev) => ({ ...prev, [name]: value }));
             }
         }
+        // TODO: 4 weights müssen übergeben werden zwischen alles (sinnvoll wäre negative Werte)
         if (name === "weights") {
             // Entferne unnötige Leerzeichen und trenne an ","
             const values = value.split(",").map((v) => v.trim());
 
-            // Prüfe, ob jede Zahl ein Float ist und zwischen 3 und 5 liegt
+            // Prüfe, ob jede Zahl ein Float
             const isValid = values.every(
-                (num) => num === "" || (!isNaN(Number(num)) && Number(num) >= 3 && Number(num) <= 5)
+                (num) => num === "" || !isNaN(Number(num)) || /^-?\d+(\.\d+)?$/.test(num)
             );
 
             // Falls gültig, setze den State
