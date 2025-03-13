@@ -241,9 +241,9 @@ function DataVisualization() {
         return result;
     }
 
-    function uploadCSV(event: any){
+    function uploadCSV(event: React.ChangeEvent<HTMLInputElement>){
         // get selected file
-        const file = event.target.files[0]
+        const file = event.target.files?.[0];  // Nutze optional chaining
 
         // check file
         if (!file) {
@@ -375,7 +375,7 @@ function DataVisualization() {
                             </>
                         ) : <></>}
 
-                        <UploadButton></UploadButton>
+                        <UploadButton onChange={uploadCSV}></UploadButton>
                         <DownloadButton onClick={() => downloadCSV('Frontendtest')}></DownloadButton>
                     </div>
                 </Card>
