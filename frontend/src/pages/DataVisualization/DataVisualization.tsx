@@ -273,7 +273,7 @@ function DataVisualization() {
 
                         <GenericButton title='Start Simulation' onClick={() => {
                             handleTransmit(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights)
-                        }} />
+                        }} idd={"data_StartSimu"}/>
                     <hr/>
                     <label id="transData">{transmittedData}</label>
                 </Card>
@@ -310,14 +310,14 @@ function DataVisualization() {
 
                         {role === "administrator" ? (
                             <>
-                                <GenericButton title="Protocol" onClick={placeholderButtonFunction}/>
-                                <GenericButton title="Debug" onClick={placeholderButtonFunction}/>
-                                <GenericButton title="History" onClick={toggleHistoricalData}/>
+                                <GenericButton title="Protocol" onClick={placeholderButtonFunction} idd={"data_Protocol"}/>
+                                <GenericButton title="Debug" onClick={placeholderButtonFunction} idd={"data_Debug"}/>
+                                <GenericButton title="History" onClick={toggleHistoricalData} idd={"data_History"}/>
                             </>
                         ) : <></>}
                         {role === "data_analyst" ? (
                             <>
-                                <GenericButton title="History" onClick={placeholderButtonFunction}/>
+                                <GenericButton title="History" onClick={placeholderButtonFunction} idd={"data_History"}/>
                             </>
                         ) : <></>}
 

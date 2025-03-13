@@ -42,7 +42,7 @@ function Header() {
                             </li>
 
                             <li>
-                                <a onClick={logOut} className={styles.navbarListItem}>Logout</a>
+                                <a onClick={logOut} className={styles.navbarListItem} id={"navbar_Logout"}>Logout</a>
                             </li>
                         </>
                     ) : (

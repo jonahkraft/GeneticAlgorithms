@@ -49,7 +49,7 @@ function Home() {
                 </div>
                     <p className={styles.introText}>{easySpeech ? easyP2: normalP2}</p>
 
-                <GenericButton title="Proceed to Simulation" onClick={clickButton}></GenericButton>
+                <GenericButton title="Proceed to Simulation" onClick={clickButton} idd={"home_PTS"}></GenericButton>
                 </div>
             </div>
 
