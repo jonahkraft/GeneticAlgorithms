@@ -31,6 +31,24 @@ def get_users(connection_path: str = "db/users.db") -> list[tuple[str, str]]:
 
     return cur.fetchall()
 
+def get_logs(connection_path: str = "db/logs.db") -> list[tuple[str, str]]:
+    """
+    Gets a list of all logs.
+
+    :param connection_path: path to the database
+    :type connection_path: str
+
+    :returns A list of logs
+    :type list[tuple[str, str]]
+    """
+    
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+
+    cur.execute("SELECT time, log FROM logs")
+
+    return cur.fetchall()
+
 def add_user(username: str, password: str, role: str = "data_analyst", connection_path: str = "db/users.db")-> None:
     """
     Adds a user to the user database
@@ -439,4 +457,4 @@ def write_log(log: str, connection_path = "db/logs.db"):
     connection.commit()
     connection.close()
 
-#print(get_users_experiments("simulation_expert", "./backend/db/simulation_data.db"))
+#print(get_logs("./backend/db/logs.db"))
