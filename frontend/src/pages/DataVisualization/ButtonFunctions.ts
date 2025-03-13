@@ -5,11 +5,6 @@ export function placeholderButtonFunction(){
     alert('Diese Funktionalität wird fertig implementiert, sobald das Einbinden mit dem Backend funktioniert')
 }
 
-function showHistory(){
-    // TODO: Backend API
-    return
-}
-
 function showProtocol(){
     // TODO: Backend API
     return
@@ -121,4 +116,4 @@ export async function downloadCSV(filename: string) {
 
 
 
-export default { placeholderButtonFunction, showHistory, showProtocol, showDebug, uploadCSV, downloadCSV}
+export default { placeholderButtonFunction, showProtocol, showDebug, uploadCSV, downloadCSV}
