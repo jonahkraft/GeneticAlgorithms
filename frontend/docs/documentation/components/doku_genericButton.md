@@ -1,7 +1,7 @@
-###Dokumentation für Generic Buttons
+### Dokumentation für Generic Buttons
 
 Generic Buttons ist eine Komponente welche für
-den genormten Button.
+den genormten Button sorgt.
 
 ```interface Probs```
 
