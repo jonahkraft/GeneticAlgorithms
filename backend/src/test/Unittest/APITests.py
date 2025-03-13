@@ -47,7 +47,11 @@ class APITests(UnitMeta):
     def RegisterData(self, data : dict[str, str], token : str) -> bool:
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain', "Authorization": f"Bearer {token}"}
         res = requests.post("http://localhost:5000/api/register", data = json.dumps(data), headers= headers)
+        print(res)
+        print(res.content)
+        print(res.text)
         res = json.loads(res.text)
+        print(data["role"])
         return not res["already_registered"] and not res["invalid_role"] == (data["role"] != "invalid-role") and res["success"]
     def GetAdminToken(self):
         obj = {
