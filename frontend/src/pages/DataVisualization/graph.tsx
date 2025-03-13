@@ -14,33 +14,29 @@ export interface HistoricalDataType {
     'experiment_id': string;
 }
 
-function graph(data: Record<string, HistoricalDataType[]>) {
+function graph(data: HistoricalDataType[]) {
     if (!data || Object.keys(data).length === 0) return;
 
     // Liste für Scatter-Plot (Einzelne Werte)
-    const list: { gen: string; consumption: number }[] = [];
+    const list: { gen: string; consumption: string }[] = [];
 
     // Objekt zur Berechnung der Durchschnittswerte
-    const avgMap: Record<string, { sum: number; count: number }> = {};
+    const avgMap: Record<string, { sum: number; count: number }> = {};  
+    //const avgMap: {gen: string, sum: number, count: number }[] = [];
 
     // Über alle Generationen iterieren
-    Object.keys(data).forEach(genKey => {
-        const entries = data[genKey]; // Array der Generation
+    data.forEach(entry => {
 
-        entries.forEach(entry => {
-            const consumption = Number(entry.Consumption);
+        // Scatter-Daten speichern
+        list.push({ gen: entry.generation, consumption: entry.Consumption})
 
-            // Scatter-Daten speichern
-            list.push({ gen: entry.generation, consumption });
-
-            // Durchschnittswerte berechnen
-            if (!avgMap[entry.generation]) {
-                avgMap[entry.generation] = { sum: 0, count: 0 };
-            }
-            avgMap[entry.generation].sum += consumption;
-            avgMap[entry.generation].count += 1;
-        });
-    });
+        // Durchschnittswerte berechnen
+        if (!avgMap[entry.generation]) {
+            avgMap[entry.generation] = { sum: 0, count: 0 };
+        }
+        avgMap[entry.generation].sum += Number(entry.Consumption);
+        avgMap[entry.generation].count += 1;
+    })
 
     // Durchschnittsdaten erstellen
     const avg = Object.keys(avgMap).map(gen => ({
@@ -67,7 +63,7 @@ function graph(data: Record<string, HistoricalDataType[]>) {
                 {
                     type: "line",
                     label: "Average Consumption",
-                    data: avg.map(row => ({ x: row.gen, y: row.genAvg })),
+                    data: avg.map(row => ({ x: row.gen, y: String(row.genAvg) })),
                     borderColor: "rgb(0, 0, 0)",
                     borderWidth: 2,
                     pointRadius: 5,

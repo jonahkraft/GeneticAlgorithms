@@ -1,7 +1,6 @@
 import { saveAs } from 'file-saver';
 import getSimulationData from "../../get_simulation_data.ts";
 import graph from "./graph.tsx";
-import {getGenertations} from "./DataVisualization.tsx";
 
 export function placeholderButtonFunction(){
     alert('Diese Funktionalität wird fertig implementiert, sobald das Einbinden mit dem Backend funktioniert')
@@ -84,10 +83,11 @@ export function uploadCSV(event: any){
 
  */
 
-export async function downloadCSV(filename: string){
+export async function downloadCSV(filename: string, id: string){
+
     let csvContent = "";
     let blocker = 0;
-    const data = await getSimulationData(["generation", "final_drive", "roll_radius", "gear_3", "gear_4", "gear_5", "consumption", "elasticity_3", "elasticity_4", "elasticity_5", "experiment_id"], [])
+    const data = await getSimulationData(["generation", "final_drive", "roll_radius", "gear_3", "gear_4", "gear_5", "consumption", "elasticity_3", "elasticity_4", "elasticity_5", "experiment_id"], [`experiment_id = ${id}`]);
 
     // Iterate through all generations
     Object.keys(data).forEach((generationKey) => {
@@ -122,4 +122,4 @@ export async function downloadCSV(filename: string){
 
 
 
-//export default { placeholderButtonFunction, showProtocol, showDebug, uploadCSV, downloadCSV}
+export default { placeholderButtonFunction, showProtocol, showDebug, uploadCSV, downloadCSV}

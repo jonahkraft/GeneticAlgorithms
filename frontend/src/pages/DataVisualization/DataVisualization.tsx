@@ -55,6 +55,9 @@ function DataVisualization() {
         setShowHistoricalData(!showHistoricalData)
     }
 
+    // id von dem Experiment, das gerade angezeigt wird
+    const [id, setId] = useState("0")
+
     // data speichert Datensatz vom backend Server, funktioniert aktell noch nicht, daher ist data Null
     const [data, setData] = useState<HistoricalDataType[]>();
 
@@ -173,6 +176,7 @@ function DataVisualization() {
 
     function updateData(data: HistoricalDataType[]) {
         setData(data)
+        setId(data[0].experiment_id)
     }
 
     // Zeigt übermittelte Daten auf Seite an
@@ -377,7 +381,7 @@ function DataVisualization() {
                         ) : <></>}
 
                         <UploadButton onChange={uploadCSV}></UploadButton>
-                        <DownloadButton onClick={() => downloadCSV('Frontendtest')}></DownloadButton>
+                        <DownloadButton onClick={() => downloadCSV('Frontendtest', id)}></DownloadButton>
                     </div>
                 </Card>
             </div>
