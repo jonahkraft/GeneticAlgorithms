@@ -1,5 +1,4 @@
 import styles from './UploadButton.module.css';
-import { uploadCSV } from "../../pages/DataVisualization/ButtonFunctions.ts";
 
 /*
 function UploadButton(){
