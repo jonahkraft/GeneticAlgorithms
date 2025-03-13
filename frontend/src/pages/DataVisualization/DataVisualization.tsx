@@ -18,6 +18,20 @@ import DropDown from "../../components/DropdownMenu/DropDown.tsx";
 import CallBack from "../../components/DropdownMenu/CallBack.tsx";
 import HistoricalData from "../../components/HistoricalData/HistoricalData.tsx"
 
+export function getGenertations(data: Record<string, HistoricalDataType[]>){
+    if (Object.keys(data).length === 0){
+        return
+    }
+
+    const Generations: string[] = []
+
+    for (let i = 0; i <= data[0].length; i++){
+        Generations.push(String(i))
+    }
+    console.log(Generations)
+    return Generations
+}
+
 export interface HistoricalDataType {
     generation: string;
     'Final Drive': string;
@@ -31,21 +45,6 @@ export interface HistoricalDataType {
     'Elasticity 5': string;
     'experiment_id': string;
 }
-
-// Interface für Datentyp in functions loadGenerations
-interface GenerationData {
-    generation: string;
-    'Final Drive': string;
-    'Roll Radius': string;
-    'Gear 3': string;
-    'Gear 4': string;
-    'Gear 5': string;
-    Consumption: string;
-    'Elasticity 3': string;
-    'Elasticity 4': string;
-    'Elasticity 5': string;
-}
-
 
 function DataVisualization() {
     const navigate = useNavigate();
@@ -106,27 +105,6 @@ function DataVisualization() {
             graph(data!);
         }
     }, [data]);
-
-    // Anzeige Graph einer spezifischen Generation (alle Generationen x)
-    useEffect(() => {
-        graphGen(selectedGeneration!);
-    }, [selectedGeneration]);
-
-    // Show Generation Drop Down
-    function loadGenerations(arr: Record<string, GenerationData[]>) {
-        console.log("in function loadGen:", typeof (arr)) // returned object
-        if (Object.keys(arr).length === 0) {
-            return
-        }
-
-        const newGenerations: string[] = [];
-
-        for (let i = 0; i <= arr[0].length; i++) {
-            //newGenerations.push(`Generation ${i}`);
-            newGenerations.push(String(i));
-        }
-        setGenerations(newGenerations);
-    }
 
     // Change Drop Down Element
     function handleDropdownSelect(index: number) {
@@ -220,6 +198,71 @@ function DataVisualization() {
               setTransmittedData(json.data);
             }
           });*/
+    }
+
+    function parseCSVToList(csvContent: string) {
+        const result: any = {};
+
+        // Remove unnecessary spaces
+        const lines = csvContent.trim().split("\n");
+
+        if (lines.length < 2) {
+            console.error("CSV file is empty or has no data rows!");
+            return result;
+        }
+
+        // Extract column headers
+        const keys = lines[0].split(";");
+
+        // Process each data row
+        for (let i = 1; i < lines.length; i++) {
+            const values = lines[i].split(";");
+            if (values.length !== keys.length) continue; // Ignore malformed rows
+
+            // Create row object
+            const row: any = {};
+            keys.forEach((key, index) => {
+                row[key] = values[index];
+            });
+
+            // Determine the generation from the "generation" column
+            const generation = row["generation"];
+            if (!result[generation]) {
+                result[generation] = [];
+            }
+
+            result[generation].push(row);
+        }
+
+        return result;
+    }
+
+    function uploadCSV(event: any){
+        // get selected file
+        const file = event.target.files[0]
+
+        // check file
+        if (!file) {
+            alert('Please choose a CSV-File');
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            // content of uploaded file
+            // @ts-ignore
+            const csvContent = e.target.result;
+            // list which will contain the parsedCSV file
+            // @ts-ignore
+            const parsedList = parseCSVToList(csvContent);
+            // TODO: Usage for pasedList (backend i.e)
+            console.log(parsedList)
+            getGenertations(parsedList)
+            graph(parsedList);
+        };
+
+        reader.readAsText(file); // Liest die Datei als Text
     }
 
     return (
