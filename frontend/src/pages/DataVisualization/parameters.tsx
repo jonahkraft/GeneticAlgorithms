@@ -44,7 +44,8 @@ function transmitParameters(aep: string, generation_count: string, population_si
         { headers: { "Authorization": `Bearer ${token.trim()}`, "Content-Type": "application/json" } })
         .then((response) => {
             console.log(response.data.experiment_id)
-            getSimulationData([], [response.data.experiment_id])
+            return getSimulationData([], [response.data.experiment_id])
+
         })
         .catch(error => {
             if (error.response) {
