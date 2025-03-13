@@ -80,13 +80,13 @@ function DataVisualization() {
 
     // Parameter from Requirement
     const [paraInputs, setParaInputs] = useState({
-        aep: "",                    // Wert zwischen 0 und 1
+        aep: "",                    // Wert zwischen 0 und 1, float
         generation_count: "",       // int
         population_size: "",        // int
         given_seed: "",             // feste Vorgabe/random -> float
         elite_count: "",            // int
         alien_count: "",            // int
-        weights: ""                 // float
+        weights: ""                 // list[float]
     });
 
     // Display the transmitted Parameters
@@ -123,10 +123,8 @@ function DataVisualization() {
         }
 
         const newGenerations: string[] = [];
-        //console.log(arr);
 
         for (let i = 0; i <= arr[0].length; i++) {
-            //console.log(arr[i]);
             //newGenerations.push(`Generation ${i}`);
             newGenerations.push(String(i));
         }
@@ -137,7 +135,6 @@ function DataVisualization() {
     function handleDropdownSelect(index: number) {
         // Saves selected generation in state
         setSelectedGeneration(generations[index]);
-        //console.log("Ausgewählte Generation:", selectedGen);
 
         // Add Stuff like Update-UI
         setGeneratedElement(
@@ -220,25 +217,11 @@ function DataVisualization() {
         setTransmittedData(result);
     }
 
-
-    // For Debugging Purpose/ Test Purpose
-    //console.log('Data: ', data, typeof (data))
-    //console.log('Generations: ', generations, typeof (generations))
-    //console.log('SelectedGeneration: ', selectedGeneration, typeof (selectedGeneration))
-    //console.log('GeneratedElement: ', generatedElement, typeof (generatedElement))
-    //console.log(document.cookie)
     const tmpList = generateResultList(data)
 
     return (
         <div className={styles.wrapper}>
-            {/*<div className={styles.toolbar}>Toolbar</div><*/}
-
             <div className={styles.container}>
-                {/*<button className="toggle-btn left-btn" onClick={() => toggleSidebar('left')}>☰</button>*/}
-                {/*<div className="sidebar left" id="leftSidebar">*/}
-                {/*    <button className="close-btn" onClick={() => toggleSidebar('left')}>✖</button>*/}
-                {/*    Left Sidebar Content*/}
-                {/*</div>*/}
             </div>
 
             <div className={styles.mainContent}>
@@ -344,13 +327,7 @@ function DataVisualization() {
                         <DownloadButton onClick={() => downloadCSV(tmpList, 'Frontendtest')}></DownloadButton>
                     </div>
                 </Card>
-
-                {/*<h2>{selectedGeneration ? `Selected generation: ${selectedGeneration}` : "Please select a generation"}</h2>*/}
-                {/*{generatedElement}*/}
             </div>
-
-            {/*<div className="sidebar right" id="rightSidebar">Right Sidebar Content</div>*/}
-            {/*<button className="toggle-btn right-btn" onClick={() => toggleSidebar('right')}>☰</button>*/}
         </div>
     );
 }
