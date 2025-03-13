@@ -18,7 +18,7 @@ import UserPersmissions from '../../components/UserPermissions/UserPersmissions.
 import UploadButton from "../../components/UploadButton/UploadButton.tsx";
 import {downloadCSV} from "./ButtonFunctions.ts";
 import GenericButton from '../../components/GenericButton/GenericButton.tsx';
-import {send} from "vite";
+// import {send} from "vite";
 
 //
 
@@ -69,18 +69,6 @@ function DataVisualization() {
     // @ts-expect-error
     const [generatedElement, setGeneratedElement] = useState<JSX.Element | null>(null);
 
-    const [sendParameters, setSendParameters] = useState(false)
-    /*
-    // Parameter //TODO: Stuff for later
-    const [inputs, setInputs] = useState({
-        finalDrive: "",
-        rollRadius: "",
-        gear3: "",
-        gear4: "",
-        gear5: ""
-    });
-     */
-
     // Parameter from Requirement
     const [paraInputs, setParaInputs] = useState({
         aep: "",                    // Wert zwischen 0 und 1
@@ -93,13 +81,7 @@ function DataVisualization() {
     });
 
     // Display the transmitted Parameters
-    const [transmittedData, setTransmittedData] = useState("Transmitted Data: Placeholder");
-
-    //const token = 'bla'
-    // load CSV Files
-    useEffect(() => {
-
-    }, [sendParameters]);
+    const [transmittedData, setTransmittedData] = useState("Transmitted Data: None");
 
     // Verarbeitung der Daten (generateResultList & loadGenerations)
     useEffect(() => {
@@ -202,22 +184,6 @@ function DataVisualization() {
     // Zeigt übermittelte Daten auf Seite an
     function handleTransmit(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weigths: string) {
         const result = `AEP: ${aep}, Generation Count: ${generation_count}, Population Size: ${population_size}, Given Seed: ${given_seed}, Elite Count: ${elite_count}, Alien Count: ${alien_count}, Weights: ${weigths}`;
-
-        if (!sendParameters) return;
-        console.log('DataVisualization vor axios get');
-        const token = cookies.getCookies().token
-        // call backend-API
-        //        axios.post("/api/get_simulation_data", {columns: [], row_constraints: []}, {"Content-Type": "application/json", "Authorization": `Bearer ${token}`})
-        axios.post("/api/get_simulation_data", { "population_size": population_size, "simulation_seed": given_seed, "strategy": 2, "aep": aep, "elite_count": elite_count, "alien_count": alien_count, "weights": weights },
-            { headers: { "Authorization": `Bearer ${token.trim()}`, "Content-Type": "application/json" } })
-            .then((response) => {
-                console.log('DataVisualization NACH axios get');
-                console.log('Result von AXIOS GET', response.data, 'Result von AXIOS GET', response);
-                //const result = Papa.parse(response.data, { header: true, skipEmptyLines: true });
-                console.log(response.data)
-            })
-            .catch((error) => console.error(error));
-
         setTransmittedData(result);
     }
 
@@ -243,22 +209,6 @@ function DataVisualization() {
             </div>
 
             <div className={styles.mainContent}>
-                {/*<Card>
-                    <div className={styles.paraContent}>
-                        <a>Final Drive</a>
-                        <input type="text" name="finalDrive" value={inputs.finalDrive} onChange={handleParaChange} />
-                        <a>Roll Radius</a>
-                        <input type="text" name="rollRadius" value={inputs.rollRadius} onChange={handleParaChange} />
-                        <a>Gear 3</a>
-                        <input type="text" name="gear3" value={inputs.gear3} onChange={handleParaChange} />
-                        <a>Gear 4</a>
-                        <input type="text" name="gear4" value={inputs.gear4} onChange={handleParaChange} />
-                        <a>Gear 5</a>
-                        <input type="text" name="gear5" value={inputs.gear5} onChange={handleParaChange} />
-                        <button className={styles.paraButton} onClick={() => transmitParameters(inputs.finalDrive, inputs.rollRadius, inputs.gear3, inputs.gear4, inputs.gear5)}>Apply Changes</button>
-                    </div>
-                </Card>*/}
-
                 <Card>
                     <h2>Description</h2>
                     <p>
@@ -312,7 +262,7 @@ function DataVisualization() {
                             handleTransmit(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights)
                         }} />
                     <hr/>
-                    <a id="transData">{transmittedData}</a>
+                    <label id="transData">{transmittedData}</label>
                 </Card>
 
                 <hr/>
