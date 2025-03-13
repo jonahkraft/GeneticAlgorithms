@@ -24,19 +24,16 @@ function transmitParameters(aep: string, generation_count: string, population_si
     console.log(elite_count, typeof(elite_count))
     console.log(alien_count, typeof(alien_count))
     console.log(weights, typeof(weights))
-    const transmitWeights = [weights]
-    // TODO: sort weights
 
     // TODO: startegy kanan 1,2 oder 3 sein
 
     //const strategy = '2' laut backend
     // TODO: given_seed fest oder random
     // given_seed = ''
-    console.log('DataVisualization vor axios get');
     const token = cookies.getCookies().token
     // call backend-API
     //        axios.post("/api/get_simulation_data", {columns: [], row_constraints: []}, {"Content-Type": "application/json", "Authorization": `Bearer ${token}`})
-    axios.post("/api/get_simulation_data", { "population_size": population_size, "simulation_seed": given_seed, "generation_count": generation_count ,"strategy": '2', "aep": aep, "elite_count": elite_count, "alien_count": alien_count, "weights": transmitWeights },
+    axios.post("/api/start_simulation", { "population_size": population_size, "simulation_seed": given_seed, "generation_count": generation_count ,"strategy": '2', "aep": aep, "elite_count": elite_count, "alien_count": alien_count, "weights": weights },
         { headers: { "Authorization": `Bearer ${token.trim()}`, "Content-Type": "application/json" } })
         .then((response) => {
             console.log('DataVisualization NACH axios get');
