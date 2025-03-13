@@ -14,7 +14,7 @@ import GenericButton from '../../components/GenericButton/GenericButton.tsx';
 
 styles wird für das Design der einzelnen Elemente importiert
 
-useNavigate aus dem React Router dient zur Naviagation zwischen den Seiten
+useNavigate aus dem React Router dient zur programmgesteuerten Naviagation zwischen den Seiten
 
 cookies wird zur Verwaltung der Cookie Dateien genutzt
 
@@ -25,7 +25,7 @@ GenericButton wird für die einheitlichen Buttons der Website genutzt
 function Home(){}
 ```
 
-Die function Home ist eine React-Komponente welche die Main Page handhabt.
+Kernfunktion der Homepage.
 Diese enthält folgende Elemente:
 
 ## Variablen, Zustände und Funktionen:
@@ -68,6 +68,14 @@ function clickButton(){}
 Diese Funktion stellt sicher, dass wenn man eingeloggt ist und auf die Data Visualization Page möchte, man entweder
 auf die Login Page weitergeleitet wird, falls man nicht angemeldet ist und falls man schon angemeldet ist
 direkt auf die Datenvisualisierung.
+
+```
+return()
+```
+Gibt die nötigen HTML Elemente für die Website zurück
+
+
+
 
 
 
