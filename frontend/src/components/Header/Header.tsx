@@ -20,17 +20,17 @@ function Header() {
             <nav className={styles.navbar}>
 
                 {/* Logo */}
-                <Link to="/" className={styles.logo}><img src="/favicon.svg" alt="Logo of GeneticAlgorithms" width="20px" height="20px"/></Link>
+                <Link to="/" className={styles.logo} id={"navbar_Icon"} ><img src="/favicon.svg" alt="Logo of GeneticAlgorithms" width="20px" height="20px"/></Link>
 
                 {/* Navigation */}
 
                 <ul className={styles.navbarList}>
                     <li>
-                        <Link to="/" className={styles.navbarListItem}>Home</Link>
+                        <Link to="/" className={styles.navbarListItem} id={"navbar_Home"} >Home</Link>
                     </li>
 
                     <li>
-                        <Link to="/data_visualization" className={styles.navbarListItem}>Data Visualization</Link>
+                        <Link to="/data_visualization" className={styles.navbarListItem} id={"navbar_Data"} >Data Visualization</Link>
                     </li>
 
                     {/*VisualizationButton für Login bzw. Logout bzw. Settings je nach aktuellem Zustand*/}
@@ -38,7 +38,7 @@ function Header() {
                     {signed_in ? (
                         <>
                             <li>
-                                <Link to="/settings" className={styles.navbarListItem}>Settings</Link>
+                                <Link to="/settings" className={styles.navbarListItem} id={"navbar_Settings"} >Settings</Link>
                             </li>
 
                             <li>
@@ -47,7 +47,7 @@ function Header() {
                         </>
                     ) : (
                         <li>
-                            <Link to="/login" className={styles.navbarListItem}>Login</Link>
+                            <Link to="/login" className={styles.navbarListItem} id={"navbar_Login"} >Login</Link>
                         </li>
                     )}
                 </ul>
