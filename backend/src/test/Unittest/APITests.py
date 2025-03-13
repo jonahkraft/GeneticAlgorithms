@@ -43,7 +43,7 @@ class APITests(UnitMeta):
     def DeletaData(self, data : dict[str, str], user_exists : bool, token : str) -> bool:
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain', "Authorization": f"Bearer {token}"}
         res = requests.post("http://localhost:5000/api/register", data = json.dumps(data), headers= headers)
-        return json.loads(res.text)["success"] == user_exists
+        return (res.status_code == 200) == user_exists
     def RegisterData(self, data : dict[str, str], token : str) -> bool:
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain', "Authorization": f"Bearer {token}"}
         res = requests.post("http://localhost:5000/api/register", data = json.dumps(data), headers= headers)
