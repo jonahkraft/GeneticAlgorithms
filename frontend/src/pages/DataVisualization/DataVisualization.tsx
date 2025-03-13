@@ -1,9 +1,7 @@
 import cookies from "../../cookies.ts";
-import HistoricalData from "../../components/HistoricalData/HistoricalData.tsx";
 import { useNavigate } from "react-router-dom";
 import generateResultList from "./generate_result_list.ts";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
 import { useEffect, useState } from "react";
 import {placeholderButtonFunction} from "./ButtonFunctions.ts";
 import graph from "./graph.tsx";
@@ -18,7 +16,21 @@ import {downloadCSV} from "./ButtonFunctions.ts";
 import GenericButton from '../../components/GenericButton/GenericButton.tsx';
 import DropDown from "../../components/DropdownMenu/DropDown.tsx";
 import CallBack from "../../components/DropdownMenu/CallBack.tsx";
-// import {send} from "vite";
+import HistoricalData from "../../components/HistoricalData/HistoricalData.tsx"
+
+export interface HistoricalDataType {
+    generation: string;
+    'Final Drive': string;
+    'Roll Radius': string;
+    'Gear 3': string;
+    'Gear 4': string;
+    'Gear 5': string;
+    Consumption: string;
+    'Elasticity 3': string;
+    'Elasticity 4': string;
+    'Elasticity 5': string;
+    'experiment_id': string;
+}
 
 // Interface für Datentyp in functions loadGenerations
 interface GenerationData {
@@ -40,6 +52,8 @@ function DataVisualization() {
     const easySpeech = cookies.getCookies().easy_speech
     const role = cookies.getCookies().role
 
+    var commonConfig = { delimiter: "," };
+
     const normalText = "In the genetic algorithm we start with a population of entities. This population is the first generation. Every generation is the base of the following generation. This is archived by selecting and multiplying good entities and deleting bad ones. Each entity represents a set of input values and their corresponding results for consumption and elasticity. First the input values will be randomly set. After all results are computed, the entities will be ranked depending on their result values. Good performing entities with slightly modified values are used to generate a new population. The best performing entities are called elites. Elites are not modified, but copied to the next generation. The worst performing entities will not be used for future generations.";
     const easyText = "In the genetic algorithm, we start with a group of entities. This group is the first generation. Every generation is the base for the next one. Good entities are chosen and multiplied, while bad ones are removed. Each entity represents a set of values and their results for fuel usage and elasticity. The values are first set randomly. After computing the results, the entities are ranked based on their performance. Good performing entities are slightly changed and used to create a new group. The best performing entities are called elites. Elites are not changed but copied to the next group. The worst entities are not used in future generations.";
 
@@ -56,8 +70,8 @@ function DataVisualization() {
         setShowHistoricalData(!showHistoricalData)
     }
 
-    // data speichert Datensatz vom backend Server, funktioniert aktuell noch nicht, daher ist data Null
-    // const [data, setData] = useState<object[]>([]);
+    // data speichert Datensatz vom backend Server, funktioniert aktell noch nicht, daher ist data Null
+    const [data, setData] = useState<HistoricalDataType[]>();
 
     // generations erstellt eine Liste aller Generations von 0 - x (in Test Liste 0-10)
     const [generations, setGenerations] = useState<string[]>([]);
@@ -86,8 +100,12 @@ function DataVisualization() {
 
     // Anzeige Graph aller Generationen
     useEffect(() => {
-        graph();
-    }, []);
+        if( data != null && data!.length > 0 ) {
+            console.log("Show Graph with data:")
+            console.log(data)
+            graph(data!);
+        }
+    }, [data]);
 
     // Anzeige Graph einer spezifischen Generation (alle Generationen x)
     useEffect(() => {
@@ -193,27 +211,16 @@ function DataVisualization() {
     function handleTransmit(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weights: string) {
         const result = transmitParameters(aep, generation_count, population_size, given_seed, elite_count, alien_count, weights)
         //const result = `AEP: ${aep}, Generation Count: ${generation_count}, Population Size: ${population_size}, Given Seed: ${given_seed}, Elite Count: ${elite_count}, Alien Count: ${alien_count}, Weights: ${weigths}`;
-        // @ts-ignore
-        if (
-            result &&
-            typeof result === 'object' &&
-            'aep' in result &&
-            'generation_count' in result &&
-            'population_size' in result &&
-            'given_seed' in result &&
-            'elite_count' in result &&
-            'alien_count' in result &&
-            'weights' in result
-        ) {
-            setTransmittedData(result);
-        }
-        if (result === "Transmitted Data: None"){
-            setTransmittedData(result)
-        }
-        // loadGenerations(result)
+        console.log("Rückgabe parameter")
+        console.log(result)
+       
+        /*Papa.parse(result,{
+            ...commonConfig,
+            complete: (json: any) => {
+              setTransmittedData(json.data);
+            }
+          });*/
     }
-
-    const tmpList = generateResultList([])
 
     return (
         <div className={styles.wrapper}>
@@ -322,7 +329,7 @@ function DataVisualization() {
                         ) : <></>}
 
                         <UploadButton></UploadButton>
-                        <DownloadButton onClick={() => downloadCSV(tmpList, 'Frontendtest')}></DownloadButton>
+                        {/* TODO temporär <DownloadButton onClick={() => downloadCSV(tmpList, 'Frontendtest')}></DownloadButton> */}
                     </div>
                 </Card>
             </div>
