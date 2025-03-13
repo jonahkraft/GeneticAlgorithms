@@ -1,4 +1,4 @@
-from backend.Test.MetaTest import MetaTest
+from backend.src.test.MetaTest import MetaTest
 from typing import Callable
 
 

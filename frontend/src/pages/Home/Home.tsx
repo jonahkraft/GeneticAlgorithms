@@ -5,6 +5,13 @@ import GenericButton from '../../components/GenericButton/GenericButton.tsx';
 
 function Home() {
     const navigate = useNavigate()
+    const easySpeech = cookies.getCookies().easy_speech
+
+    const normalP1 = "Evolution: The driving force for diversity and adaptation on our planet. Natural selection ensures that only the strongest survive and pass on the secret of their success to their children.";
+    const easyP1 = "Evolution: The force that helps living things change and survive. Only the strongest can survive and teach their children how to succeed.";
+
+    const normalP2 = "Our simulation uses these same principles in the form of genetic algorithms to find the optimal balance between performance and consumption in vehicles. For each configuration of parameters, the program returns the Pareto front, a collection of solutions where no value can be improved without worsening another.";
+    const easyP2 = "Our simulation uses genetic algorithms to find the best balance between performance and fuel usage in vehicles. For each set of parameters, the program shows the Pareto front, a set of solutions where no value can be improved without making another worse.";
 
     function clickButton() {
         if (!cookies.isLoggedIn()) {
@@ -15,22 +22,23 @@ function Home() {
     }
 
     return (
+
+        
         <div className={styles.wrapper}>
             <br/><br/>
             <div className={styles.mainContent}>
-                <h2 className={styles.header}>Welcome to the Simulation</h2>
-                <p className={styles.introText}>
-                    Evolution: The driving force for diversity and adaptation on our planet. Natural selection ensures that only the strongest survive and pass on the secret of their success to their children.
-                </p>
+                <div className={styles.wrapper}>
+                <img src="/intro.png" alt="a picture that shows graphs of simulations" className={styles.fullWidthImage}/>
+                    <p className={styles.introText}>{easySpeech ? easyP1: normalP1}</p>
+
                 <div className={styles.pictureContainer}>
                     <img src="/example.png" className={styles.image} alt="Example Data Visaulization"/>
 
                 </div>
-                <p className={styles.introText}>
-                    Our simulation uses these same principles in the form of genetic algorithms to find the optimal balance between performance and consumption in vehicles.                     For each configuration of parameters, the program returns the Pareto front, a collection of solutions where no value can be improved without worsening another.
+                    <p className={styles.introText}>{easySpeech ? easyP2: normalP2}</p>
 
-                </p>
                 <GenericButton title="Proceed to Simulation" onClick={clickButton}></GenericButton>
+                </div>
             </div>
 
             <div className={styles.faq}>

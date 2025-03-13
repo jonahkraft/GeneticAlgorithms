@@ -2,24 +2,26 @@ from simulation.car import Car
 from simulation.evolution.interfaces.population import Population
 from simulation.evolution.operators import EVAL_PARETO, REC_CROSS_POINT
 from simulation.evolution.strategies import STRAT_B
-from simulation.utilities.helper import import_generations_from_csv, plot_generations, export_generations_to_csv, export_generations_to_list
+from simulation.utilities.helper import export_generations_to_list, import_generations_from_csvfile
+
+# deprecated but maybe useful some other time
+# from simulation.utilities.helper import import_generations_from_csv, plot_generations, export_generations_to_csv
 
 '''
 Übergebbare Parameter:
 
-aep := Mutationsrate, eigentlich: je höher, desto geringere Mutation
-deswegen 1-aep in Strategie-C damit es intuitiver ist, zwischen 0 und 1
 generation_count := Anzahl der Generationen die berrechnet werden
 strategy := die Strategie, die angewandt wird bei der Generierung neuer Generationen
 population_size := konstante Größe der Population
 given_seed := seed für die Erzeugung der ersten Population
-elite_count := Anzahl der Top Individuen, die für die nächste Generation behalten werden
-alien_count := Anzahl der Individuen, die komplett neu generiert werden für die nächste Generation
 weights := die Gewichte der Ziehlparameter consumption, elasticity 3-5
-path := Pfad fürs exporiteren der Ergebnisse/ importieren der CSV als Generation
+elite_count := nur für Strategie 2: Anzahl der Top Individuen, die für die nächste Generation behalten werden
+alien_count := nur für Strategie 2: Anzahl der Individuen, die komplett neu generiert werden für die nächste Generation
+aep := eigentlich Erforschungsrate, je höher, desto geringere Mutationsrate (bei Strategie 1, wo es sich selbst anpasst)
+        hier: Mutationsrate der Strategie 2 (beeinflusst Nichts anderes), je höher, desto höher die Mutationsrate
+i := nur für Strategie 3: aktuelle Generation
+n := nur für Strategie 3: komplette Anzahl der Simulationen
 '''
-
-PATH = "backend/results/"
 
 
 class Schnittstelle(object):
@@ -53,7 +55,7 @@ class Schnittstelle(object):
 
         self.generation = Population(Car, population_size, seed=given_seed)
 
-    def evolute(self, generation_count=10, strategy=1, aep=0.2, elite_count=2, alien_count=0):
+    def evolute(self, generation_count=10, strategy=1, aep=0.2, elite_count=2, alien_count=0, i=1, n=10):
         ''''
         Generiert die nächsten [generation_count] Generationen entsprechend der ausgewählten Strategie.
         Dabei gibt es zusätzlich die Optionen aep einzustellen, was unter anderem die Mutationsrate
@@ -67,14 +69,20 @@ class Schnittstelle(object):
         :param strategy: which strategy you want to use
         :type strategy: int
 
-        :param aep: mutationrate
+        :param aep: mutationrate for strategy 2
         :type aep: float
 
-        :param elite_count: number of elites that stay between generations 
+        :param elite_count: number of elites that stay between generations for strategy 2
         :type elite_count: int
 
-        :param alien_count: number of aliens that get generated comepletely new each generation
+        :param alien_count: number of aliens that get generated comepletely new each generation for strategy 2
         :type alien_count: int
+
+        :param i: the current generation your in for strategy 3
+        :type i: int
+
+        :param n: the overall number of generations you want to compute for strategy 3
+        :type n: int
         '''
         def STRAT_C(population, _, __):
             '''
@@ -91,46 +99,46 @@ class Schnittstelle(object):
                 alien=alien_count
             )
 
-        if strategy == 2:
+        def STRAT_D(population, _, __):
+            '''
+            Eine Custom Strategie welche es ermöglichen soll anzugeben in welcher Generation man sich
+            befindet und wie viele man haben will und dann aber nur einen Schritt zu machen.
+            '''
+            return population.next_generation(
+                aep=(i + 1) / (n + 1),
+                eval_funct=EVAL_PARETO,
+                recombination_funct=REC_CROSS_POINT
+            )
+
+        if strategy == 3:
+            self.generation = self.generation.evolve(1, STRAT_D)
+        elif strategy == 2:
             self.generation = self.generation.evolve(generation_count, STRAT_C)
         else:
             self.generation = self.generation.evolve(generation_count, STRAT_B)
 
-    def results(self, path=PATH):
+    def results(self):
         '''
-        Gibt alle Individuen aller Generationen des aktuellen Experiments in einer csv aus, samt Eingaben
+        Gibt alle Individuen aller Generationen des aktuellen Experiments in einer Liste aus, samt Eingaben
         und Ausgaben der Simulation in folgender Form:
-        [Generation] [Final Drive] [Roll Radius] [Gear 3] [Gear 4] [Gear 5] (Eingaben)
-        [Consumption] [Elasticity 3] [Elasticity 4] [Elasticity 5] (Ausgaben)
-
-        Zusätzlich werden noch 5 png erzeugt um die Entwicklung zu visualisieren.
-        Drei davon stellen die Population jeweils im Anfangszustand, in der Mitte der Entwicklungsdauer
-        und am Ende der Entwicklung dar.
-        Die anderen beiden visualisieren den Phänotyp, sowie die Qualität.
-        Ist aktuell nicht drin lol
-
-        :param path: path to export the results to
-        :type path: str
+        [[Generation] [Final Drive] [Roll Radius] [Gear 3] [Gear 4] [Gear 5] (Eingaben)
+        [Consumption] [Elasticity 3] [Elasticity 4] [Elasticity 5]] (Ausgaben)
 
         :returns: list of all the values of the generations with a header
         :rtype: list[list[float]] 
         '''
         return export_generations_to_list(self.generation)
 
-    def import_from_csv(self, file='generations', path=PATH):
+    def import_from_csv(self, file):
         '''
-        Importiert eine csv als Generation. Alternativ zu einem zufälligen Startzustand.
+        Importiert eine Liste mit Listen als Generation. Alternativ zu einem zufälligen Startzustand.
 
-        :param file: name of the CSV
-        :type file: str
-
-        :param path: path to import the CSV from
-        :type path: str
+        :param file: List of Lists in the form: ...
+        :type file: list[list[float]]
         '''
-        self.generation = import_generations_from_csv(
+        self.generation = import_generations_from_csvfile(
             Car,
-            name=f"{file}.csv",
-            directory=path
+            file=file,
         )
 
     def clear(self):

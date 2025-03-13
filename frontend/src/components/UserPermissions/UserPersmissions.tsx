@@ -6,7 +6,7 @@ import {placeholderButtonFunction} from "../../pages/DataVisualization/ButtonFun
 function UserPersmissions(){
     const role = cookies.getCookies().role
 
-    if (role === 'admin') {
+    if (role === 'administrator') {
         return(
             <>
                 <GenericButton title="Protocol" onClick={placeholderButtonFunction}/>

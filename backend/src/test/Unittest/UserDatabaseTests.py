@@ -2,7 +2,7 @@ import sqlite3
 import hashlib
 import string
 import UnitMeta
-from backend import database
+from backend.src import database
 from typing import *
 
 class UserDatabaseTests(UnitMeta.UnitMeta):
@@ -21,6 +21,7 @@ class UserDatabaseTests(UnitMeta.UnitMeta):
         return True;
 
     def ClearTestDataBase(this):
+        testConnection = "..\\TestUserDatabase.db"
         """
         Cleared die Testdatenbank
         :return:
@@ -136,8 +137,9 @@ class UserDatabaseTests(UnitMeta.UnitMeta):
 
         return True;
 
+
 if __name__ == "__main__":
-    # Die (eigentlich static readonly aber gibts in Python nicht) Felder die benötigt werden
+   # Die (eigentlich static readonly aber gibts in Python nicht) Felder die benötigt werden
     # Test Connection
     testConnection = "..\\TestUserDataBase.db"
     # Allgemeine Nutzer Sample Daten

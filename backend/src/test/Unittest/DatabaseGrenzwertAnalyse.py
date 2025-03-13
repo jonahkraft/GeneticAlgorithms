@@ -1,10 +1,8 @@
-import sqlite3
-import hashlib
-import UnitMeta
-from UserDatabaseTests import UserDatabaseTests
-from backend import database
-from typing import *
 import random
+import sqlite3
+from backend.src import database
+import UnitMeta
+
 
 class UserDBGrenzwertAnalyse(UnitMeta.UnitMeta):
     def __init__(this):
@@ -73,7 +71,15 @@ class UserDBGrenzwertAnalyse(UnitMeta.UnitMeta):
             return "add_user hat die Grenzwertanalyse nicht bestanden, es sind die zu viele Rows nach dem Add vorhanden."
         # durch die vorherigen Invarianten wissen wir das die vals jetzt korrekt sind
         return True
+def GetRandomRole():
+    return random.choice(["administrator", "data_analyst", "simulator"])
+def GetRandomName():
+    alphabet : str = "abcdefghijklmnopqrstuvwxyz"
+    length : int = 10 # smaller 26
+    return str(random.choices(alphabet, k = length))
 
+def GetRandomPassword():
+    return GetRandomName() + str(random.randint(0, 1000))
 if __name__ == "__main__":
 
     testConnection = "..\\TestUserDataBase.db"
@@ -88,7 +94,8 @@ if __name__ == "__main__":
 
     #testConnection : sqlite3.Connection = sqlite3.connect("..\\TestUserDatabase.db")
     # Nutzer Daten hier Random
-    UserData : list[dict[str, str]] = [{"name": str(n), "pass": str(n) + str(p), "role": str(r)} for n in random.choices(range(1000), k = 70) for p in range(20) for r in range(4)]
+   # UserData : list[dict[str, str]] = [{"name": GetRandomName(), "pass": GetRandomPassword(), "role": GetRandomRole() } for n in in range(7) for p in range(20) for r in range(4)]
+    UserData : list[dict[str, str]] = [{"name": name, "pass": password, "role": role} for name in [GetRandomName() for _ in range(70)] for password in [GetRandomPassword() for _ in range(20)] for role in [GetRandomRole() for _ in range(4)]]
     neededResult : list[dict[str, str]] = []
     for data in UserData:
         if not any(data["name"] == d["name"] for d in neededResult):

@@ -13,8 +13,6 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="database module" href="database.html" />
-    <link rel="prev" title="codesnippets.evolution.interfaces package" href="codesnippets.evolution.interfaces.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -37,133 +35,14 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
-<section id="module-codesnippets.utilities.consumption_model">
-<span id="codesnippets-utilities-consumption-model-module"></span><h2>codesnippets.utilities.consumption_model module<a class="headerlink" href="#module-codesnippets.utilities.consumption_model" title="Link to this heading">¶</a></h2>
-<p>This module contains the functions to run the consumption simulation.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="codesnippets.utilities.consumption_model.is_wine_installed">
-<span class="sig-prename descclassname"><span class="pre">codesnippets.utilities.consumption_model.</span></span><span class="sig-name descname"><span class="pre">is_wine_installed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/utilities/consumption_model.html#is_wine_installed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.utilities.consumption_model.is_wine_installed" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if wine64 is installed, False otherwise.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="codesnippets.utilities.consumption_model.run_simulation">
-<span class="sig-prename descclassname"><span class="pre">codesnippets.utilities.consumption_model.</span></span><span class="sig-name descname"><span class="pre">run_simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">final_drive_ratio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roll_radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gear3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gear4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gear5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/utilities/consumption_model.html#run_simulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.utilities.consumption_model.run_simulation" title="Link to this definition">¶</a></dt>
-<dd><p>Runs the simulation with the given parameters and returns the results.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>final_drive_ratio</strong> (<em>float</em><em> or </em><em>int</em>) – The final drive ratio.</p></li>
-<li><p><strong>roll_radius</strong> (<em>float</em><em> or </em><em>int</em>) – The roll radius.</p></li>
-<li><p><strong>gear3</strong> (<em>float</em><em> or </em><em>int</em>) – The gear ratio of gear 3.</p></li>
-<li><p><strong>gear4</strong> (<em>float</em><em> or </em><em>int</em>) – The gear ratio of gear 4.</p></li>
-<li><p><strong>gear5</strong> (<em>float</em><em> or </em><em>int</em>) – The gear ratio of gear 5.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>consumption, elasticity 3, elasticity 4, elasticity 5</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple(float, float, float, float)</p>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="codesnippets-utilities-consumption-model-module">
+<h2>codesnippets.utilities.consumption_model module<a class="headerlink" href="#codesnippets-utilities-consumption-model-module" title="Link to this heading">¶</a></h2>
 </section>
-<section id="module-codesnippets.utilities.helper">
-<span id="codesnippets-utilities-helper-module"></span><h2>codesnippets.utilities.helper module<a class="headerlink" href="#module-codesnippets.utilities.helper" title="Link to this heading">¶</a></h2>
-<p>This module contains some helper functions that are used in the project.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="codesnippets.utilities.helper.export_generations_to_csv">
-<span class="sig-prename descclassname"><span class="pre">codesnippets.utilities.helper.</span></span><span class="sig-name descname"><span class="pre">export_generations_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'generations'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/utilities/helper.html#export_generations_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.utilities.helper.export_generations_to_csv" title="Link to this definition">¶</a></dt>
-<dd><p>Exports the given generations to a csv file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>generations</strong> (<em>list</em><em>[</em><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population" title="codesnippets.evolution.interfaces.population.Population"><em>Population</em></a><em>]</em>) – The generations to export.</p></li>
-<li><p><strong>name</strong> – The name of the file.</p></li>
-<li><p><strong>name</strong> – str</p></li>
-<li><p><strong>directory</strong> (<em>str</em>) – The directory to save the file in.</p></li>
-<li><p><strong>header</strong> (<em>bool</em>) – Flag whether to include a header in the file.</p></li>
-<li><p><strong>delimiter</strong> (<em>str</em>) – The delimiter to use.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The path to the file.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="codesnippets.utilities.helper.export_generations_to_list">
-<span class="sig-prename descclassname"><span class="pre">codesnippets.utilities.helper.</span></span><span class="sig-name descname"><span class="pre">export_generations_to_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/utilities/helper.html#export_generations_to_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.utilities.helper.export_generations_to_list" title="Link to this definition">¶</a></dt>
-<dd><p>Exports the given generations to a csv file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>generations</strong> (<em>list</em><em>[</em><a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.population.Population" title="codesnippets.evolution.interfaces.population.Population"><em>Population</em></a><em>]</em>) – The generations to export.</p></li>
-<li><p><strong>header</strong> (<em>bool</em>) – Flag whether to include a header in the file.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[list[float]]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="codesnippets.utilities.helper.import_generations_from_csv">
-<span class="sig-prename descclassname"><span class="pre">codesnippets.utilities.helper.</span></span><span class="sig-name descname"><span class="pre">import_generations_from_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'generations'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">';'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/utilities/helper.html#import_generations_from_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.utilities.helper.import_generations_from_csv" title="Link to this definition">¶</a></dt>
-<dd><p>Imports the generations from a csv file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cls</strong> (<a class="reference internal" href="codesnippets.evolution.interfaces.html#codesnippets.evolution.interfaces.individual.Individual" title="codesnippets.evolution.interfaces.individual.Individual"><em>Individual</em></a>) – The class of the individuals.</p></li>
-<li><p><strong>name</strong> – The name of the file.</p></li>
-<li><p><strong>name</strong> – str</p></li>
-<li><p><strong>directory</strong> (<em>str</em>) – The directory to load the file from.</p></li>
-<li><p><strong>header</strong> (<em>bool</em>) – Flag whether the file contains a header.</p></li>
-<li><p><strong>delimiter</strong> (<em>str</em>) – The used delimiter.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The generations.</p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[Population]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="codesnippets.utilities.helper.plot_generations">
-<span class="sig-prename descclassname"><span class="pre">codesnippets.utilities.helper.</span></span><span class="sig-name descname"><span class="pre">plot_generations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'generations-plot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/codesnippets/utilities/helper.html#plot_generations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#codesnippets.utilities.helper.plot_generations" title="Link to this definition">¶</a></dt>
-<dd><p>Plot the generations of an experiment.
-:param generations: The generations to plot.
-:type generations: list[Population]
-:param name: The name of the experiment.
-:type name: str
-:param directory: The directory to save the results to.
-:type directory: str</p>
-</dd></dl>
-
+<section id="codesnippets-utilities-helper-module">
+<h2>codesnippets.utilities.helper module<a class="headerlink" href="#codesnippets-utilities-helper-module" title="Link to this heading">¶</a></h2>
 </section>
-<section id="module-codesnippets.utilities">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-codesnippets.utilities" title="Link to this heading">¶</a></h2>
-<p>This module contains all utility functions used in the project.</p>
+<section id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading">¶</a></h2>
 </section>
 </section>
 
@@ -185,27 +64,14 @@
 
 <h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">backend</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="Test.html">Test package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html">api module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="app.html">app module</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="codesnippets.html">codesnippets package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="database.html">database module</a></li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">backend</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-  <li><a href="modules.html">backend</a><ul>
-  <li><a href="codesnippets.html">codesnippets package</a><ul>
-      <li>Previous: <a href="codesnippets.evolution.interfaces.html" title="previous chapter">codesnippets.evolution.interfaces package</a></li>
-      <li>Next: <a href="database.html" title="next chapter">database module</a></li>
-  </ul></li>
-  </ul></li>
   </ul></li>
 </ul>
 </div>

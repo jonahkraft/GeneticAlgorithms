@@ -15,6 +15,24 @@ redis_client = Redis(host=redis_host)
 #             username text)""")
 #user_connection.commit()
 
+def get_users(connection_path: str = "db/users.db") -> list[tuple[str, str]]:
+    """
+    Gets a list of all users with their roles.
+
+    :param connection_path: path to the database
+    :type connection_path: str
+
+    :returns A list of users with their roles
+    :type list[tuple[str, str]]
+    """
+    
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+
+    cur.execute("SELECT user_name, role FROM users")
+
+    return cur.fetchall()
+
 
 def add_user(user_name: str, password: str, role: str = "data_analyst", connection_path: str = "db/users.db")-> None:
     """
@@ -75,6 +93,7 @@ def delete_user(user_name:str, connection_path: str = "db/users.db") -> bool:
     cur.execute("DELETE FROM users WHERE user_name=?",[user_name])
     connection.commit()
     connection.close()
+    return True
 
 def change_password(user_name: str, new_password: str, connection_path: str = "db/users.db") -> bool:
     """
@@ -101,9 +120,7 @@ def change_password(user_name: str, new_password: str, connection_path: str = "d
     h.update(str.encode(new_password))
 
     if user_exists(user_name,connection_path):
-        cur.execute("""UPDATE users
-                    SET hashed_password = ?
-                    WHERE user_name=?""",[h.hexdigest,user_name])
+        cur.execute("UPDATE users SET hashed_password = ? WHERE user_name=?",[h.hexdigest(),user_name])
 
         connection.commit()
         connection.close()
@@ -189,7 +206,7 @@ def user_exists(user_name: str, connection_path: str = "db/users.db") -> bool:
     connection.close()
     return res
 
-def get_expreriment_owner(experiment_id: int, connection_path: str = "db/simulation_data.db"):
+def get_experiment_owner(experiment_id: int, connection_path: str = "db/simulation_data.db"):
     """
     Returns who ran which experiment
 
@@ -213,15 +230,35 @@ def get_expreriment_owner(experiment_id: int, connection_path: str = "db/simulat
 
     return res
 
+def get_users_experiments(username: str, connection_path: str = "db/simulation_data.db"):
+    """
+    Returns the users experiments
+
+    :param username: the users username
+    :type str
+
+    :param connection_path: The path to the database
+    :type connection_path: str
+    """
+
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+
+    cur.execute("SELECT experiment_id FROM experiment_owners WHERE username = ?", [username])
+    ids = cur.fetchall()
+    ids = [i[0] for i in ids]
+
+    return ids
 
 def add_experiment_data(username: str, data: list[list], connection_path: str = "db/simulation_data.db") -> None:
     """
     Adds the given csv data to the given connection
 
     :param username: The user adding the experiment data
+    :type username: str
 
     :param data: The data to enter in the form list[list[generation: int, final_drive: float, roll_radius: float, gear_3: float, gear_4: float, gear_5: float, consumption: float, elasticity_3: float, elasticity_4: float, elasticity_5: float]]
-    :type file_path: list[list]
+    :type data: list[list]
 
     :param connection_path: The path to the database
     :type connection_path: str
@@ -244,7 +281,7 @@ def add_experiment_data(username: str, data: list[list], connection_path: str = 
 
     cur.executemany("INSERT INTO car_data (generation, final_drive, roll_radius, gear_3, gear_4, gear_5, consumption, elasticity_3, elasticity_4, elasticity_5,experiment_id) VALUES (?,?,?,?,?,?,?,?,?,?,?);", to_db)
 
-    cur.execute("INSERT INTO experiment_data (experiment_id, username) VALUES(?,?)", [experiment_id, username])
+    cur.execute("INSERT INTO experiment_owners (experiment_id, username) VALUES(?,?)", [experiment_id, username])
 
     connection.commit()
     connection.close()
@@ -320,3 +357,5 @@ def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], const
         writer = csv.writer(file)
         writer.writerow(header)
         writer.writerows(results)
+
+#print(get_users_experiments("simulation_expert", "./backend/db/simulation_data.db"))

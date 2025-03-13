@@ -4,7 +4,7 @@ import os
 import random as rdm
 
 import numpy as np
-from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
 
 
 class Benchmark:
@@ -58,7 +58,7 @@ class Benchmark:
             rdm.shuffle(indexes)
             for i in range(nonzero_weights_per_row):
                 self._weights[indexes[i][0]][indexes[i][1]] = rdm.random()
-        
+
         # reset the seed for the random number generator
         rdm.setstate(rdm_original_state)
 
@@ -150,68 +150,70 @@ class Benchmark:
         """
         return ((1 - b) * cls.global_max_wave(x - c) + b * cls.local_extrema_overlay(a, x - c)) / 2
 
-    def plot(self, directory="results", resolution=100):
-        """
-        Visualizes the simulation for each output dimension using 2D and 3D results and saves them in the given directory.
-        :param resolution: Number of points along each axis in the results.
-        :type resolution: int
-        :param directory: Directory to save the results in.
-        :type directory: str
-        """
 
-        print(f"Plotting simulation... ")
+#    def plot(self, directory="results", resolution=100):
+#        """
+#        Visualizes the simulation for each output dimension using 2D and 3D results and saves them in the given directory.
+#        :param resolution: Number of points along each axis in the results.
+#        :type resolution: int
+#        :param directory: Directory to save the results in.
+#        :type directory: str
+#        """
+#
+#        print(f"Plotting simulation... ")
+#
+#        # check if the directory exists
+#        if not os.path.exists(directory):
+#            os.makedirs(directory)
+#
+#        for output_dim in range(self._n):
+#            plot_number = 1
+#            for i in range(self._m):
+#                for j in range(self._m):
+#                    if i <= j:  # Avoid duplicate results
+#                        # Create a new figure
+#                        fig = plt.figure(figsize=(12, 12))
+#
+#                        if i == j:  # Plot 2D for single parameters
+#                            ax = fig.add_subplot(111)
+#                            plot_number += 1
+#
+#                            x = np.linspace(0, 1, resolution)
+#                            y = np.array([self.__call__(
+#                                *[xk if k == i else 0.5 for k in range(self._m)],
+#                                i=output_dim
+#                            ) for xk in x])
+#
+#                            ax.plot(x, y)
+#                            ax.set_xlabel(f'Parameter {i + 1}')
+#                            ax.set_ylabel(f'Output {output_dim + 1}')
+#                            filename = os.path.join(directory, f'single-output_{output_dim + 1}-param_{i + 1}.png')
+#
+#                        else:  # Plot 3D for pairs of parameters
+#                            ax = fig.add_subplot(111, projection='3d')
+#                            plot_number += 1
+#
+#                            x = np.linspace(0, 1, resolution)
+#                            y = np.linspace(0, 1, resolution)
+#                            X, Y = np.meshgrid(x, y)
+#                            Z = np.array([self.__call__(
+#                                *[xi if k == i else yi if k == j else 0.5 for k in range(self._m)],
+#                                i=output_dim
+#                            ) for xi, yi in zip(np.ravel(X), np.ravel(Y))])
+#                            Z = Z.reshape(X.shape)
+#
+#                            ax.plot_surface(X, Y, Z, cmap='viridis')
+#                            ax.set_xlabel(f'Parameter {i + 1}')
+#                            ax.set_ylabel(f'Parameter {j + 1}')
+#                            ax.set_zlabel(f'Output {output_dim + 1}')
+#                            filename = os.path.join(directory, f'pair-output_{output_dim + 1}-param_{i + 1}_{j + 1}.png')
+#
+#                        # Save the figure
+#                        plt.tight_layout()
+#                        fig.savefig(filename)
+#                        plt.close(fig)  # Close the figure to avoid memory leaks
+#        print(f"Done! Saved results to {directory}")
 
-        # check if the directory exists
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-
-        for output_dim in range(self._n):
-            plot_number = 1
-            for i in range(self._m):
-                for j in range(self._m):
-                    if i <= j:  # Avoid duplicate results
-                        # Create a new figure
-                        fig = plt.figure(figsize=(12, 12))
-
-                        if i == j:  # Plot 2D for single parameters
-                            ax = fig.add_subplot(111)
-                            plot_number += 1
-
-                            x = np.linspace(0, 1, resolution)
-                            y = np.array([self.__call__(
-                                *[xk if k == i else 0.5 for k in range(self._m)],
-                                i=output_dim
-                            ) for xk in x])
-
-                            ax.plot(x, y)
-                            ax.set_xlabel(f'Parameter {i + 1}')
-                            ax.set_ylabel(f'Output {output_dim + 1}')
-                            filename = os.path.join(directory, f'single-output_{output_dim + 1}-param_{i + 1}.png')
-
-                        else:  # Plot 3D for pairs of parameters
-                            ax = fig.add_subplot(111, projection='3d')
-                            plot_number += 1
-
-                            x = np.linspace(0, 1, resolution)
-                            y = np.linspace(0, 1, resolution)
-                            X, Y = np.meshgrid(x, y)
-                            Z = np.array([self.__call__(
-                                *[xi if k == i else yi if k == j else 0.5 for k in range(self._m)],
-                                i=output_dim
-                            ) for xi, yi in zip(np.ravel(X), np.ravel(Y))])
-                            Z = Z.reshape(X.shape)
-
-                            ax.plot_surface(X, Y, Z, cmap='viridis')
-                            ax.set_xlabel(f'Parameter {i + 1}')
-                            ax.set_ylabel(f'Parameter {j + 1}')
-                            ax.set_zlabel(f'Output {output_dim + 1}')
-                            filename = os.path.join(directory, f'pair-output_{output_dim + 1}-param_{i + 1}_{j + 1}.png')
-
-                        # Save the figure
-                        plt.tight_layout()
-                        fig.savefig(filename)
-                        plt.close(fig)  # Close the figure to avoid memory leaks
-        print(f"Done! Saved results to {directory}")
 
     def __call__(self, *x, i=None):
         """
