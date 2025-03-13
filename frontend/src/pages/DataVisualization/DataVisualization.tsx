@@ -200,9 +200,8 @@ function DataVisualization() {
 
             // Prüfe, ob jede Zahl ein Float
             const isValid = values.every(
-                (num) => num === "" || !isNaN(Number(num)) || /^-?\d+(\.\d+)?$/.test(num)
+                (num) => num === "" || num === "-" || !isNaN(Number(num)) || /^-?\d+(\.\d+)?$/.test(num)
             );
-
             // Falls gültig, setze den State
             if (isValid) {
                 setParaInputs((prev) => ({ ...prev, [name]: value }));
@@ -211,8 +210,10 @@ function DataVisualization() {
     }
 
     // Zeigt übermittelte Daten auf Seite an
-    function handleTransmit(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weigths: string) {
-        const result = `AEP: ${aep}, Generation Count: ${generation_count}, Population Size: ${population_size}, Given Seed: ${given_seed}, Elite Count: ${elite_count}, Alien Count: ${alien_count}, Weights: ${weigths}`;
+    function handleTransmit(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weights: string) {
+        const result = transmitParameters(aep, generation_count, population_size, given_seed, elite_count, alien_count, weights)
+        //const result = `AEP: ${aep}, Generation Count: ${generation_count}, Population Size: ${population_size}, Given Seed: ${given_seed}, Elite Count: ${elite_count}, Alien Count: ${alien_count}, Weights: ${weigths}`;
+        // @ts-ignore
         setTransmittedData(result);
     }
 
@@ -272,7 +273,6 @@ function DataVisualization() {
                     </table>
 
                         <GenericButton title='Start Simulation' onClick={() => {
-                            transmitParameters(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights);
                             handleTransmit(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights)
                         }} />
                     <hr/>

@@ -29,6 +29,18 @@ function transmitParameters(aep: string, generation_count: string, population_si
     const weightsArray = weights.split(",");
     console.log(weightsArray)
 
+    if (weightsArray.length !== 4){
+        alert("Weigths benötigt 4 Eingabewerte, sonst werden die Daten nicht an den Server gesendet")
+        return "Transmitted Data: None"
+    }
+
+    console.log(given_seed)
+    if (given_seed === ""){
+        const randomInt = Math.floor(Math.random() * 1000) + 1;
+        given_seed = randomInt.toString();
+        console.log(given_seed, typeof(given_seed))
+    }
+
     // TODO: startegy kanan 1,2 oder 3 sein
 
     //const strategy = '2' laut backend
