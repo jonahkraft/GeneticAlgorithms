@@ -18,20 +18,6 @@ import DropDown from "../../components/DropdownMenu/DropDown.tsx";
 import CallBack from "../../components/DropdownMenu/CallBack.tsx";
 import HistoricalData from "../../components/HistoricalData/HistoricalData.tsx"
 
-export function getGenertations(data: Record<string, HistoricalDataType[]>){
-    if (Object.keys(data).length === 0){
-        return
-    }
-
-    const Generations: string[] = []
-
-    for (let i = 0; i <= data[0].length; i++){
-        Generations.push(String(i))
-    }
-    console.log(Generations)
-    return Generations
-}
-
 export interface HistoricalDataType {
     generation: string;
     'Final Drive': string;
@@ -204,6 +190,20 @@ function DataVisualization() {
           });*/
     }
 
+    function getGenertations(data: Record<string, HistoricalDataType[]>){
+        if (Object.keys(data).length === 0){
+            return
+        }
+
+        const Generations: string[] = []
+
+        for (let i = 0; i <= data[0].length; i++){
+            Generations.push(String(i))
+        }
+        console.log(Generations)
+        setGenerations(Generations)
+    }
+
     function parseCSVToList(csvContent: string) {
         const result: any = {};
 
@@ -264,6 +264,7 @@ function DataVisualization() {
             console.log(parsedList)
             getGenertations(parsedList)
             graph(parsedList);
+            //Object.values(parsedList)[1]
         };
 
         reader.readAsText(file); // Liest die Datei als Text
