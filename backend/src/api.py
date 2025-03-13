@@ -364,7 +364,7 @@ def api_start_simulation():
     simulation_interface.evolute(generation_count, strategy, aep, elite_count, alien_count)
 
     simulation_results = simulation_interface.results()
-    exp_id = db.add_experiment_data(simulation_results)
+    exp_id = db.add_experiment(current_user, simulation_results, population_size, simulation_seed, generation_count, strategy, aep, elite_count, alien_count, weights)
 
     db.write_log(f"Started simulation and saved results to experiment {exp_id}")
     return jsonify({"experiment_id": exp_id}), 200
@@ -412,17 +412,14 @@ def api_get_simulation_data():
             row_constraints.append(c)
 
     try:
-        db.export_experiment_data_to_csv("./results/export_data.csv", columns, row_constraints)
+        data = db.export_experiment_data(columns, row_constraints)
     except ValueError as e:
         db.write_log(f"Failed to export data to csv: {e}")
         return jsonify({"msg": f"{e}"}), 400
 
-    with open("./results/export_data.csv", "r") as file:
-        db.write_log(f"Exported data to csv")
-        return jsonify({"content": file.read()}), 200
+    db.write_log(f"Exported data to csv")
+    return jsonify({"content": data}), 200
 
-    db.write_log(f"Failed to export data to csv, because path does not exist")
-    return jsonify({}), 404
 
 @api.route("/api/get_users", methods=["GET"])
 @jwt_required()

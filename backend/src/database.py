@@ -2,10 +2,13 @@ import sqlite3
 import csv
 import hashlib
 import os
+import io
 
 #user_connection = sqlite3.connect("../db/simulation_data.db")
 #cur = user_connection.cursor()
-#cur.execute("ALTER TABLE experiments ADD COLUMN simulation_seed INT")
+#cur.execute("ALTER TABLE experiments RENAME COLUMN elasticity3_weight TO elasticity_3_weight")
+#cur.execute("ALTER TABLE experiments RENAME COLUMN elasticity4_weight TO elasticity_4_weight")
+#cur.execute("ALTER TABLE experiments RENAME COLUMN elasticity5_weight TO elasticity_5_weight")
 #user_connection.commit()
 
 def get_users(connection_path: str = "db/users.db") -> list[tuple[str, str]]:
@@ -292,7 +295,7 @@ def user_exists(username: str, connection_path: str = "db/users.db") -> bool:
     connection.close()
     return res
 
-def get_experiment_owner(experiment_id: int, connection_path: str = "db/simulation_data.db"):
+def get_experiment(experiment_id: int, connection_path: str = "db/simulation_data.db"):
     """
     Returns who ran which experiment
 
@@ -302,19 +305,32 @@ def get_experiment_owner(experiment_id: int, connection_path: str = "db/simulati
     :param connection_path: The path to the database
     :type connection_path: str
 
-    :returns The username of the one who ran the experiment  
+    :returns The inputs used to run the experiment as well as username of the one who ran the experiment  
+    :type dict
     """ 
     
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
-    cur.execute("SELECT username FROM experiments WHERE experiment_id = ?", [experiment_id])
+    cur.execute("SELECT username, population_size, simulation_seed, generation_count, strategy, aep, elite_count, alien_count, consumption_weight, elasticity_3_weight, elasticity_4_weight, elasticity_5_weight FROM experiments WHERE experiment_id = ?", [experiment_id])
 
     res = cur.fetchone()
-    
+
+    experiment = {
+        "username": res[0],
+        "population_size": res[1],
+        "simulation_seed": res[2],
+        "generation_count": res[3],
+        "strategy": res[4],
+        "aep": res[5],
+        "elite_count": res[6],
+        "alien_count": res[7],
+        "weights": [res[8], res[9], res[10], res[11]]
+    }
+
     connection.close()
 
-    return res
+    return experiment
 
 def get_users_experiments(username: str, connection_path: str = "db/simulation_data.db"):
     """
@@ -336,7 +352,7 @@ def get_users_experiments(username: str, connection_path: str = "db/simulation_d
 
     return ids
 
-def add_experiment_data(username: str, data: list[list], connection_path: str = "db/simulation_data.db") -> None:
+def add_experiment(username: str, data: list[list], population_size: int, simulation_seed: int, generation_count: int, strategy: int, aep: float, elite_count: int, alien_count: int, weights: list[int], connection_path: str = "db/simulation_data.db") -> None:
     """
     Adds the given csv data to the given connection
 
@@ -367,14 +383,14 @@ def add_experiment_data(username: str, data: list[list], connection_path: str = 
 
     cur.executemany("INSERT INTO car_data (generation, final_drive, roll_radius, gear_3, gear_4, gear_5, consumption, elasticity_3, elasticity_4, elasticity_5,experiment_id) VALUES (?,?,?,?,?,?,?,?,?,?,?);", to_db)
 
-    cur.execute("INSERT INTO experiments (experiment_id, username) VALUES(?,?)", [experiment_id, username])
+    cur.execute("INSERT INTO experiments (experiment_id, username, population_size, simulation_seed, generation_count, strategy, aep, elite_count, alien_count, consumption_weight, elasticity_3_weight, elasticity_4_weight, elasticity_5_weight) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)", [experiment_id, username, population_size, simulation_seed, generation_count, strategy, aep, elite_count, alien_count, weights[0], weights[1], weights[2], weights[3]])
 
     connection.commit()
     connection.close()
     
     return experiment_id
 
-def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], constraints: list[str] = [], connection_path: str = "db/simulation_data.db") -> str:
+def export_experiment_data(columns: list[str] = [], constraints: list[str] = [], connection_path: str = "db/simulation_data.db") -> str:
     """
     Exports the data from the database to csv
 
@@ -439,10 +455,13 @@ def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], const
 
     header = [i[0] for i in cur.description]
 
-    with open(file_path, "w", newline="") as file:
-        writer = csv.writer(file)
-        writer.writerow(header)
-        writer.writerows(results)
+    output = io.StringIO()
+
+    writer = csv.writer(output)
+    writer.writerow(header)
+    writer.writerows(results)
+
+    return output.getvalue()
 
 def write_log(log: str, connection_path = "db/logs.db"):
     connection = sqlite3.connect(connection_path)
