@@ -1,4 +1,5 @@
 import { saveAs } from 'file-saver';
+import getSimulationData from "../../get_simulation_data.ts";
 
 export function placeholderButtonFunction(){
     alert('Diese Funktionalität wird fertig implementiert, sobald das Einbinden mit dem Backend funktioniert')
@@ -82,9 +83,10 @@ export function uploadCSV(event: any){
     reader.readAsText(file); // Liest die Datei als Text
 }
 
-export function downloadCSV(data: any, filename: string){
+export async function downloadCSV(filename: string) {
     let csvContent = "";
-    let blocker = 0
+    let blocker = 0;
+    const data = await getSimulationData(["generation", "final_drive", "roll_radius", "gear_3", "gear_4", "gear_5", "consumption", "elasticity_3", "elasticity_4", "elasticity_5", "experiment_id"], [])
 
     // Iterate through all generations
     Object.keys(data).forEach((generationKey) => {
@@ -93,18 +95,18 @@ export function downloadCSV(data: any, filename: string){
         const generationData = data[generationKey];
 
         if (generationData.length > 0) {
-            // Collect Column names
-            const keys = Object.keys(generationData[0]);
+            // Collect Column names, excluding "experiment_id"
+            const keys = Object.keys(generationData[0]) //.filter(key => key !== "experiment_id");
 
-            if (blocker === 0){
+            if (blocker === 0) {
                 // add to csvContent accordingly
                 csvContent += keys.join(";") + "\n";
-                blocker += 1
+                blocker += 1;
             }
 
             // Iterate through every row
             generationData.forEach((row: any) => {
-                // Collect row data accordingly to specific column
+                // Collect row data, excluding "experiment_id"
                 const values = keys.map((key) => row[key]);
                 // add to csvContent accordingly
                 csvContent += values.join(";") + "\n";
