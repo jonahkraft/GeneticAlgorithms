@@ -87,8 +87,12 @@ def api_login():
 
     data = request.get_json()
 
-    username = data["username"]
-    password = data["password"]
+    try:
+        username = data["username"]
+        password = data["password"]
+    except NameError as e:
+        db.write_log(f"Failed to login user, because of {e}")
+        return jsonify({"msg": f"{e}"}, 400)
 
     return login(username, password)
 
@@ -120,9 +124,13 @@ def api_register():
 
     data = request.get_json()
 
-    username = data["username"]
-    password = data["password"]
-    role = data["role"]
+    try:
+        username = data["username"]
+        password = data["password"]
+        role = data["role"]
+    except NameError as e:
+        db.write_log(f"Failed to register user, because of: {e}")
+        return jsonify({"msg": f"{e}"}, 400)
 
     return register(username, password, role)
 
@@ -143,7 +151,11 @@ def api_delete_user():
     current_user = get_jwt_identity()
 
     data = request.get_json()
-    username = data["username"]
+    try:
+        username = data["username"]
+    except NameError as e:
+        db.write_log(f"Failed to delete user, because of: {e}")
+        return jsonify({"msg": f"{e}"}, 400)
 
     if db.get_role(current_user) != "administrator":
         db.write_log(f"Failed to delete user '{username}', because {current_user} is no administrator")
@@ -177,9 +189,13 @@ def api_change_password():
     current_user = get_jwt_identity()
     data = request.get_json()
 
-    username = data["username"]
-    old_password = data["old_password"]
-    new_password = data["new_password"]
+    try:
+        username = data["username"]
+        old_password = data["old_password"]
+        new_password = data["new_password"]
+    except NameError as e:
+        db.write_log(f"Failed to change password, because of: {e}")
+        return jsonify({"msg": f"{e}"}, 400)
 
     if current_user == username:
         if db.check_password(username,old_password):
@@ -225,8 +241,12 @@ def api_change_username():
     current_user = get_jwt_identity()
     data = request.get_json()
 
-    old_username = data["old_username"]
-    new_username = data["new_username"]
+    try:
+        old_username = data["old_username"]
+        new_username = data["new_username"]
+    except NameError as e:
+        db.write_log(f"Failed to change username, because of: {e}")
+        return jsonify({"msg": f"{e}"}, 400)
 
     if current_user == old_username:
         if db.change_username(old_username, new_username):
@@ -268,8 +288,12 @@ def api_change_role():
     current_user = get_jwt_identity()
     data = request.get_json()
 
-    username = data["username"]
-    role = data["role"]
+    try:
+        username = data["username"]
+        role = data["role"]
+    except NameError as e:
+        db.write_log(f"Failed to change role of '{username}', because of: {e}")
+        return jsonify({"msg": f"{e}"}, 400)
 
     allowed_roles = {"data_analyst", "administrator", "simulator"}
 
@@ -322,14 +346,18 @@ def api_start_simulation():
 
     data = request.get_json()
 
-    population_size = data["population_size"]
-    simulation_seed = data["simulation_seed"]
-    generation_count = data["generation_count"]
-    strategy = data["strategy"]
-    aep = data["aep"]
-    elite_count = data["elite_count"]
-    alien_count = data["alien_count"]
-    weights = data["weights"]
+    try:
+        population_size = int(data["population_size"])
+        simulation_seed = int(data["simulation_seed"])
+        generation_count = int(data["generation_count"])
+        strategy = int(data["strategy"])
+        aep = float(data["aep"])
+        elite_count = int(data["elite_count"])
+        alien_count = int(data["alien_count"])
+        weights = [float(x) for x in data["weights"][1:-1].split(",")]
+    except NameError as e:
+        db.write_log(f"Failed to start simulation, because of missing parameter: {e}")
+        return jsonify({"msg": f"{e}"}, 400)
 
     simulation_interface = sim.Schnittstelle(population_size, simulation_seed, weights)
 
@@ -370,8 +398,12 @@ def api_get_simulation_data():
 
     data = request.get_json()
 
-    columns: list[str] = data["columns"]
-    row_constraints: list[str] = data["row_constraints"]
+    try:
+        columns: list[str] = data["columns"]
+        row_constraints: list[str] = data["row_constraints"]
+    except NameError as e:
+        db.write_log(f"Failed to get simulation data, because of: {e}")
+        return jsonify({"msg": f"{e}"}, 400)
 
     if role == "simulator":
         allowed_ids = db.get_users_experiments(current_user)

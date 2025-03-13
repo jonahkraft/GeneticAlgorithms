@@ -71,8 +71,11 @@ class UserDBGrenzwertAnalyse(UnitMeta.UnitMeta):
             return "add_user hat die Grenzwertanalyse nicht bestanden, es sind die zu viele Rows nach dem Add vorhanden."
         # durch die vorherigen Invarianten wissen wir das die vals jetzt korrekt sind
         return True
-def GetRandomRole():
-    return random.choice(["administrator", "data_analyst", "simulator"])
+def GetRandomRole(useInvalidRole : bool = False):
+    roles : list[str] = ["administrator", "data_analyst", "simulator"]
+    if useInvalidRole:
+        roles.append("invalid-role")
+    return random.choice(roles)
 def GetRandomName():
     alphabet : str = "abcdefghijklmnopqrstuvwxyz"
     length : int = 10 # smaller 26
