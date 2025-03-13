@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>src.simulation.evolution.interfaces.individual &#8212; Genetic Algorithms Backend  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/alabaster.css?v=12dfc556" />
+    <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for src.simulation.evolution.interfaces.individual</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span><span class="p">,</span> <span class="n">ABC</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">.allele</span> <span class="kn">import</span> <span class="n">Allele</span>
+<span class="kn">from</span> <span class="nn">..benchmark</span> <span class="kn">import</span> <span class="n">Benchmark</span>
+<span class="kn">from</span> <span class="nn">..operators</span> <span class="kn">import</span> <span class="n">GEN_GRID_HALTON</span><span class="p">,</span> <span class="n">GEN_SOBOL_HALTON</span><span class="p">,</span> <span class="n">MUT_GAUSS</span>
+<span class="kn">from</span> <span class="nn">..metrics</span> <span class="kn">import</span> <span class="n">METRIC_AVG</span>
+
+
+<div class="viewcode-block" id="Individual">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual">[docs]</a>
+<span class="k">class</span> <span class="nc">Individual</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract base class for individuals. An individual represents a potential solution to an optimization problem.</span>
+<span class="sd">    :var _Blueprint: Blueprint for genotype and optimization goals of the phenotype.</span>
+<span class="sd">    :type _Blueprint: dict{&#39;genotype&#39;: list[Class(Allele)], &#39;goals&#39;: list[float or int]}</span>
+<span class="sd">    :var _genotype: The genotype of the individual (tuple of Alleles according to the blueprint).</span>
+<span class="sd">    :type _genotype: tuple(Allele)</span>
+<span class="sd">    :var _phenotype: The phenotype of the individual.</span>
+<span class="sd">    :type _phenotype: tuple(float) or None</span>
+<span class="sd">    :var _instances: List of all instances of the class.</span>
+<span class="sd">    :type _instances: list[Individual]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Blueprint for genotype and optimization goals of the phenotype.</span>
+    <span class="c1"># The &#39;genotype&#39; key should contain a list of Allele classes, defining the structure of the individual&#39;s genotype.</span>
+    <span class="c1"># The &#39;genotype_labels&#39; key should contain a list of strings, defining the labels for the alleles.</span>
+    <span class="c1"># The &#39;goals&#39; key should contain a list of numeric values representing the optimization goals for each phenotype</span>
+    <span class="c1"># The &#39;phenotype_labels&#39; key should contain a list of strings, defining the labels for the phenotype</span>
+    <span class="c1"># attribute. Positive values indicate maximization, negative values indicate minimization, and zero indicates no</span>
+    <span class="c1"># preference. The absolute value of each position represents the weight or priority of the corresponding goal.</span>
+    <span class="n">_Blueprint</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;genotype&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">Allele</span><span class="p">,</span> <span class="n">Allele</span><span class="p">,</span> <span class="n">Allele</span><span class="p">],</span>  <span class="c1"># example: three alleles</span>
+        <span class="s1">&#39;genotype_labels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Allele 1&#39;</span><span class="p">,</span> <span class="s1">&#39;Allele 2&#39;</span><span class="p">,</span> <span class="s1">&#39;Allele 3&#39;</span><span class="p">],</span>  <span class="c1"># example: labels for the alleles</span>
+        <span class="s1">&#39;goals&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>  <span class="c1"># example: minimize Allele 1, ignore Allele 2, maximize Allele 3 with double weight</span>
+        <span class="s1">&#39;phenotype_labels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Phenotype 1&#39;</span><span class="p">,</span> <span class="s1">&#39;Phenotype 2&#39;</span><span class="p">,</span> <span class="s1">&#39;Phenotype 3&#39;</span><span class="p">]</span>  <span class="c1"># example: labels for the phenotype</span>
+    <span class="p">}</span>
+
+    <span class="c1"># pseudo classes (if exists)</span>
+    <span class="n">_pseudo</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># list of all instances of the class</span>
+    <span class="n">_instances</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># caches</span>
+    <span class="n">_class_cache</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="Individual.__init__">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">genotype</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param genotype: The genotype of the individual (list of Alleles).</span>
+<span class="sd">        :type genotype: Allele</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># set the id of the individual</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_instances</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">genotype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">genotype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">gen_funct</span><span class="o">=</span><span class="n">GEN_SOBOL_HALTON</span><span class="p">,</span> <span class="n">return_genotypes</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># initialize genotype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_genotype</span> <span class="o">=</span> <span class="n">genotype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phenotype</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># add the instance to the list of all instances of the class</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_instances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># clear caches (phenotype is set to None)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_caches</span><span class="p">()</span>
+
+        <span class="c1"># make sure that the genotype is valid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_enforce_constraints</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Individual.get_id">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.get_id">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: The id of the individual.</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span></div>
+
+
+<div class="viewcode-block" id="Individual.get_all">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.get_all">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_all</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: All instances of the class.</span>
+<span class="sd">        :return: list[Individual]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span></div>
+
+
+<div class="viewcode-block" id="Individual.get_blueprint">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.get_blueprint">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_blueprint</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: The blueprint of the class.</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_Blueprint</span></div>
+
+
+<div class="viewcode-block" id="Individual.get_genotype">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.get_genotype">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_genotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param transform: Flag whether the genotype should be returned as a tuple of values.</span>
+<span class="sd">        :type transform: bool</span>
+<span class="sd">        :param normalized: Flag whether the values should be normalized.</span>
+<span class="sd">        :type normalized: bool</span>
+<span class="sd">        :return: The genotype of the individual.</span>
+<span class="sd">        :rtype: tuple</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">transform</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">allele</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">normalized</span><span class="o">=</span><span class="n">normalized</span><span class="p">)</span> <span class="k">for</span> <span class="n">allele</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_genotype</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_genotype</span></div>
+
+
+<div class="viewcode-block" id="Individual.get_phenotype">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.get_phenotype">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_phenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: The phenotype of the individual.</span>
+<span class="sd">        :rtype: tuple</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># calculate the phenotype if it is not cached</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phenotype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_phenotype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_phenotype</span><span class="p">()</span>
+
+        <span class="c1"># Verify that the phenotype matches the blueprint</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_phenotype</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_Blueprint</span><span class="p">[</span><span class="s1">&#39;goals&#39;</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Phenotype does not match the Blueprint (goals).&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phenotype</span></div>
+
+
+<div class="viewcode-block" id="Individual.get_min_phenotype">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.get_min_phenotype">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_min_phenotype</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">others</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a tuple of the minimum phenotype values for each phenotype attribute of the given individuals. If no</span>
+<span class="sd">        individuals are given, all instances of the class are used.</span>
+<span class="sd">        :param others: Other individuals. If None, all instances of the class are used.</span>
+<span class="sd">        :type others: list[Individual] or None</span>
+<span class="sd">        :return: The minimum phenotype values for each phenotype attribute.</span>
+<span class="sd">        :rtype: tuple(float)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># set the default value for others to all instances of the class and whether to cache the result</span>
+        <span class="k">if</span> <span class="n">others</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;min_phenotype&quot;</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">:</span>
+                <span class="c1"># return cached value</span>
+                <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">[</span><span class="s2">&quot;min_phenotype&quot;</span><span class="p">]</span>
+            <span class="n">others</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># calculate the minimum phenotype values</span>
+        <span class="n">min_phenotype</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_Blueprint</span><span class="p">[</span><span class="s1">&#39;goals&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">individual</span> <span class="ow">in</span> <span class="n">others</span><span class="p">:</span>
+            <span class="n">phenotype</span> <span class="o">=</span> <span class="n">individual</span><span class="o">.</span><span class="n">get_phenotype</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">phenotype</span><span class="p">)):</span>
+                <span class="n">min_phenotype</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">min_phenotype</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">phenotype</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="c1"># convert the result to a tuple</span>
+        <span class="n">min_phenotype</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">min_phenotype</span><span class="p">)</span>
+
+        <span class="c1"># cache the result</span>
+        <span class="k">if</span> <span class="n">cache</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">[</span><span class="s2">&quot;min_phenotype&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">min_phenotype</span>
+
+        <span class="c1"># return the result</span>
+        <span class="k">return</span> <span class="n">min_phenotype</span></div>
+
+
+<div class="viewcode-block" id="Individual.get_max_phenotype">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.get_max_phenotype">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_max_phenotype</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">others</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a tuple of the maximum phenotype values for each phenotype attribute of the given individuals. If no</span>
+<span class="sd">        individuals are given, all instances of the class are used.</span>
+<span class="sd">        :param others: Other individuals. If None, all instances of the class are used.</span>
+<span class="sd">        :type others: list[Individual] or None</span>
+<span class="sd">        :return: The maximum phenotype values for each phenotype attribute.</span>
+<span class="sd">        :rtype: tuple(float)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># set the default value for others to all instances of the class and whether to cache the result</span>
+        <span class="k">if</span> <span class="n">others</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;max_phenotype&quot;</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">:</span>
+                <span class="c1"># return cached value</span>
+                <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">[</span><span class="s2">&quot;max_phenotype&quot;</span><span class="p">]</span>
+            <span class="n">others</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># calculate the maximum phenotype values</span>
+        <span class="n">max_phenotype</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_Blueprint</span><span class="p">[</span><span class="s1">&#39;goals&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">individual</span> <span class="ow">in</span> <span class="n">others</span><span class="p">:</span>
+            <span class="n">phenotype</span> <span class="o">=</span> <span class="n">individual</span><span class="o">.</span><span class="n">get_phenotype</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">phenotype</span><span class="p">)):</span>
+                <span class="n">max_phenotype</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_phenotype</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">phenotype</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="c1"># convert the result to a tuple</span>
+        <span class="n">max_phenotype</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">max_phenotype</span><span class="p">)</span>
+
+        <span class="c1"># cache the result</span>
+        <span class="k">if</span> <span class="n">cache</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">[</span><span class="s2">&quot;max_phenotype&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_phenotype</span>
+
+        <span class="c1"># return the result</span>
+        <span class="k">return</span> <span class="n">max_phenotype</span></div>
+
+
+<div class="viewcode-block" id="Individual.get_relative_phenotype">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.get_relative_phenotype">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_relative_phenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">others</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the relative phenotype of the individual compared to the passed individuals. If no individuals are</span>
+<span class="sd">        given, all instances of the class are used.</span>
+<span class="sd">        :param others: Other individuals. If None, all instances of the class are used.</span>
+<span class="sd">        :type others: list[Individual] or None</span>
+<span class="sd">        :return: The relative phenotype of the individual.</span>
+<span class="sd">        :rtype: tuple(float)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">phenotype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_phenotype</span><span class="p">()</span>
+        <span class="n">min_phenotype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">get_min_phenotype</span><span class="p">(</span><span class="n">others</span><span class="o">=</span><span class="n">others</span><span class="p">)</span>
+        <span class="n">max_phenotype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">get_max_phenotype</span><span class="p">(</span><span class="n">others</span><span class="o">=</span><span class="n">others</span><span class="p">)</span>
+        <span class="n">relative_phenotype</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">phenotype</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">max_phenotype</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">min_phenotype</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>  <span class="c1"># avoid division by zero</span>
+                <span class="n">relative_phenotype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">.5</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">relative_phenotype</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">phenotype</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">min_phenotype</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_phenotype</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">min_phenotype</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">relative_phenotype</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Individual.get_goals">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.get_goals">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_goals</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: The optimization goals for the phenotype.</span>
+<span class="sd">        :rtype: tuple(float)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_Blueprint</span><span class="p">[</span><span class="s1">&#39;goals&#39;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="Individual.get_max_distance">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.get_max_distance">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_max_distance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the maximum possible distance between two individuals of the class.</span>
+<span class="sd">        :param p: Which p-norm to use (p=1: Manhattan distance, p=2: Euclidean distance, p=inf: maximum distance).</span>
+<span class="sd">        :type p: int</span>
+<span class="sd">        :param normalized: Flag whether the axes should be normalized before calculating the distance.</span>
+<span class="sd">        :type normalized: bool</span>
+<span class="sd">        :return: The maximum possible distance between two individuals of the class.</span>
+<span class="sd">        :rtype: float or int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">normalized</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">p</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_Blueprint</span><span class="p">[</span><span class="s1">&#39;genotype&#39;</span><span class="p">])</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">p</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">allele</span><span class="o">.</span><span class="n">get_max</span><span class="p">()</span> <span class="o">-</span> <span class="n">allele</span><span class="o">.</span><span class="n">get_min</span><span class="p">()</span> <span class="k">for</span> <span class="n">allele</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_Blueprint</span><span class="p">[</span><span class="s1">&#39;genotype&#39;</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="n">p</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">axis</span> <span class="o">**</span> <span class="n">p</span> <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">])</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">p</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="Individual.get_diversity">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.get_diversity">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_diversity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">others</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">METRIC_AVG</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the diversity of the individual compared to the passed individuals. If no individuals are given, all</span>
+<span class="sd">        instances of the class are used.</span>
+<span class="sd">        :param others: Other individuals. If None, all instances of the class are used.</span>
+<span class="sd">        :type others: list[Individual] or None</span>
+<span class="sd">        :param p: Which p-norm to use calculating the distances (p=1: Manhattan distance, p=2: Euclidean distance,</span>
+<span class="sd">            p=inf: maximum distance).</span>
+<span class="sd">        :type p: int or float</span>
+<span class="sd">        :param normalized: Flag whether the calculation distance should be normalized.</span>
+<span class="sd">        :type normalized: bool</span>
+<span class="sd">        :param metric: The metric to use for calculating the diversity.</span>
+<span class="sd">        :type metric: function</span>
+<span class="sd">        :return: The calculated diversity.</span>
+<span class="sd">        :rtype: float or int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># set the default value for others to all instances of the class</span>
+        <span class="k">if</span> <span class="n">others</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">others</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_instances</span>
+
+        <span class="n">other_ids</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">other</span><span class="o">.</span><span class="n">_id</span> <span class="k">for</span> <span class="n">other</span> <span class="ow">in</span> <span class="n">others</span><span class="p">])</span>
+
+        <span class="c1"># create a cache key</span>
+        <span class="n">cache_key</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;diversity&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">other_ids</span><span class="p">),</span> <span class="n">p</span><span class="p">,</span> <span class="n">normalized</span><span class="p">,</span> <span class="n">metric</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="c1"># check if the result is already in the cache</span>
+        <span class="k">if</span> <span class="n">cache_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span>
+
+        <span class="c1"># Calculation of the maximum possible distance between two individuals</span>
+        <span class="n">max_dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">get_max_distance</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="c1"># calculate the distances between the individuals</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">other</span> <span class="ow">in</span> <span class="n">others</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">_id</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">:</span>
+                <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="n">normalized</span><span class="p">)</span> <span class="o">/</span> <span class="n">max_dist</span><span class="p">)</span>
+
+        <span class="c1"># calculate the average distance</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">metric</span><span class="p">(</span><span class="o">*</span><span class="n">values</span><span class="p">)</span>
+
+        <span class="c1"># cache the result and return it</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="Individual.get_group_diversity">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.get_group_diversity">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_group_diversity</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">METRIC_AVG</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the diversity of the group of individuals. If no individuals are given, all instances of the class are</span>
+<span class="sd">        used.</span>
+<span class="sd">        :param group: The group of individuals. If None, all instances of the class are used.</span>
+<span class="sd">        :type group: list[Individual] or None</span>
+<span class="sd">        :param p: Which p-norm to use calculating the distances (p=1: Manhattan distance, p=2: Euclidean distance,</span>
+<span class="sd">            p=inf: maximum distance).</span>
+<span class="sd">        :type p: int or float</span>
+<span class="sd">        :param normalized: Flag whether the single distances should be normalized.</span>
+<span class="sd">        :type normalized: bool</span>
+<span class="sd">        :param metric: The metric to use for calculating the diversity.</span>
+<span class="sd">        :type metric: function</span>
+<span class="sd">        :return: The calculated diversity.</span>
+<span class="sd">        :rtype: float or int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># set the default value for group to all instances of the class</span>
+        <span class="k">if</span> <span class="n">group</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span>
+
+        <span class="c1"># create a cache key</span>
+        <span class="n">individual_ids</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">individual</span><span class="o">.</span><span class="n">_id</span> <span class="k">for</span> <span class="n">individual</span> <span class="ow">in</span> <span class="n">group</span><span class="p">])</span>
+        <span class="n">cache_key</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;group_diversity&#39;</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">individual_ids</span><span class="p">),</span> <span class="n">p</span><span class="p">,</span> <span class="n">normalized</span><span class="p">,</span> <span class="n">metric</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="c1"># check if the result is already in the cache</span>
+        <span class="k">if</span> <span class="n">cache_key</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span>
+
+        <span class="c1"># Calculation of the maximum possible distance between two individuals</span>
+        <span class="n">max_dist</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_max_distance</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="c1"># calculate the distances between the individuals</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="p">)):</span>
+                <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">group</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="n">normalized</span><span class="p">)</span> <span class="o">/</span> <span class="n">max_dist</span><span class="p">)</span>
+
+        <span class="c1"># calculate the average distance</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">metric</span><span class="p">(</span><span class="o">*</span><span class="n">values</span><span class="p">)</span>
+
+        <span class="c1"># cache the result and return it</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="Individual.get_fitness">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.get_fitness">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_fitness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">others</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the fitness of the individual based on the relative phenotype and the optimization goals defined in the</span>
+<span class="sd">        blueprint.</span>
+<span class="sd">        :param others: Other individuals.</span>
+<span class="sd">        :type others: list[Individual] or None</span>
+<span class="sd">        :return: The fitness of the individual.</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># initialize variables</span>
+        <span class="n">rel_phenotype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_relative_phenotype</span><span class="p">(</span><span class="n">others</span><span class="o">=</span><span class="n">others</span><span class="p">)</span>
+        <span class="n">goals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_Blueprint</span><span class="p">[</span><span class="s1">&#39;goals&#39;</span><span class="p">]</span>
+        <span class="n">fitness</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># calculate the fitness</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rel_phenotype</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">goals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">fitness</span> <span class="o">+=</span> <span class="n">goals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">rel_phenotype</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># goals[i] &lt; 0:</span>
+                <span class="n">fitness</span> <span class="o">+=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">goals</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">rel_phenotype</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="c1"># normalize and return the fitness</span>
+        <span class="n">goals_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">abs</span><span class="p">(</span><span class="n">goal</span><span class="p">)</span> <span class="k">for</span> <span class="n">goal</span> <span class="ow">in</span> <span class="n">goals</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">goals_sum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">.5</span>
+        <span class="n">fitness</span> <span class="o">/=</span> <span class="n">goals_sum</span>
+        <span class="k">return</span> <span class="n">fitness</span></div>
+
+
+<div class="viewcode-block" id="Individual.get_min_fitness">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.get_min_fitness">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_min_fitness</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">others</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the minimum fitness of the given individuals. If no individuals are given, all instances of the class</span>
+<span class="sd">        are used.</span>
+<span class="sd">        :param others: Other individuals. If None, all instances of the class are used.</span>
+<span class="sd">        :type others: list[Individual] or None</span>
+<span class="sd">        :return: The minimum fitness of the given individuals.</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">others</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;min_fitness&quot;</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">:</span>
+                <span class="c1"># return cached value</span>
+                <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">[</span><span class="s2">&quot;min_fitness&quot;</span><span class="p">]</span>
+            <span class="n">others</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># calculate the minimum fitness</span>
+        <span class="n">min_fitness</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">individual</span> <span class="ow">in</span> <span class="n">others</span><span class="p">:</span>
+            <span class="n">min_fitness</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">min_fitness</span><span class="p">,</span> <span class="n">individual</span><span class="o">.</span><span class="n">get_fitness</span><span class="p">())</span>
+
+        <span class="c1"># cache the result</span>
+        <span class="k">if</span> <span class="n">cache</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">[</span><span class="s2">&quot;min_fitness&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">min_fitness</span>
+
+        <span class="c1"># return the result</span>
+        <span class="k">return</span> <span class="n">min_fitness</span></div>
+
+
+<div class="viewcode-block" id="Individual.get_max_fitness">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.get_max_fitness">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_max_fitness</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">others</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the maximum fitness of the given individuals. If no individuals are given, all instances of the class</span>
+<span class="sd">        are used.</span>
+<span class="sd">        :param others: Other individuals. If None, all instances of the class are used.</span>
+<span class="sd">        :type others: list[Individual] or None</span>
+<span class="sd">        :return: The maximum fitness of the given individuals.</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">others</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;max_fitness&quot;</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">:</span>
+                <span class="c1"># return cached value</span>
+                <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">[</span><span class="s2">&quot;max_fitness&quot;</span><span class="p">]</span>
+            <span class="n">others</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cache</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># calculate the maximum fitness</span>
+        <span class="n">max_fitness</span> <span class="o">=</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">individual</span> <span class="ow">in</span> <span class="n">others</span><span class="p">:</span>
+            <span class="n">max_fitness</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_fitness</span><span class="p">,</span> <span class="n">individual</span><span class="o">.</span><span class="n">get_fitness</span><span class="p">())</span>
+
+        <span class="c1"># cache the result</span>
+        <span class="k">if</span> <span class="n">cache</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">[</span><span class="s2">&quot;max_fitness&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_fitness</span>
+
+        <span class="c1"># return the result</span>
+        <span class="k">return</span> <span class="n">max_fitness</span></div>
+
+
+<div class="viewcode-block" id="Individual.get_relative_fitness">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.get_relative_fitness">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_relative_fitness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">others</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the relative fitness of the individual compared to the passed individuals. If no individuals are given,</span>
+<span class="sd">        all instances of the class are used.</span>
+<span class="sd">        :param others: Other individuals. If None, all instances of the class are used.</span>
+<span class="sd">        :type others: list[Individual] or None</span>
+<span class="sd">        :return: The relative fitness of the individual.</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fitness</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_fitness</span><span class="p">()</span>
+        <span class="n">min_fitness</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">get_min_fitness</span><span class="p">(</span><span class="n">others</span><span class="o">=</span><span class="n">others</span><span class="p">)</span>
+        <span class="n">max_fitness</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">get_max_fitness</span><span class="p">(</span><span class="n">others</span><span class="o">=</span><span class="n">others</span><span class="p">)</span>
+        <span class="n">relative_fitness</span> <span class="o">=</span> <span class="p">(</span><span class="n">fitness</span> <span class="o">-</span> <span class="n">min_fitness</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_fitness</span> <span class="o">-</span> <span class="n">min_fitness</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">relative_fitness</span></div>
+
+
+<div class="viewcode-block" id="Individual._calculate_phenotype">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual._calculate_phenotype">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_calculate_phenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This abstract method should calculate the phenotype of the individual based on its genotype. The</span>
+<span class="sd">        implementation of this method is specific to the structure of the genotype and the type of optimization</span>
+<span class="sd">        problem. It should be overwritten in each derived class. The phenotype is the manifested form of the genotype</span>
+<span class="sd">        and represents the characteristics of the individual that are evaluated in the evolutionary algorithm.</span>
+<span class="sd">        :return: The calculated phenotype.</span>
+<span class="sd">        :rtype: tuple(float)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Example: set the phenotype to a tuple of zeros</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">([</span><span class="mf">.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_Blueprint</span><span class="p">[</span><span class="s1">&#39;goals&#39;</span><span class="p">]))</span></div>
+
+
+<div class="viewcode-block" id="Individual._enforce_constraints">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual._enforce_constraints">[docs]</a>
+    <span class="k">def</span> <span class="nf">_enforce_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Should implement mechanisms to enforce any constraints.</span>
+<span class="sd">        :return: void</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>  <span class="c1"># can be implemented in the subclass if required</span></div>
+
+
+<div class="viewcode-block" id="Individual.create">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.create">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gen_funct</span><span class="o">=</span><span class="n">GEN_GRID_HALTON</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_genotypes</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates n individuals using the given generation method. The method is used to distribute the individuals in an</span>
+<span class="sd">        evolutionary algorithm.</span>
+<span class="sd">        :param n: Number of individuals to create.</span>
+<span class="sd">        :type n: int</span>
+<span class="sd">        :param gen_funct: The method to distribute the individuals in the search space.</span>
+<span class="sd">        :type gen_funct: function</span>
+<span class="sd">        :param seed: The seed of the generation method. A seed can be used to make the generation deterministic.</span>
+<span class="sd">        :param return_genotypes: Flag whether the genotypes should be returned instead of the individuals.</span>
+<span class="sd">        :type return_genotypes: bool</span>
+<span class="sd">        :return: A list of individuals or genotypes (if return_genotypes is True).</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="n">points</span> <span class="o">=</span> <span class="n">gen_funct</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_Blueprint</span><span class="p">[</span><span class="s1">&#39;genotype&#39;</span><span class="p">]),</span> <span class="n">seed</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)):</span>
+            <span class="n">genotype</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_Blueprint</span><span class="p">[</span><span class="s1">&#39;genotype&#39;</span><span class="p">])):</span>
+                <span class="n">genotype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_Blueprint</span><span class="p">[</span><span class="s1">&#39;genotype&#39;</span><span class="p">][</span><span class="n">j</span><span class="p">](</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="kc">True</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">return_genotypes</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">genotype</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="p">(</span><span class="o">*</span><span class="n">genotype</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="Individual.pseudo_class">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.pseudo_class">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">pseudo_class</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">complexity</span><span class="o">=</span><span class="mf">.5</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a pseudo individual which is a subclass of the individual class. The pseudo individual can be used</span>
+<span class="sd">        to test algorithms without using a cost intensive simulation.</span>
+<span class="sd">        :param complexity: The complexity of the pseudo simulation (0: simple, 1: complex).</span>
+<span class="sd">        :type complexity: float or int</span>
+<span class="sd">        :param seed: The seed of the pseudo simulation. A seed can be used to make the simulation deterministic.</span>
+<span class="sd">        :type seed: int</span>
+<span class="sd">        :return: The Pseudo Individual.</span>
+<span class="sd">        :rtype: Class(Individual)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">cache_key</span> <span class="o">=</span> <span class="p">(</span><span class="n">complexity</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_pseudo</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cache_key</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_pseudo</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span>
+
+        <span class="c1"># create the pseudo simulation</span>
+        <span class="n">simulation</span> <span class="o">=</span> <span class="n">Benchmark</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_Blueprint</span><span class="p">[</span><span class="s1">&#39;genotype&#39;</span><span class="p">]),</span> <span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_Blueprint</span><span class="p">[</span><span class="s1">&#39;goals&#39;</span><span class="p">]),</span> <span class="n">complexity</span><span class="o">=</span><span class="n">complexity</span><span class="p">,</span>
+                               <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+
+        <span class="c1"># create the pseudo individual</span>
+        <span class="k">class</span> <span class="nc">PseudoIndividual</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+            <span class="k">def</span> <span class="nf">_calculate_phenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">simulation</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">get_genotype</span><span class="p">(</span><span class="n">transform</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+            <span class="nd">@classmethod</span>
+            <span class="k">def</span> <span class="nf">get_sim</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">simulation</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_pseudo</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">PseudoIndividual</span>
+        <span class="k">return</span> <span class="n">PseudoIndividual</span></div>
+
+
+<div class="viewcode-block" id="Individual._clear_caches">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual._clear_caches">[docs]</a>
+    <span class="k">def</span> <span class="nf">_clear_caches</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clears the caches of the Class and the instance.</span>
+<span class="sd">        :rtype: void</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phenotype</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_class_cache</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+
+<div class="viewcode-block" id="Individual.mutate">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.mutate">[docs]</a>
+    <span class="k">def</span> <span class="nf">mutate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">MUT_GAUSS</span><span class="p">,</span> <span class="n">heat</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs a mutation of the individual, changing the genetic characteristics according to the specified</span>
+<span class="sd">        mutation method and intensity. The method adjusts the alleles of the individual to create new variations in</span>
+<span class="sd">        the population, which is an important component in exploring the solution space in evolutionary algorithms.</span>
+<span class="sd">        :param method: The mutation method to use. A Gaussian mutation is used by default.</span>
+<span class="sd">        :type method: function</span>
+<span class="sd">        :param heat: The heat of the mutation.</span>
+<span class="sd">        :type heat: float or int</span>
+<span class="sd">        :rtype: void</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># mutate the individual</span>
+        <span class="k">for</span> <span class="n">allele</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_genotype</span><span class="p">:</span>
+            <span class="n">allele</span><span class="o">.</span><span class="n">mutate</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">heat</span><span class="o">=</span><span class="n">heat</span><span class="p">)</span>
+
+        <span class="c1"># clear the cache</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_caches</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_enforce_constraints</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Individual.distance">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.distance">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the distance between two individuals based on their genotype using a p-norm.</span>
+<span class="sd">        :param p: Which p-norm to use (p=1: Manhattan distance, p=2: Euclidean distance, p=inf: maximum distance).</span>
+<span class="sd">        :type p: int or float</span>
+<span class="sd">        :param a: The first individual.</span>
+<span class="sd">        :type a: Individual</span>
+<span class="sd">        :param b: The second individual.</span>
+<span class="sd">        :type b: Individual</span>
+<span class="sd">        :param normalized: Whether values of the alleles should be normalized before calculating the distance.</span>
+<span class="sd">        :type normalized: bool</span>
+<span class="sd">        :return: The distance between the two individuals.</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># make sure that a is the individual with the lower id</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">_id</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">_id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>  <span class="c1"># the distance between an individual and itself is always 0</span>
+        <span class="k">elif</span> <span class="n">a</span><span class="o">.</span><span class="n">_id</span> <span class="o">&gt;</span> <span class="n">b</span><span class="o">.</span><span class="n">_id</span><span class="p">:</span>
+            <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span>
+
+        <span class="c1"># create a cache key</span>
+        <span class="n">cache_key</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;distance&#39;</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">normalized</span><span class="p">)</span>
+
+        <span class="c1"># check if the result is already in the cache</span>
+        <span class="k">if</span> <span class="n">cache_key</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span>
+
+        <span class="c1"># calculate the distance</span>
+        <span class="n">genotype_a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">get_genotype</span><span class="p">(</span><span class="n">transform</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="n">normalized</span><span class="p">)</span>
+        <span class="n">genotype_b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">get_genotype</span><span class="p">(</span><span class="n">transform</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="n">normalized</span><span class="p">)</span>
+
+        <span class="c1"># calculate the distance</span>
+        <span class="k">if</span> <span class="n">p</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">):</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="nb">abs</span><span class="p">(</span><span class="n">genotype_a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">genotype_b</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">genotype_a</span><span class="p">))])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">abs</span><span class="p">(</span><span class="n">genotype_a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">genotype_b</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">**</span> <span class="n">p</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">genotype_a</span><span class="p">))])</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="n">dist</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">p</span><span class="p">)</span>
+
+        <span class="c1"># cache the result and return it</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist</span>
+        <span class="k">return</span> <span class="n">dist</span></div>
+
+
+<div class="viewcode-block" id="Individual.__str__">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.__str__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: A string representation of the individual.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">(</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_genotype</span><span class="p">)</span><span class="si">}</span><span class="s1">)&#39;</span></div>
+
+
+<div class="viewcode-block" id="Individual.__eq__">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.__eq__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param other: The other individual.</span>
+<span class="sd">        :type other: Individual</span>
+<span class="sd">        :return: True if the individuals are equal, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_genotype</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_genotype</span></div>
+
+
+<div class="viewcode-block" id="Individual.__copy__">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.__copy__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: A copy of the individual.</span>
+<span class="sd">        :rtype: Individual</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">copy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">allele</span><span class="o">.</span><span class="n">__copy__</span><span class="p">()</span> <span class="k">for</span> <span class="n">allele</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_genotype</span><span class="p">])</span>  <span class="c1"># create a copy of the individual</span>
+        <span class="n">copy</span><span class="o">.</span><span class="n">_phenotype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phenotype</span>  <span class="c1"># copy the phenotype for better performance</span>
+        <span class="k">return</span> <span class="n">copy</span>  <span class="c1"># return the copy</span></div>
+
+
+<div class="viewcode-block" id="Individual.__hash__">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.__hash__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: The hash value of the individual.</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_genotype</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Individual.order">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.order">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">order</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="s1">&#39;fitness&#39;</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of all instances wich are ordered by the given attribute. The default is to order by fitness. If</span>
+<span class="sd">        no group is given, all instances of the class are used.</span>
+<span class="sd">        :param group: The group of individuals to order. If None, all instances of the class are used.</span>
+<span class="sd">        :type group: list[Individual] or None</span>
+<span class="sd">        :param by: The attribute to order by (&#39;id&#39;, &#39;fitness&#39; or &#39;diversity&#39;).</span>
+<span class="sd">        :type by: str</span>
+<span class="sd">        :param reverse: Flag whether the individuals should be ordered descending.</span>
+<span class="sd">        :type reverse: bool</span>
+<span class="sd">        :return: All instances of the class order by their fitness.</span>
+<span class="sd">        :rtype: list[Individual]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># set the default value for group to all instances of the class</span>
+        <span class="k">if</span> <span class="n">group</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span>
+
+        <span class="n">switcher</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">individual</span><span class="p">:</span> <span class="n">individual</span><span class="o">.</span><span class="n">get_id</span><span class="p">(),</span>
+            <span class="s1">&#39;fitness&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">individual</span><span class="p">:</span> <span class="n">individual</span><span class="o">.</span><span class="n">get_fitness</span><span class="p">(),</span>
+            <span class="s1">&#39;diversity&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">individual</span><span class="p">:</span> <span class="n">individual</span><span class="o">.</span><span class="n">get_diversity</span><span class="p">(),</span>
+        <span class="p">}</span>
+
+        <span class="c1"># return the result</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">switcher</span><span class="p">[</span><span class="n">by</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Individual.reset">
+<a class="viewcode-back" href="../../../../../src.simulation.evolution.interfaces.html#src.simulation.evolution.interfaces.individual.Individual.reset">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets the class. All instances are removed from future calculations and the caches are cleared.</span>
+<span class="sd">        :rtype: void</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_instances</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cache</span> <span class="o">=</span> <span class="p">{}</span></div>
+</div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../../index.html">Genetic Algorithms Backend</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../modules.html">backend</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;1980, Thomas Kottenhahn, Christian Maul, Sambou Kinteh, Patrick Radau, Janik Rostami-Abandansari, Anton Schönfeld, Paul Seidel, Simon Laubersheimer.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -354,10 +354,9 @@ def api_start_simulation():
         aep = float(data["aep"])
         elite_count = int(data["elite_count"])
         alien_count = int(data["alien_count"])
-        weights = []
-        for x in data["weights"][1:-1].split(","):
-            if x.strip():  # Überprüft, ob das Element nicht leer ist (entfernt Leerzeichen)
-                weights.append(float(x))
+        weights = data["weights"]
+
+        print(weights)
 
     except NameError as e:
         db.write_log(f"Failed to start simulation, because of missing parameter: {e}")

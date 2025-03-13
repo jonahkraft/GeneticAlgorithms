@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>src.database &#8212; Genetic Algorithms Backend  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=12dfc556" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for src.database</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">io</span>
+
+<span class="c1">#user_connection = sqlite3.connect(&quot;../db/simulation_data.db&quot;)</span>
+<span class="c1">#cur = user_connection.cursor()</span>
+<span class="c1">#cur.execute(&quot;ALTER TABLE experiments RENAME COLUMN elasticity3_weight TO elasticity_3_weight&quot;)</span>
+<span class="c1">#cur.execute(&quot;ALTER TABLE experiments RENAME COLUMN elasticity4_weight TO elasticity_4_weight&quot;)</span>
+<span class="c1">#cur.execute(&quot;ALTER TABLE experiments RENAME COLUMN elasticity5_weight TO elasticity_5_weight&quot;)</span>
+<span class="c1">#user_connection.commit()</span>
+
+<div class="viewcode-block" id="get_users">
+<a class="viewcode-back" href="../../src.html#src.database.get_users">[docs]</a>
+<span class="k">def</span> <span class="nf">get_users</span><span class="p">(</span><span class="n">connection_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db/users.db&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets a list of all users with their roles.</span>
+
+<span class="sd">    :param connection_path: path to the database</span>
+<span class="sd">    :type connection_path: str</span>
+
+<span class="sd">    :returns A list of users with their roles</span>
+<span class="sd">    :type list[tuple[str, str]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connection_path</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT username, role FROM users&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="get_logs">
+<a class="viewcode-back" href="../../src.html#src.database.get_logs">[docs]</a>
+<span class="k">def</span> <span class="nf">get_logs</span><span class="p">(</span><span class="n">connection_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db/logs.db&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets a list of all logs.</span>
+
+<span class="sd">    :param connection_path: path to the database</span>
+<span class="sd">    :type connection_path: str</span>
+
+<span class="sd">    :returns A list of logs</span>
+<span class="sd">    :type list[tuple[str, str]]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connection_path</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT time, log FROM logs&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="add_user">
+<a class="viewcode-back" href="../../src.html#src.database.add_user">[docs]</a>
+<span class="k">def</span> <span class="nf">add_user</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;data_analyst&quot;</span><span class="p">,</span> <span class="n">connection_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db/users.db&quot;</span><span class="p">)</span><span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds a user to the user database</span>
+
+<span class="sd">    :param username: The first Name of the User</span>
+<span class="sd">    :type username: str</span>
+
+<span class="sd">    :param role: The users role</span>
+<span class="sd">    :type role: str</span>
+
+<span class="sd">    :param password: The users password</span>
+<span class="sd">    :type password: str</span>
+
+<span class="sd">    :param connection_path: path to the database</span>
+<span class="sd">    :type connection_path: str</span>
+
+<span class="sd">    :returns:</span>
+<span class="sd">        bool: returns True if user has been added successfully, False otherwise</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connection_path</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="n">h</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+    <span class="n">h</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">password</span><span class="p">))</span>
+
+    <span class="n">user_added_successfully</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;INSERT INTO users(username,role,hashed_password) VALUES(?,?,?)&quot;</span><span class="p">,(</span><span class="n">username</span><span class="p">,</span><span class="n">role</span><span class="p">,</span><span class="n">h</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()))</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">IntegrityError</span><span class="p">:</span>
+        <span class="n">user_added_successfully</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">user_added_successfully</span></div>
+
+
+<div class="viewcode-block" id="delete_user">
+<a class="viewcode-back" href="../../src.html#src.database.delete_user">[docs]</a>
+<span class="k">def</span> <span class="nf">delete_user</span><span class="p">(</span><span class="n">username</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">connection_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db/users.db&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Deletes the given user.</span>
+
+<span class="sd">    :param username: The name of the user</span>
+<span class="sd">    :type username: str</span>
+
+<span class="sd">    :param connection_path: path to the database</span>
+<span class="sd">    :type connection_path: str</span>
+
+<span class="sd">    :returns: Returns true if deletion successful</span>
+<span class="sd">    :retype: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connection_path</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">user_exists</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">connection_path</span><span class="p">):</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;DELETE FROM users WHERE username=?&quot;</span><span class="p">,[</span><span class="n">username</span><span class="p">])</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="change_password">
+<a class="viewcode-back" href="../../src.html#src.database.change_password">[docs]</a>
+<span class="k">def</span> <span class="nf">change_password</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">connection_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db/users.db&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Changes a users password in the user database</span>
+
+<span class="sd">    :param username: The name of the User</span>
+<span class="sd">    :type username: str</span>
+
+<span class="sd">    :param new_password: The users new_password</span>
+<span class="sd">    :type new_password: str</span>
+
+<span class="sd">    :param connection_path: path to the database</span>
+<span class="sd">    :type connection_path: str</span>
+
+<span class="sd">    :returns: returns True if the password has been changed successfully, False otherwise</span>
+<span class="sd">    :rytpe: bool</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connection_path</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="n">h</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+    <span class="n">h</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">new_password</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">user_exists</span><span class="p">(</span><span class="n">username</span><span class="p">,</span><span class="n">connection_path</span><span class="p">):</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;UPDATE users SET hashed_password = ? WHERE username=?&quot;</span><span class="p">,[</span><span class="n">h</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span><span class="n">username</span><span class="p">])</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="change_username">
+<a class="viewcode-back" href="../../src.html#src.database.change_username">[docs]</a>
+<span class="k">def</span> <span class="nf">change_username</span><span class="p">(</span><span class="n">old_username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">users_connection_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db/users.db&quot;</span><span class="p">,</span> <span class="n">simulation_data_connection_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db/simulation_data.db&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Changes a users name in the user database</span>
+
+<span class="sd">    :param old_username: The name of the User to change</span>
+<span class="sd">    :type old_username: str</span>
+
+<span class="sd">    :param new_username: The users new username</span>
+<span class="sd">    :type new_username: str</span>
+
+<span class="sd">    :param users_connection_path: path to the users database</span>
+<span class="sd">    :type users_connection_path: str</span>
+
+<span class="sd">    :param simulation_data_connection_path: path to the simulation data database</span>
+<span class="sd">    :type simulation_data_connection_path: str</span>
+
+<span class="sd">    :returns: returns True if the username has been changed successfully, False otherwise</span>
+<span class="sd">    :rytpe: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">users_connection_path</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">user_exists</span><span class="p">(</span><span class="n">old_username</span><span class="p">,</span> <span class="n">users_connection_path</span><span class="p">):</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;UPDATE users SET username = ? WHERE username = ?&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">new_username</span><span class="p">,</span> <span class="n">old_username</span><span class="p">])</span>
+
+    <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">simulation_data_connection_path</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;UPDATE experiments SET username = ? WHERE username = ?&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">new_username</span><span class="p">,</span> <span class="n">old_username</span><span class="p">])</span>
+
+    <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="change_role">
+<a class="viewcode-back" href="../../src.html#src.database.change_role">[docs]</a>
+<span class="k">def</span> <span class="nf">change_role</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">connection_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db/users.db&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Changes a users name in the user database</span>
+
+<span class="sd">    :param username: The name of the User to change the role of</span>
+<span class="sd">    :type username: str</span>
+
+<span class="sd">    :param role: The users new role (simulator | data_analyst | administrator)</span>
+<span class="sd">    :type role: str</span>
+
+<span class="sd">    :param connection_path: path to the database</span>
+<span class="sd">    :type connection_path: str</span>
+
+<span class="sd">    :returns: returns True if the role has been changed successfully, False otherwise</span>
+<span class="sd">    :rytpe: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">allowed_roles</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data_analyst&quot;</span><span class="p">,</span> <span class="s2">&quot;administrator&quot;</span><span class="p">,</span> <span class="s2">&quot;simulator&quot;</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">role</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">allowed_roles</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connection_path</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">user_exists</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">connection_path</span><span class="p">):</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;UPDATE users SET role = ? WHERE username = ?&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">role</span><span class="p">,</span> <span class="n">username</span><span class="p">])</span>
+
+    <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="get_role">
+<a class="viewcode-back" href="../../src.html#src.database.get_role">[docs]</a>
+<span class="k">def</span> <span class="nf">get_role</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">connection_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db/users.db&quot;</span><span class="p">)</span><span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the role of the entered user</span>
+
+<span class="sd">    :param username: The name of the user</span>
+<span class="sd">    :type username: str</span>
+
+<span class="sd">    :param connection_path: path to the database</span>
+<span class="sd">    :type connection_path: str</span>
+
+<span class="sd">    :returns: The role of the user if one exists, None otherwise</span>
+<span class="sd">    :rtype: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connection_path</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT role FROM users WHERE ?=username&quot;</span><span class="p">,[</span><span class="n">username</span><span class="p">])</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="check_password">
+<a class="viewcode-back" href="../../src.html#src.database.check_password">[docs]</a>
+<span class="k">def</span> <span class="nf">check_password</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">connection_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db/users.db&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks if an entered password is correct</span>
+
+<span class="sd">    :param username: The name of the user</span>
+<span class="sd">    :type username: str</span>
+
+<span class="sd">    :param password: The entered password</span>
+<span class="sd">    :type password: str</span>
+
+<span class="sd">    :param connection_path: path to the database</span>
+<span class="sd">    :type connection_path: str</span>
+
+<span class="sd">    :returns: returns True if the password is correct, False otherwise</span>
+<span class="sd">    :rtype: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connection_path</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT hashed_password FROM users WHERE ?=username&quot;</span><span class="p">,[</span><span class="n">username</span><span class="p">])</span>
+
+    <span class="n">users_hashed_password</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+    <span class="n">h</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">password</span><span class="p">))</span>
+    <span class="n">entered_hashed_password</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">users_hashed_password</span> <span class="o">==</span> <span class="n">entered_hashed_password</span></div>
+
+
+<div class="viewcode-block" id="user_exists">
+<a class="viewcode-back" href="../../src.html#src.database.user_exists">[docs]</a>
+<span class="k">def</span> <span class="nf">user_exists</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">connection_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db/users.db&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks if a user exists in the database</span>
+
+<span class="sd">    :param username: The first Name of the User</span>
+<span class="sd">    :type username: str</span>
+
+<span class="sd">    :param connection_path: path to the database</span>
+<span class="sd">    :type connection_path: str</span>
+
+<span class="sd">    :returns: returns True if user exists, False otherwise</span>
+<span class="sd">    :rtype: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connection_path</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM users WHERE ?=username&quot;</span><span class="p">,[</span><span class="n">username</span><span class="p">])</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="get_experiment">
+<a class="viewcode-back" href="../../src.html#src.database.get_experiment">[docs]</a>
+<span class="k">def</span> <span class="nf">get_experiment</span><span class="p">(</span><span class="n">experiment_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">connection_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db/simulation_data.db&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns who ran which experiment</span>
+
+<span class="sd">    :param experiment_id: The experiment_id</span>
+<span class="sd">    :type experiment_id: int</span>
+
+<span class="sd">    :param connection_path: The path to the database</span>
+<span class="sd">    :type connection_path: str</span>
+
+<span class="sd">    :returns The inputs used to run the experiment as well as username of the one who ran the experiment  </span>
+<span class="sd">    :type dict</span>
+<span class="sd">    &quot;&quot;&quot;</span> 
+    
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connection_path</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT username, population_size, simulation_seed, generation_count, strategy, aep, elite_count, alien_count, consumption_weight, elasticity_3_weight, elasticity_4_weight, elasticity_5_weight FROM experiments WHERE experiment_id = ?&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">experiment_id</span><span class="p">])</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+
+    <span class="n">experiment</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="s2">&quot;population_size&quot;</span><span class="p">:</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="s2">&quot;simulation_seed&quot;</span><span class="p">:</span> <span class="n">res</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+        <span class="s2">&quot;generation_count&quot;</span><span class="p">:</span> <span class="n">res</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+        <span class="s2">&quot;strategy&quot;</span><span class="p">:</span> <span class="n">res</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+        <span class="s2">&quot;aep&quot;</span><span class="p">:</span> <span class="n">res</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
+        <span class="s2">&quot;elite_count&quot;</span><span class="p">:</span> <span class="n">res</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span>
+        <span class="s2">&quot;alien_count&quot;</span><span class="p">:</span> <span class="n">res</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span>
+        <span class="s2">&quot;weights&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">res</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="n">res</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">res</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">res</span><span class="p">[</span><span class="mi">11</span><span class="p">]]</span>
+    <span class="p">}</span>
+
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">experiment</span></div>
+
+
+<div class="viewcode-block" id="get_users_experiments">
+<a class="viewcode-back" href="../../src.html#src.database.get_users_experiments">[docs]</a>
+<span class="k">def</span> <span class="nf">get_users_experiments</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">connection_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db/simulation_data.db&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the users experiments</span>
+
+<span class="sd">    :param username: the users username</span>
+<span class="sd">    :type str</span>
+
+<span class="sd">    :param connection_path: The path to the database</span>
+<span class="sd">    :type connection_path: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connection_path</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT experiment_id FROM experiments WHERE username = ?&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">username</span><span class="p">])</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">ids</span></div>
+
+
+<div class="viewcode-block" id="add_experiment">
+<a class="viewcode-back" href="../../src.html#src.database.add_experiment">[docs]</a>
+<span class="k">def</span> <span class="nf">add_experiment</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">],</span> <span class="n">population_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">simulation_seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">generation_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">strategy</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">aep</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">elite_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">alien_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">weights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">connection_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db/simulation_data.db&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds the given csv data to the given connection</span>
+
+<span class="sd">    :param username: The user adding the experiment data</span>
+<span class="sd">    :type username: str</span>
+
+<span class="sd">    :param data: The data to enter in the form list[list[generation: int, final_drive: float, roll_radius: float, gear_3: float, gear_4: float, gear_5: float, consumption: float, elasticity_3: float, elasticity_4: float, elasticity_5: float]]</span>
+<span class="sd">    :type data: list[list]</span>
+
+<span class="sd">    :param connection_path: The path to the database</span>
+<span class="sd">    :type connection_path: str</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connection_path</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT MAX(experiment_id) FROM car_data&quot;</span><span class="p">)</span>
+    <span class="n">experiment_id</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">experiment_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">experiment_id</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">experiment_id</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span> <span class="o">+</span> <span class="p">[</span><span class="n">experiment_id</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+    <span class="n">to_db</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">5</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">6</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">7</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">8</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">9</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">experiment_id</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
+
+    <span class="n">cur</span><span class="o">.</span><span class="n">executemany</span><span class="p">(</span><span class="s2">&quot;INSERT INTO car_data (generation, final_drive, roll_radius, gear_3, gear_4, gear_5, consumption, elasticity_3, elasticity_4, elasticity_5,experiment_id) VALUES (?,?,?,?,?,?,?,?,?,?,?);&quot;</span><span class="p">,</span> <span class="n">to_db</span><span class="p">)</span>
+
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;INSERT INTO experiments (experiment_id, username, population_size, simulation_seed, generation_count, strategy, aep, elite_count, alien_count, consumption_weight, elasticity_3_weight, elasticity_4_weight, elasticity_5_weight) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">experiment_id</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">population_size</span><span class="p">,</span> <span class="n">simulation_seed</span><span class="p">,</span> <span class="n">generation_count</span><span class="p">,</span> <span class="n">strategy</span><span class="p">,</span> <span class="n">aep</span><span class="p">,</span> <span class="n">elite_count</span><span class="p">,</span> <span class="n">alien_count</span><span class="p">,</span> <span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">weights</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">weights</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">weights</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span>
+
+    <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">experiment_id</span></div>
+
+
+<div class="viewcode-block" id="export_experiment_data">
+<a class="viewcode-back" href="../../src.html#src.database.export_experiment_data">[docs]</a>
+<span class="k">def</span> <span class="nf">export_experiment_data</span><span class="p">(</span><span class="n">columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">constraints</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">connection_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;db/simulation_data.db&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Exports the data from the database to csv</span>
+
+<span class="sd">    :param file_path: The filepath of the resulting csv file</span>
+<span class="sd">    :type file_path</span>
+
+<span class="sd">    :param columns: The columns to be exported</span>
+<span class="sd">    :type columns: list[str]</span>
+
+<span class="sd">    :param constraints: The constraints to be applied. Contrainsts are in the form of &quot;lhs op rhs&quot; where lhs and rhs are either column names or numbers and op is one of the following operators: &quot;&lt;&quot;,&quot;&gt;&quot;,&quot;&lt;=&quot;,&quot;&gt;=&quot;,&quot;=&quot;, &quot;&lt;&gt;&quot;</span>
+<span class="sd">    :type constraints: list[str]</span>
+
+<span class="sd">    :param connection_path: The path to the database</span>
+<span class="sd">    :type connection_path: str</span>
+
+<span class="sd">    :returns: The path to the resulting csv file</span>
+<span class="sd">    :rtype: str</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">is_number</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connection_path</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="n">possible_operators</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span><span class="s2">&quot;&lt;=&quot;</span><span class="p">,</span><span class="s2">&quot;&gt;=&quot;</span><span class="p">,</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;&gt;&quot;</span><span class="p">]</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM car_data&quot;</span><span class="p">)</span>
+    <span class="n">possible_cols</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span>
+    <span class="n">possible_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">possible_cols</span><span class="p">]</span>
+    <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">columns</span> <span class="o">==</span> <span class="p">[]:</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">possible_cols</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">((</span><span class="sa">f</span><span class="s2">&quot;The Column &#39;</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&#39; does not exist&quot;</span><span class="p">))</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">constraints</span> <span class="o">==</span> <span class="p">[]:</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">constraints</span><span class="p">:</span>
+            <span class="n">lhs</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">rhs</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">op</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">possible_operators</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">((</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">op</span><span class="si">}</span><span class="s2">&#39; is no valid operator&quot;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">is_number</span><span class="p">(</span><span class="n">lhs</span><span class="p">)</span> <span class="ow">or</span> <span class="n">lhs</span> <span class="ow">in</span> <span class="n">possible_cols</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">((</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">lhs</span><span class="si">}</span><span class="s2">&#39; is no valid operand&quot;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">is_number</span><span class="p">(</span><span class="n">rhs</span><span class="p">)</span> <span class="ow">or</span> <span class="n">rhs</span> <span class="ow">in</span> <span class="n">possible_cols</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">((</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">rhs</span><span class="si">}</span><span class="s2">&#39; is no valid operand&quot;</span><span class="p">))</span>
+            
+        <span class="n">rows</span> <span class="o">=</span> <span class="s2">&quot; WHERE &quot;</span> <span class="o">+</span> <span class="s2">&quot; AND &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">constraints</span><span class="p">)</span>
+
+    <span class="n">sql_query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;SELECT </span><span class="si">{</span><span class="n">cols</span><span class="si">}</span><span class="s2"> FROM car_data</span><span class="si">{</span><span class="n">rows</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql_query</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+    <span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">description</span><span class="p">]</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+
+    <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="write_log">
+<a class="viewcode-back" href="../../src.html#src.database.write_log">[docs]</a>
+<span class="k">def</span> <span class="nf">write_log</span><span class="p">(</span><span class="n">log</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">connection_path</span> <span class="o">=</span> <span class="s2">&quot;db/logs.db&quot;</span><span class="p">):</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">connection_path</span><span class="p">)</span>
+    <span class="n">cur</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;INSERT INTO logs(time,log) VALUES(DATETIME(),?)&quot;</span><span class="p">,[</span><span class="n">log</span><span class="p">])</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<span class="c1">#print(get_logs(&quot;./backend/db/logs.db&quot;))</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Genetic Algorithms Backend</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">backend</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;1980, Thomas Kottenhahn, Christian Maul, Sambou Kinteh, Patrick Radau, Janik Rostami-Abandansari, Anton Schönfeld, Paul Seidel, Simon Laubersheimer.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
