@@ -7,7 +7,7 @@ class APITests(UnitMeta):
     def __init__(self):
         self.ClearDataBase()
         self.registered = False
-        self.TestData = [{"username": DatabaseGrenzwertAnalyse.GetRandomName(), "password": DatabaseGrenzwertAnalyse.GetRandomPassword(), "role": DatabaseGrenzwertAnalyse.GetRandomRole()} for _ in range(100)]
+        self.TestData = [{"username": DatabaseGrenzwertAnalyse.GetRandomName(), "password": DatabaseGrenzwertAnalyse.GetRandomPassword(), "role": DatabaseGrenzwertAnalyse.GetRandomRole(True)} for _ in range(100)]
 
         pass
     def ClearDataBase(self):
@@ -25,36 +25,48 @@ class APITests(UnitMeta):
         return True
     def LoginData(self, data : dict[str, str], registered : bool, password_correct : bool, role : str) -> str | bool:
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        data = json.loads(requests.post("http://localhost:5000/api/login", data = json.dumps(data), headers = headers).text)
-        token = data["access_token"]
-        if data["registered"] == registered and (not registered or (data["password_correct"] == password_correct and (not password_correct or data["role"] == role))):
+        val = json.loads(requests.post("http://localhost:5000/api/login", data = json.dumps(data), headers = headers).text)
+        token = val["access_token"]
+        valid = val["registered"] == registered
+
+        if not valid:
+            return False
+        if not registered:
+            return True
+        if not password_correct:
+            return val["password_correct"] == password_correct
+        if val["role"] == role:
             return token
         return False
     def TestLoginDeleteUser(self):
         for data in self.TestData:
+            # Test with right password
             token = self.LoginData(data, data["role"] != "invalid-role", True, data["role"])
             if not token:
                 return "Fehler bei dem Login"
             # now delete
-            if not self.DeletaData(data, data["role"] != "invalid-role", token):
+            if not self.DeletaData(data, data["role"] == "administrator", token): # Nur der Admin darf sich löschen
                 return "Fehler bei Delete"
+            if data["role"] == "invalid-role":
+                continue
+            # Test with wrong password
+            data0 = data.copy()
+            data0["password"] = "wrongpass0"
+            if not self.LoginData(data0, True, False, data["role"]):
+                return "Fehler beim falschen Login"
         return True
 
 
-    def DeletaData(self, data : dict[str, str], user_exists : bool, token : str) -> bool:
+    def DeletaData(self, data : dict[str, str], should_succeed : bool, token : str) -> bool:
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain', "Authorization": f"Bearer {token}"}
-        res = requests.post("http://localhost:5000/api/register", data = json.dumps(data), headers= headers)
-        return (res.status_code == 200) == user_exists
+        res = requests.post("http://localhost:5000/api/delete_user", data = json.dumps(data), headers= headers)
+        return (res.status_code == 200) == should_succeed
     def RegisterData(self, data : dict[str, str], token : str) -> bool:
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain', "Authorization": f"Bearer {token}"}
-        print(data)
         res = requests.post("http://localhost:5000/api/register", data = json.dumps(data), headers= headers)
-        print(res)
-        print(res.content)
-        print(res.text)
         res = json.loads(res.text)
-        print(data["role"])
-        return not res["already_registered"] and not res["invalid_role"] == (data["role"] != "invalid-role") and res["success"]
+        valid = not res["already_registered"]
+        return valid and (data["role"] == "invalid-role") == res["invalid_role"] and res["success"] == (not res["invalid_role"])
     def GetAdminToken(self):
         obj = {
             "username": "user",
