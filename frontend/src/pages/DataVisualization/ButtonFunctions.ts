@@ -1,6 +1,5 @@
 import { saveAs } from 'file-saver';
 import getSimulationData from "../../get_simulation_data.ts";
-import graph from "./graph.tsx";
 
 export function placeholderButtonFunction(){
     alert('Diese Funktionalität wird fertig implementiert, sobald das Einbinden mit dem Backend funktioniert')
@@ -12,7 +11,7 @@ function showProtocol(){
 }
 
 function showDebug(){
-    // TODO: IDK
+    // TODO: ?
     return
 }
 /*
@@ -122,4 +121,4 @@ export async function downloadCSV(filename: string, id: string){
 
 
 
-export default { placeholderButtonFunction, showProtocol, showDebug, uploadCSV, downloadCSV}
+//export default { placeholderButtonFunction, showProtocol, showDebug, uploadCSV, downloadCSV}
