@@ -15,6 +15,7 @@ function transmitParameters(finaldrive: string, rollradius: string, gear3: strin
 
 import cookies from "../../cookies.ts";
 import axios from "axios";
+import getSimulationData from "../../get_simulation_data.ts";
 
 function transmitParameters(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weights: string){
     console.log(aep, typeof(aep))
@@ -24,24 +25,19 @@ function transmitParameters(aep: string, generation_count: string, population_si
     console.log(elite_count, typeof(elite_count))
     console.log(alien_count, typeof(alien_count))
     console.log(weights, typeof(weights))
-    const transmitWeights = [weights]
-    // TODO: sort weights
 
     // TODO: startegy kanan 1,2 oder 3 sein
 
     //const strategy = '2' laut backend
     // TODO: given_seed fest oder random
     // given_seed = ''
-    console.log('DataVisualization vor axios get');
     const token = cookies.getCookies().token
     // call backend-API
-    //        axios.post("/api/get_simulation_data", {columns: [], row_constraints: []}, {"Content-Type": "application/json", "Authorization": `Bearer ${token}`})
-    axios.post("/api/get_simulation_data", { "population_size": population_size, "simulation_seed": given_seed, "generation_count": generation_count ,"strategy": '2', "aep": aep, "elite_count": elite_count, "alien_count": alien_count, "weights": transmitWeights },
+    axios.post("/api/start_simulation", { "population_size": population_size, "simulation_seed": given_seed, "generation_count": generation_count ,"strategy": '2', "aep": aep, "elite_count": elite_count, "alien_count": alien_count, "weights": weights },
         { headers: { "Authorization": `Bearer ${token.trim()}`, "Content-Type": "application/json" } })
         .then((response) => {
-            console.log('DataVisualization NACH axios get');
-            //const result = Papa.parse(response.data, { header: true, skipEmptyLines: true });
-            console.log(response.data)
+            console.log(response.data.experiment_id)
+            getSimulationData([], [response.data.experiment_id])
         })
         .catch(error => {
             if (error.response) {

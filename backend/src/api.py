@@ -354,7 +354,11 @@ def api_start_simulation():
         aep = float(data["aep"])
         elite_count = int(data["elite_count"])
         alien_count = int(data["alien_count"])
-        weights = [float(x) for x in data["weights"][1:-1].split(",")]
+        weights = []
+        for x in data["weights"][1:-1].split(","):
+            if x.strip():  # Überprüft, ob das Element nicht leer ist (entfernt Leerzeichen)
+                weights.append(float(x))
+
     except NameError as e:
         db.write_log(f"Failed to start simulation, because of missing parameter: {e}")
         return jsonify({"msg": f"{e}"}, 400)
@@ -399,8 +403,8 @@ def api_get_simulation_data():
     data = request.get_json()
 
     try:
-        columns: list[str] = data["columns"]
-        row_constraints: list[str] = data["row_constraints"]
+        columns: list[str] = [x for x in data["columns"][1:-1].split(",")]
+        row_constraints: list[str] = [x for x in data["row_constraints"][1:-1].split(",")]
     except NameError as e:
         db.write_log(f"Failed to get simulation data, because of: {e}")
         return jsonify({"msg": f"{e}"}, 400)
