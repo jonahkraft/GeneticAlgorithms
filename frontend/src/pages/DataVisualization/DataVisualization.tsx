@@ -18,6 +18,7 @@ import UserPersmissions from '../../components/UserPermissions/UserPersmissions.
 import UploadButton from "../../components/UploadButton/UploadButton.tsx";
 import {downloadCSV} from "./ButtonFunctions.ts";
 import GenericButton from '../../components/GenericButton/GenericButton.tsx';
+import {send} from "vite";
 
 //
 
@@ -68,6 +69,7 @@ function DataVisualization() {
     // @ts-expect-error
     const [generatedElement, setGeneratedElement] = useState<JSX.Element | null>(null);
 
+    const [sendParameters, setSendParameters] = useState(false)
     /*
     // Parameter //TODO: Stuff for later
     const [inputs, setInputs] = useState({
@@ -96,18 +98,8 @@ function DataVisualization() {
     //const token = 'bla'
     // load CSV Files
     useEffect(() => {
-        console.log('DataVisualization vor axios get');
-        // call backend-API
-        //        axios.post("/api/get_simulation_data", {columns: [], row_constraints: []}, {"Content-Type": "application/json", "Authorization": `Bearer ${token}`})
-        axios.post("/api/get_simulation_data")
-            .then((response) => {
-                console.log('DataVisualization NACH axios get');
-                console.log('Result von AXIOS GET', response.data, 'Result von AXIOS GET', response);
-                const result = Papa.parse(response.data, { header: true, skipEmptyLines: true });
-                setData(result.data);
-            })
-            .catch((error) => console.error("Fehler beim Laden der CSV:", error));
-    }, []);
+
+    }, [sendParameters]);
 
     // Verarbeitung der Daten (generateResultList & loadGenerations)
     useEffect(() => {
@@ -173,21 +165,37 @@ function DataVisualization() {
     function handleParaChange(e: React.ChangeEvent<HTMLInputElement>) {
         // TODO: Eingabefeld begrenzen, damit man nicht zu lange zahlen eintragen kann
         const { name, value } = e.target;
-        if (e.target.name === 'generation_count' || e.target.name === 'population_size' || e.target.name === 'elite_count' || e.target.name === 'alien_count') {
+        if (name === 'generation_count' || name === 'population_size' || name === 'elite_count' || name === 'alien_count') {
             // Erlaubt nur int-Zahlen
             if (/^\d+$|^$/.test(value)) {
                 setParaInputs((prev) => ({ ...prev, [name]: value }));
             }
         }
-        if (e.target.name === 'given_seed' || e.target.name === 'weights') {
+        if (name === 'given_seed') {
             // Erlaubt nur float-Zahlen
             if (/^\d*\.?\d*$/.test(value)) {
                 setParaInputs((prev) => ({ ...prev, [name]: value }));
             }
         }
-        if (e.target.name === 'aep') {
+        if (name === 'aep') {
             // Erlaubt nur 0-1 Zahlen
             if (/^0(\.\d*)?$|^1$|^$/.test(value)) {
+                setParaInputs((prev) => ({ ...prev, [name]: value }));
+            }
+        }
+        if (name === "weights") {
+            // Entferne Leerzeichen und trenne die Werte
+            const values = value.split(",").map((v) => v.trim());
+
+            // Regex für gültige Float-Zahlen
+            const floatRegex = /^\d*\.?\d+$/;
+
+            // Prüfe, ob ALLE Werte gültige Floats zwischen 3 und 5 sind
+            const isValid = values.every(
+                (num) => floatRegex.test(num) && parseFloat(num) >= 3 && parseFloat(num) <= 5
+            );
+
+            if (isValid || value === "") {
                 setParaInputs((prev) => ({ ...prev, [name]: value }));
             }
         }
@@ -196,8 +204,25 @@ function DataVisualization() {
     // Zeigt übermittelte Daten auf Seite an
     function handleTransmit(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weigths: string) {
         const result = `AEP: ${aep}, Generation Count: ${generation_count}, Population Size: ${population_size}, Given Seed: ${given_seed}, Elite Count: ${elite_count}, Alien Count: ${alien_count}, Weights: ${weigths}`;
+
+        if (!sendParameters) return;
+        console.log('DataVisualization vor axios get');
+        const token = cookies.getCookies().token
+        // call backend-API
+        //        axios.post("/api/get_simulation_data", {columns: [], row_constraints: []}, {"Content-Type": "application/json", "Authorization": `Bearer ${token}`})
+        axios.post("/api/get_simulation_data", { "population_size": population_size, "simulation_seed": given_seed, "strategy": 2, "aep": aep, "elite_count": elite_count, "alien_count": alien_count, "weights": weights },
+            { headers: { "Authorization": `Bearer ${token.trim()}`, "Content-Type": "application/json" } })
+            .then((response) => {
+                console.log('DataVisualization NACH axios get');
+                console.log('Result von AXIOS GET', response.data, 'Result von AXIOS GET', response);
+                //const result = Papa.parse(response.data, { header: true, skipEmptyLines: true });
+                console.log(response.data)
+            })
+            .catch((error) => console.error(error));
+
         setTransmittedData(result);
     }
+
 
     // For Debugging Purpose/ Test Purpose
     //console.log('Data: ', data, typeof (data))
