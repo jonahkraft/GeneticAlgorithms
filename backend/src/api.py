@@ -250,11 +250,10 @@ def api_change_username():
             db.write_log(f"Failed to change {old_username}, because only administrators can change other users usernames")
             return jsonify({"msg": f"Only administrators can change other users usernames"}, 401)
 
-
 @api.route("/api/change_role", methods=["POST"])
 @jwt_required()
 def api_change_role():
-    """Changes the users username  
+    """Changes the users role  
 
     :param JSON
     {
@@ -278,16 +277,19 @@ def api_change_role():
     allowed_roles = {"data_analyst", "administrator", "simulator"}
 
     if role not in allowed_roles:
+        db.write_log(f"Failed to change role of '{username}', because role '{role}' is invalid") 
         return jsonify({"msg": f"Invalid role '{role}'"}), 400
 
     if db.get_role(current_user) != "administrator":
+        db.write_log(f"Failed to change change role of '{username}', because {current_user} is no administrator")
         return jsonify({"msg": f"Only administrators can change user roles"}, 401)
 
     if db.change_role(username, role):
+        db.write_log(f"Changed role of '{username}' to '{role}'")
         return jsonify({}, 200)
     else:
+        db.write_log(f"Failed to change role of '{username}', because user does not exist")
         return jsonify({"msg": f"Cannot find user '{username}'"}, 404)
-
 
 @api.route("/api/start_simulation", methods=["POST"])
 @jwt_required()
