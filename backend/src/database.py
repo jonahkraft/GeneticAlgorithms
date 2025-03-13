@@ -410,7 +410,7 @@ def get_experiment_inputs(experiment_id: int, connection_path: str = "db/simulat
 
     return data
 
-def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], constraints: list[str] = [], connection_path: str = "db/simulation_data.db") -> str:
+def export_experiment(file_path: str, columns: list[str] = [], constraints: list[str] = [], connection_path: str = "db/simulation_data.db") -> str:
     """
     Exports the data from the database to csv
 

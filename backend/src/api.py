@@ -400,8 +400,8 @@ def api_get_simulation_data():
     data = request.get_json()
 
     try:
-        columns: list[str] = [x for x in data["columns"][1:-1].split(",")]
-        row_constraints: list[str] = [x for x in data["row_constraints"][1:-1].split(",")]
+        columns: list[str] = data["columns"]
+        row_constraints: list[str] = data["row_constraints"]
     except NameError as e:
         db.write_log(f"Failed to get simulation data, because of: {e}")
         return jsonify({"msg": f"{e}"}), 400
@@ -413,7 +413,7 @@ def api_get_simulation_data():
             row_constraints.append(c)
 
     try:
-        data = db.export_experiment_data(columns, row_constraints)
+        data = db.export_experiment(columns, row_constraints)
     except ValueError as e:
         db.write_log(f"Failed to export data to csv: {e}")
         return jsonify({"msg": f"{e}"}), 400
