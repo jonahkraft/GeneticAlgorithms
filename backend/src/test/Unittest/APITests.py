@@ -12,7 +12,8 @@ class APITests(UnitMeta):
         pass
     def ClearDataBase(self):
         con = sqlite3.connect("..\\..\\..\\db\\users.db")
-        con.execute("delete from users where user_name <> \'user\'")
+        con.execute("delete from users where username <> \'user\'")
+
         con.commit()
     def TestRegister(self):
         # login as admin
@@ -46,8 +47,13 @@ class APITests(UnitMeta):
         return (res.status_code == 200) == user_exists
     def RegisterData(self, data : dict[str, str], token : str) -> bool:
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain', "Authorization": f"Bearer {token}"}
+        print(data)
         res = requests.post("http://localhost:5000/api/register", data = json.dumps(data), headers= headers)
+        print(res)
+        print(res.content)
+        print(res.text)
         res = json.loads(res.text)
+        print(data["role"])
         return not res["already_registered"] and not res["invalid_role"] == (data["role"] != "invalid-role") and res["success"]
     def GetAdminToken(self):
         obj = {
