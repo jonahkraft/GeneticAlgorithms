@@ -51,7 +51,7 @@ class DatabaseIntegrationTest(IntegrationMeta):
         database.add_user(test_username, test_password, connnection_path=kwargs['database_path'])
 
         cursor : Cursor = database.cursor()
-        cursor.execute('SELECT * FROM users WHERE ?=user_name',[test_username])
+        cursor.execute('SELECT * FROM users WHERE ?=username',[test_username])
 
         response : Any = cursor.fetchone()
         if response is Sequence: response = response[0]
