@@ -4,11 +4,9 @@ import hashlib
 import os
 import io
 
-#user_connection = sqlite3.connect("../db/simulation_data.db")
+#user_connection = sqlite3.connect("./backend/db/logs.db")
 #cur = user_connection.cursor()
-#cur.execute("ALTER TABLE experiments RENAME COLUMN elasticity3_weight TO elasticity_3_weight")
-#cur.execute("ALTER TABLE experiments RENAME COLUMN elasticity4_weight TO elasticity_4_weight")
-#cur.execute("ALTER TABLE experiments RENAME COLUMN elasticity5_weight TO elasticity_5_weight")
+#cur.execute("CREATE TABLE logs(id INT PRIMARY KEY,time TEXT,log TEXT)")
 #user_connection.commit()
 
 def get_users(connection_path: str = "db/users.db") -> list[tuple[str, str]]:
