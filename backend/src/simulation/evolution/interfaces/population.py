@@ -4,7 +4,7 @@ import random as rdm
 import time
 from copy import copy
 
-from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
 
 from ..operators import SEL_ROULETTE, SEL_BEST, EVAL_PARETO, MUT_GAUSS, GEN_HALTON, REC_CROSS_POINT
 from ..metrics import METRIC_AVG
@@ -136,79 +136,79 @@ class Population:
         """
         return self._IndividualClass.get_group_diversity(group=self._individuals, metric=metric)
 
-    def plot(self, name='population', directory=None, fitness=False):
-        """
-        Creates a pairwise scatter plot of the genotypes of the individuals in the population. The fitness of each
-        individual is represented by the color of the dot if the colored flag is set to True. The results are saved in
-        the given directory with the given name as png file.
-        :param name: The name of the file.
-        :type name: str
-        :param directory: The directory where the file should be saved.
-        :type directory: str or None
-        :param fitness: Flag whether the fitness should be plotted.
-        :type fitness: bool
-        :return:
-        """
-
-        # set the default directory to the directory of the script where the method is called
-        if directory is None:
-            directory = os.path.dirname(os.path.realpath(__file__))
-
-        # create the directory if it does not exist
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-
-        # remove the file extension if it is given
-        if name.endswith('.png'):
-            name = name[:-4]
-
-        # add an index to the name if the file already exists
-        i = 1
-        name_tmp = name
-        while os.path.exists(os.path.join(directory, f'{name_tmp}.png')):
-            i += 1
-            name_tmp = f'{name} ({i})'
-        name = name_tmp
-
-        # get the individuals and extract the relevant information for plotting
-        if fitness:
-            individuals = self.get_individuals(order_by='fitness', reverse=False)
-            fitness_values = [ind.get_relative_fitness() for ind in individuals]
-        else:
-            individuals = self.get_individuals()
-        genotypes = [ind.get_genotype(transform=True) for ind in individuals]
-        blueprint = self._IndividualClass.get_blueprint()
-
-        # create the results
-        fig, axes = plt.subplots(nrows=len(genotypes[0]), ncols=len(genotypes[0]), figsize=(10, 10))
-        for i in range(len(genotypes[0])):
-            for j in range(len(genotypes[0])):
-                ax = axes[i, j]
-                if j < i:
-                    fig.delaxes(ax)
-                    continue
-                x_min = blueprint['genotype'][i].get_min()
-                x_max = blueprint['genotype'][i].get_max()
-                x_values = [g[i] for g in genotypes]
-                if i == j:
-                    ax.hist(x_values, bins=16, color='black')
-                else:
-                    y_min = blueprint['genotype'][j].get_min()
-                    y_max = blueprint['genotype'][j].get_max()
-                    y_values = [g[j] for g in genotypes]
-                    if fitness:
-                        ax.scatter(x_values, y_values, c=fitness_values)
-                    else:
-                        ax.scatter(x_values, y_values, edgecolor='black', facecolor='none')
-                    ax.set_ylabel(blueprint['genotype_labels'][j])
-                    ax.set_ylim(y_min, y_max)
-                ax.set_xlabel(blueprint['genotype_labels'][i])
-                ax.set_xlim(x_min, x_max)
-
-        # render and save the results
-        fig.tight_layout()
-        fig.savefig(os.path.join(directory, f'{name}.png'), dpi=600)
-        plt.close(fig)
+#    def plot(self, name='population', directory=None, fitness=False):
+#        """
+#        Creates a pairwise scatter plot of the genotypes of the individuals in the population. The fitness of each
+#        individual is represented by the color of the dot if the colored flag is set to True. The results are saved in
+#        the given directory with the given name as png file.
+#        :param name: The name of the file.
+#        :type name: str
+#        :param directory: The directory where the file should be saved.
+#        :type directory: str or None
+#        :param fitness: Flag whether the fitness should be plotted.
+#        :type fitness: bool
+#        :return:
+#        """
+#
+#        # set the default directory to the directory of the script where the method is called
+#        if directory is None:
+#            directory = os.path.dirname(os.path.realpath(__file__))
+#
+#        # create the directory if it does not exist
+#        if not os.path.exists(directory):
+#            os.makedirs(directory)
+#
+#        # remove the file extension if it is given
+#        if name.endswith('.png'):
+#            name = name[:-4]
+#
+#        # add an index to the name if the file already exists
+#        i = 1
+#        name_tmp = name
+#        while os.path.exists(os.path.join(directory, f'{name_tmp}.png')):
+#            i += 1
+#            name_tmp = f'{name} ({i})'
+#        name = name_tmp
+#
+#        # get the individuals and extract the relevant information for plotting
+#        if fitness:
+#            individuals = self.get_individuals(order_by='fitness', reverse=False)
+#            fitness_values = [ind.get_relative_fitness() for ind in individuals]
+#        else:
+#            individuals = self.get_individuals()
+#        genotypes = [ind.get_genotype(transform=True) for ind in individuals]
+#        blueprint = self._IndividualClass.get_blueprint()
+#
+#        # create the results
+#        fig, axes = plt.subplots(nrows=len(genotypes[0]), ncols=len(genotypes[0]), figsize=(10, 10))
+#        for i in range(len(genotypes[0])):
+#            for j in range(len(genotypes[0])):
+#                ax = axes[i, j]
+#                if j < i:
+#                    fig.delaxes(ax)
+#                    continue
+#                x_min = blueprint['genotype'][i].get_min()
+#                x_max = blueprint['genotype'][i].get_max()
+#                x_values = [g[i] for g in genotypes]
+#                if i == j:
+#                    ax.hist(x_values, bins=16, color='black')
+#                else:
+#                    y_min = blueprint['genotype'][j].get_min()
+#                    y_max = blueprint['genotype'][j].get_max()
+#                    y_values = [g[j] for g in genotypes]
+#                    if fitness:
+#                        ax.scatter(x_values, y_values, c=fitness_values)
+#                    else:
+#                        ax.scatter(x_values, y_values, edgecolor='black', facecolor='none')
+#                    ax.set_ylabel(blueprint['genotype_labels'][j])
+#                    ax.set_ylim(y_min, y_max)
+#                ax.set_xlabel(blueprint['genotype_labels'][i])
+#                ax.set_xlim(x_min, x_max)
+#
+#        # render and save the results
+#        fig.tight_layout()
+#        fig.savefig(os.path.join(directory, f'{name}.png'), dpi=600)
+#        plt.close(fig)
 
     def next_generation(self, aep=.5, recombination_rate=.5, parent_group_size=2, **kwargs):
         """

@@ -76,7 +76,7 @@
 <div class="viewcode-block" id="register">
 <a class="viewcode-back" href="../api.html#api.register">[docs]</a>
 <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-    <span class="n">possible_roles</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data_analyst&quot;</span><span class="p">,</span> <span class="s2">&quot;administrator&quot;</span><span class="p">,</span> <span class="s2">&quot;simulation_expert&quot;</span><span class="p">}</span>
+    <span class="n">possible_roles</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data_analyst&quot;</span><span class="p">,</span> <span class="s2">&quot;administrator&quot;</span><span class="p">,</span> <span class="s2">&quot;simulator&quot;</span><span class="p">}</span>
 
     <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -129,7 +129,7 @@
 <span class="sd">        &quot;registered&quot;: bool,</span>
 <span class="sd">        &quot;password_correct&quot;: bool,</span>
 <span class="sd">        &quot;access_token&quot;: &quot;&lt;token&gt;&quot;,</span>
-<span class="sd">        &quot;role&quot;: &quot;data_analyst | simulation_expert | administrator&quot;</span>
+<span class="sd">        &quot;role&quot;: &quot;data_analyst | simulator | administrator&quot;</span>
 <span class="sd">    }</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -153,7 +153,7 @@
 <span class="sd">    {</span>
 <span class="sd">        &quot;username&quot;: &quot;&lt;username&gt;&quot;,</span>
 <span class="sd">        &quot;password&quot;: &quot;&lt;password&gt;&quot;,</span>
-<span class="sd">        &quot;role&quot;: &quot;&lt;data_analyst | simulation_expert | administrator&gt;&quot;</span>
+<span class="sd">        &quot;role&quot;: &quot;&lt;data_analyst | simulator | administrator&gt;&quot;</span>
 <span class="sd">    }</span>
 
 <span class="sd">    :returns JSON</span>

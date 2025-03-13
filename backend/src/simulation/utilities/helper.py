@@ -3,7 +3,7 @@ This module contains some helper functions that are used in the project.
 """
 import os
 
-from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
 
 import simulation.evolution as evo
 
@@ -256,111 +256,111 @@ def import_generations_from_csvfile(cls, file, header=True):
     return generations
 
 
-def plot_generations(generations, name='generations-plot', directory=None):
-    """
-    Plot the generations of an experiment.
-    :param generations: The generations to plot.
-    :type generations: list[Population]
-    :param name: The name of the experiment.
-    :type name: str
-    :param directory: The directory to save the results to.
-    :type directory: str
-    """
-
-    print(f"Plotting generations...")
-
-    # set the default directory to the directory of the script where the method is called
-    if directory is None:
-        directory = os.path.dirname(os.path.realpath(__file__))
-
-    # create the directory if it does not exist
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-
-    # add an index to the name if the directory already exists
-    i = 1
-    name_tmp = name
-    while os.path.exists(os.path.join(directory, f'{name_tmp}')):
-        i += 1
-        name_tmp = f'{name} ({i})'
-    name = name_tmp
-
-    # create the directory (name)
-    os.makedirs(os.path.join(directory, name))
-
-    # get the class of the individuals
-    individual_class = generations[-1][0].__class__
-
-    # initialize the lists to store the data
-    obj = []
-
-    # process phenotype data
-    for i, goal in enumerate(individual_class.get_goals()):
-        objectives = [[ind.get_phenotype()[i] for ind in pop.get_individuals()] for pop in generations]
-        objectives_max = [max(objectives[j]) for j in range(len(objectives))]
-        objectives_min = [min(objectives[j]) for j in range(len(objectives))]
-        objectives_avg = [sum(objectives[j]) / len(objectives[j]) for j in range(len(objectives))]
-        obj.append((objectives_max, objectives_min, objectives_avg))
-
-    blueprint = individual_class.get_blueprint()
-    switcher = {}
-    for i, goal in enumerate(blueprint['phenotype_labels']):
-        switcher[i] = goal
-
-    # create all results on one figure and save them as png
-    fig, axes = plt.subplots(ncols=len(obj), nrows=1, figsize=(10, 3))
-    for i, ax in enumerate(axes):
-        ax.plot(obj[i][0], label='MAX', color='black')
-        ax.plot(obj[i][1], label='MIN', color='black')
-        ax.plot(obj[i][2], label='AVG', color='black')
-        ax.set_ylabel(switcher[i])
-        ax.set_xlabel('Generation')
-    fig.tight_layout()
-    fig.savefig(os.path.join(directory, name, 'phenotype.png'), dpi=600)
-    plt.close(fig)
-
-    # process trend (the average fitness of the pareto front)
-    p_fronts = [pop.get_pareto_front() for pop in generations]
-    p_front_fitness = []
-    for i, p_front in enumerate(p_fronts):
-        if len(p_front) > 0:
-            p_front_fitness.append([ind.get_relative_fitness() for ind in p_front])
-        else:
-            p_front_fitness.append([0])
-    # p_front_fitness_max = [max(p_front_fitness[j]) for j in range(len(p_front_fitness))]
-    # p_front_fitness_min = [min(p_front_fitness[j]) for j in range(len(p_front_fitness))]
-    p_front_fitness_avg = [sum(p_front_fitness[j]) / len(p_front_fitness[j]) for j in range(len(p_front_fitness))]
-
-    # process fitness data
-    fitness = [[ind.get_relative_fitness() for ind in pop.get_individuals()] for pop in generations]
-    fitness_max = [max(fitness[j]) for j in range(len(fitness))]
-    fitness_min = [min(fitness[j]) for j in range(len(fitness))]
-    fitness_avg = [sum(fitness[j]) / len(fitness[j]) for j in range(len(fitness))]
-    fit = [(fitness_max, fitness_min, fitness_avg)]
-
-    # process diversity data
-    diversity_avg = [[individual_class.get_group_diversity(pop.get_individuals())] for pop in generations]
-
-    # create all results on one figure and save them as png
-    fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(10, 3))
-    axes[0].plot(p_front_fitness_avg, label='AVG', color='black')
-    axes[0].set_ylim([0, 1])
-    axes[0].set_ylabel('Trend')
-    axes[0].set_xlabel('Generation')
-    axes[1].plot(fit[0][0], label='MAX', color='black')
-    axes[1].plot(fit[0][1], label='MIN', color='black')
-    axes[1].plot(fit[0][2], label='AVG', color='black')
-    axes[1].set_ylim([0, 1])
-    axes[1].set_ylabel('Fitness')
-    axes[1].set_xlabel('Generation')
-    axes[2].plot(diversity_avg, label='AVG', color='black')
-    axes[2].set_ylabel('Diversity')
-    axes[2].set_xlabel('Generation')
-    fig.tight_layout()
-    fig.savefig(os.path.join(directory, name, 'quality.png'), dpi=600)
-    plt.close(fig)
-
-    for i in [0, round(len(generations) / 2), len(generations) - 1]:
-        generations[i].plot(name=f"generation-{i}", directory=os.path.join(directory, name), fitness=True)
-
-    print(f"Done! Stored results in {os.path.join(directory, name)}")
+# def plot_generations(generations, name='generations-plot', directory=None):
+#    """
+#    Plot the generations of an experiment.
+#    :param generations: The generations to plot.
+#    :type generations: list[Population]
+#    :param name: The name of the experiment.
+#    :type name: str
+#    :param directory: The directory to save the results to.
+#    :type directory: str
+#    """
+#
+#    print(f"Plotting generations...")
+#
+#    # set the default directory to the directory of the script where the method is called
+#    if directory is None:
+#        directory = os.path.dirname(os.path.realpath(__file__))
+#
+#    # create the directory if it does not exist
+#    if not os.path.exists(directory):
+#        os.makedirs(directory)
+#
+#    # add an index to the name if the directory already exists
+#    i = 1
+#    name_tmp = name
+#    while os.path.exists(os.path.join(directory, f'{name_tmp}')):
+#        i += 1
+#        name_tmp = f'{name} ({i})'
+#    name = name_tmp
+#
+#    # create the directory (name)
+#    os.makedirs(os.path.join(directory, name))
+#
+#    # get the class of the individuals
+#    individual_class = generations[-1][0].__class__
+#
+#    # initialize the lists to store the data
+#    obj = []
+#
+#    # process phenotype data
+#    for i, goal in enumerate(individual_class.get_goals()):
+#        objectives = [[ind.get_phenotype()[i] for ind in pop.get_individuals()] for pop in generations]
+#        objectives_max = [max(objectives[j]) for j in range(len(objectives))]
+#        objectives_min = [min(objectives[j]) for j in range(len(objectives))]
+#        objectives_avg = [sum(objectives[j]) / len(objectives[j]) for j in range(len(objectives))]
+#        obj.append((objectives_max, objectives_min, objectives_avg))
+#
+#    blueprint = individual_class.get_blueprint()
+#    switcher = {}
+#    for i, goal in enumerate(blueprint['phenotype_labels']):
+#        switcher[i] = goal
+#
+#    # create all results on one figure and save them as png
+#    fig, axes = plt.subplots(ncols=len(obj), nrows=1, figsize=(10, 3))
+#    for i, ax in enumerate(axes):
+#        ax.plot(obj[i][0], label='MAX', color='black')
+#        ax.plot(obj[i][1], label='MIN', color='black')
+#        ax.plot(obj[i][2], label='AVG', color='black')
+#        ax.set_ylabel(switcher[i])
+#        ax.set_xlabel('Generation')
+#    fig.tight_layout()
+#    fig.savefig(os.path.join(directory, name, 'phenotype.png'), dpi=600)
+#    plt.close(fig)
+#
+#    # process trend (the average fitness of the pareto front)
+#    p_fronts = [pop.get_pareto_front() for pop in generations]
+#    p_front_fitness = []
+#    for i, p_front in enumerate(p_fronts):
+#        if len(p_front) > 0:
+#            p_front_fitness.append([ind.get_relative_fitness() for ind in p_front])
+#        else:
+#            p_front_fitness.append([0])
+#    # p_front_fitness_max = [max(p_front_fitness[j]) for j in range(len(p_front_fitness))]
+#    # p_front_fitness_min = [min(p_front_fitness[j]) for j in range(len(p_front_fitness))]
+#    p_front_fitness_avg = [sum(p_front_fitness[j]) / len(p_front_fitness[j]) for j in range(len(p_front_fitness))]
+#
+#    # process fitness data
+#    fitness = [[ind.get_relative_fitness() for ind in pop.get_individuals()] for pop in generations]
+#    fitness_max = [max(fitness[j]) for j in range(len(fitness))]
+#    fitness_min = [min(fitness[j]) for j in range(len(fitness))]
+#    fitness_avg = [sum(fitness[j]) / len(fitness[j]) for j in range(len(fitness))]
+#    fit = [(fitness_max, fitness_min, fitness_avg)]
+#
+#    # process diversity data
+#    diversity_avg = [[individual_class.get_group_diversity(pop.get_individuals())] for pop in generations]
+#
+#    # create all results on one figure and save them as png
+#    fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(10, 3))
+#    axes[0].plot(p_front_fitness_avg, label='AVG', color='black')
+#    axes[0].set_ylim([0, 1])
+#    axes[0].set_ylabel('Trend')
+#    axes[0].set_xlabel('Generation')
+#    axes[1].plot(fit[0][0], label='MAX', color='black')
+#    axes[1].plot(fit[0][1], label='MIN', color='black')
+#    axes[1].plot(fit[0][2], label='AVG', color='black')
+#    axes[1].set_ylim([0, 1])
+#    axes[1].set_ylabel('Fitness')
+#    axes[1].set_xlabel('Generation')
+#    axes[2].plot(diversity_avg, label='AVG', color='black')
+#    axes[2].set_ylabel('Diversity')
+#    axes[2].set_xlabel('Generation')
+#    fig.tight_layout()
+#    fig.savefig(os.path.join(directory, name, 'quality.png'), dpi=600)
+#    plt.close(fig)
+#
+#    for i in [0, round(len(generations) / 2), len(generations) - 1]:
+#        generations[i].plot(name=f"generation-{i}", directory=os.path.join(directory, name), fitness=True)
+#
+#    print(f"Done! Stored results in {os.path.join(directory, name)}")

@@ -2,6 +2,7 @@ const standardValue = {
     username: "could not load username",
     role: "could not load role",
     signed_in: false,
+    easy_speech: false,
     token: "",
 }
 
@@ -9,6 +10,7 @@ interface CookieData {
     username: string;
     role: string;
     signed_in: boolean;
+    easy_speech: boolean;
     token: string;
     [key: string]: string | boolean;
 }
@@ -19,15 +21,17 @@ function getCookies(): CookieData {
         .reduce<CookieData>((cookies, cookie) => {
             const [key, value] = cookie.split('=');
             if (key && value) {
-                cookies[key] = decodeURIComponent(value);
+                cookies[key] = key === 'easy_speech' ? value === 'true' : decodeURIComponent(value);
             }
             return cookies;
         }, standardValue);
 }
 
-function saveCookies(obj: { username: string; role: string; signed_in: boolean, token: string }, days = 7) {
+function saveCookies(obj: { username: string; role: string; signed_in: boolean, easy_speech: boolean, token: string }, days = 7) {
     const expires = new Date();
     expires.setDate(expires.getDate() + days);
+
+    console.log("saveCookies", typeof obj.easy_speech)
 
     for (const [key, value] of Object.entries(obj)) {
         document.cookie = `${encodeURIComponent(key)}=${encodeURIComponent(value)}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;

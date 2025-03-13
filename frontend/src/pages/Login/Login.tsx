@@ -1,9 +1,7 @@
 import styles from './Login.module.css';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import displayWarning from "./displayWarninig.ts";
-import WarningComponent from "./warning.tsx";
-//import TestlogIn from './LoginExport.ts'
+import Warning from "./Warning.tsx";
 import axios from "axios";
 import cookies from "../../cookies.ts";
 import GenericButton from "../../components/GenericButton/GenericButton.tsx";
@@ -24,20 +22,23 @@ function Login() {
         const username = formData.get("username") as string;
         const password = formData.get("password") as string;
 
-        const suc = logIn(username, password)
-        console.log(suc)
-        if (suc) {
-            navigate("/data_visualization")
-        }
+        logIn(username, password).then(success => {
+            if (success) {
+                console.log("Cookies gesetzt");
+                navigate("/data_visualization");
+            } else {
+                triggerWarning();
+            }
+        });
     }
 
-    // function triggerWarning() {
-    //     displayWarning(setText, "username or password is wrong")
-    //     setDisplaysWarning(true)
-    // }
+    function triggerWarning() {
+        setText("username or password is wrong.")
+        setDisplaysWarning(true)
+    }
 
     function disableWarning() {
-        displayWarning(setText, "")
+        setText("")
         setDisplaysWarning(false)
     }
 
@@ -92,7 +93,7 @@ function Login() {
                         <label className={styles.label} htmlFor="password">Password</label>
                     </div>
 
-                    <WarningComponent text={text}/>
+                    <Warning text={text}/>
 
                     <div className={styles.pass}>Forgot Password?</div>
 
@@ -108,41 +109,51 @@ function Login() {
     );
 }
 
-// Check for User
-function logIn(username: string, password: string) {
-    let success = false;
-
-    console.log("username in logIN", username)
-    console.log("passwird in lOGIN", password)
-    //const token = ''
-    axios.post('/api/login',
-        { "username": username, "password": password },
-        { headers: { "Content-Type": "application/json" } }
-    )
-         .then(response => {
-             const token = response.data.access_token
-             const role = response.data.role
-             console.log('Token', token)
-             console.log('Role', response.data.role)
-             cookies.saveCookies({"username": username, "role": role, "signed_in": true, "token": token})
-             console.log("erfolg")
-             success = true;
-             /*
-             axios.post('/api/protected_test', {},
-                 {
-                     headers: {
-                         "Authorization": `Bearer ${token}`,
-                         "Content-Type": "application/json"  // Ensure JSON data format
-                     }
-                 }
-             )
-              */
-         })
-         .catch(error => {
-             console.error(error);
-         });
-
-    return success;
+function logIn(username: string, password: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+        axios.post('/api/login', { "username": username, "password": password }, { headers: { "Content-Type": "application/json" } })
+            .then(response => {
+                const token = response.data.access_token;
+                const role = response.data.role;
+                cookies.saveCookies({ "username": username, "role": role, "signed_in": true, "easy_speech": false, "token": token });
+                resolve(true);
+            })
+            .catch(error => {
+                console.error(error);
+                resolve(false);
+            });
+    });
 }
+
+// // Check for User
+// function logIn(username: string, password: string) {
+//
+//     console.log("username in logIN", username)
+//     console.log("passwird in lOGIN", password)
+//     //const token = ''
+//     axios.post('/api/login',
+//         { "username": username, "password": password },
+//         { headers: { "Content-Type": "application/json" } }
+//     )
+//          .then(response => {
+//              const token = response.data.access_token
+//              const role = response.data.role
+//              cookies.saveCookies({"username": username, "role": role, "signed_in": true, "token": token})
+//              console.log("erfolg")
+//              /*
+//              axios.post('/api/protected_test', {},
+//                  {
+//                      headers: {
+//                          "Authorization": `Bearer ${token}`,
+//                          "Content-Type": "application/json"  // Ensure JSON data format
+//                      }
+//                  }
+//              )
+//               */
+//          })
+//          .catch(error => {
+//              console.error(error);
+//          });
+// }
 
 export default Login;
