@@ -1,6 +1,7 @@
 import { saveAs } from 'file-saver';
 import getSimulationData from "../../get_simulation_data.ts";
 import graph from "./graph.tsx";
+import {getGenertations} from "./DataVisualization.tsx";
 
 export function placeholderButtonFunction(){
     alert('Diese Funktionalität wird fertig implementiert, sobald das Einbinden mit dem Backend funktioniert')
@@ -15,7 +16,7 @@ function showDebug(){
     // TODO: IDK
     return
 }
-
+/*
 function parseCSVToList(csvContent: string) {
     const result: any = {};
 
@@ -74,13 +75,16 @@ export function uploadCSV(event: any){
         const parsedList = parseCSVToList(csvContent);
         // TODO: Usage for pasedList (backend i.e)
         console.log(parsedList)
+        getGenertations(parsedList)
         graph(parsedList);
     };
 
     reader.readAsText(file); // Liest die Datei als Text
 }
 
-export async function downloadCSV(data: any, filename: string){
+ */
+
+export async function downloadCSV(filename: string){
     let csvContent = "";
     let blocker = 0;
     const data = await getSimulationData(["generation", "final_drive", "roll_radius", "gear_3", "gear_4", "gear_5", "consumption", "elasticity_3", "elasticity_4", "elasticity_5", "experiment_id"], [])
@@ -118,4 +122,4 @@ export async function downloadCSV(data: any, filename: string){
 
 
 
-export default { placeholderButtonFunction, showProtocol, showDebug, uploadCSV, downloadCSV}
+//export default { placeholderButtonFunction, showProtocol, showDebug, uploadCSV, downloadCSV}
