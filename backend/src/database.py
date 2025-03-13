@@ -334,7 +334,7 @@ def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], const
     :param columns: The columns to be exported
     :type columns: list[str]
 
-    :param constraints: The constraints to be applied. Contrainsts are in the form of "lhs op rhs" where lhs and rhs are either column names or numbers and op is one of the following operators: "<",">","<=",">=","="
+    :param constraints: The constraints to be applied. Contrainsts are in the form of "lhs op rhs" where lhs and rhs are either column names or numbers and op is one of the following operators: "<",">","<=",">=","=", "<>"
     :type constraints: list[str]
 
     :param connection_path: The path to the database
