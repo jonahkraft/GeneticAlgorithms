@@ -81,6 +81,7 @@ export function uploadCSV(event: any){
 }
 
 export async function downloadCSV(filename: string, id: string){
+
     let csvContent = "";
     let blocker = 0;
     const data = await getSimulationData(["generation", "final_drive", "roll_radius", "gear_3", "gear_4", "gear_5", "consumption", "elasticity_3", "elasticity_4", "elasticity_5", "experiment_id"], [`experiment_id = ${id}`]);
