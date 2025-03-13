@@ -197,6 +197,45 @@ def api_change_password():
         else:
             return jsonify({"msg": f"Only administrators can change other users passwords"}, 401)
 
+@api.route("/api/change_username", methods=["POST"])
+@jwt_required()
+def api_change_username():
+    """Changes the users username  
+
+    :param JSON
+    {
+        "old_username": "<old username>",
+        "new_username": "<old username>"
+    }
+
+    :returns JSON
+    {
+        "msg": "<error message, if failed>"
+    }
+
+    """
+
+    current_user = get_jwt_identity()
+    data = request.get_json()
+
+    old_username = data["old_username"]
+    new_username = data["new_username"]
+
+    if current_user == old_username:
+        if db.change_username(old_username, new_username):
+            return jsonify({}, 200)
+        else:
+            return jsonify({"msg": f"Cannot find user '{old_username}'"}, 404)
+    else:
+        if db.get_role(current_user) == "administrator":
+            if db.change_username(old_username, new_username):
+                return jsonify({}, 200)
+            else:
+                return jsonify({"msg": f"Cannot find user '{old_username}'"}, 404)
+        else:
+            return jsonify({"msg": f"Only administrators can change other users usernames"}, 401)
+
+
 @api.route("/api/start_simulation", methods=["POST"])
 @jwt_required()
 def api_start_simulation():
