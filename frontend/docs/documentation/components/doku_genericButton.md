@@ -18,22 +18,24 @@ interface Probs{
 title: string;
 
 onClick:() =>void;
+
+idd: string;
 }
 ``` 
 Probs ist ein Interface welches die Struktur fpr title und onClick festlegt.
-title beschreibt den Text welcher auf dem Button angezeigt wird, onClick beinhaltet die Funktion welche der Button ausführen soll.
+title beschreibt den Text welcher auf dem Button angezeigt wird, onClick beinhaltet die Funktion welche der Button ausführen soll. Die id hilft beim schreiben von automatisierten Tests, den Button einfacher zu finden/klicken.
 
 #### Funktionen
 
 ```
-function GenericButton({ title,onClick}):Probs){}
+function GenericButton({ title,onClickn,idd}):Probs){}
 ```
 
-Die Funktion nimmt die Variablen title und onClick und gibt einen HTML button zurück mit dem gewünschten Titel und der gewünschten Funktion.
+Die Funktion nimmt die Variablen title, onClick und id und gibt einen HTML button zurück mit dem gewünschten Titel, id und der gewünschten Funktion.
 
 ```
 return(
-<button className={styles.GenericButton} onClick={onClick}>{title}</button>
+<button className={styles.GenericButton} onClick={onClick}>{title} id{}</button>
       )
 ```
 Rückgabe des gewünschten Buttons in HTML

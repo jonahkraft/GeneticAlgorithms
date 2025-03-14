@@ -53,14 +53,14 @@ class UserDBGrenzwertAnalyse(UnitMeta.UnitMeta):
         """
         for data in UserData:
             try:
-                if not database.add_user(data["name"], data["pass"], data["role"], testConnection):
+                if not database.add_user(data["name"], data["pass"], data["role"], DBtestConnection):
                    # return "User wurde nicht hinzugefügt, war schon drin"
                     pass
             except:
                 return "add_user throws an exception where there shouldn\'t be an exception to be thrown!"
-        if not all(database.user_exists(data0["name"], testConnection) for data0 in neededResult):
+        if not all(database.user_exists(data0["name"], DBtestConnection) for data0 in neededResult):
             return "Es wurde ein Nutzer zu wenig durchgef�hrt"
-        if not all(database.check_password(data0["name"], data0["pass"], testConnection) for data0 in neededResult):
+        if not all(database.check_password(data0["name"], data0["pass"], DBtestConnection) for data0 in neededResult):
             return "Es wurde ein Nutzer mit falschen Credentials eingef�gt, irgendwas gecrashed"
         # Jetzt checken ob Dopplungen hinzugef�gt wurden
         con = sqlite3.connect(testConnection)
@@ -79,13 +79,16 @@ def GetRandomRole(useInvalidRole : bool = False):
 def GetRandomName():
     alphabet : str = "abcdefghijklmnopqrstuvwxyz"
     length : int = 10 # smaller 26
-    return str(random.choices(alphabet, k = length))
-
+    res = ""
+    for val in random.choices(alphabet, k = length):
+        res += val
+    return res
 def GetRandomPassword():
     return GetRandomName() + str(random.randint(0, 1000))
 if __name__ == "__main__":
 
-    testConnection = "..\\TestUserDataBase.db"
+    testConnection = "..\\TestUserDatabase.db"
+    DBtestConnection = testConnection
     # empty DB
     con : sqlite3.Connection = sqlite3.connect(testConnection)
     con.execute("delete from users")

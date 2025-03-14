@@ -32,6 +32,7 @@ const makeDropDown = <P extends InjectedCounterProps>(
       this.setState(prevState => ({
         open: !prevState.open
       }))
+      console.log("DD clicked", this.state.open)
     }
 
     render() {

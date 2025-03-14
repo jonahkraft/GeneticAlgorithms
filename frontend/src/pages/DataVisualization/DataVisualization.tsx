@@ -88,8 +88,10 @@ function DataVisualization() {
 
     // Anzeige Graph aller Generationen
     useEffect(() => {
+        console.log("hook: create graph with: ", data)
         if( data != null && data!.length > 0 ) {
             graph(data!);
+            console.log("graph created")
         }
     }, [data]);
 
@@ -191,6 +193,7 @@ function DataVisualization() {
     }
 
     function updateData(data: HistoricalDataType[]) {
+        setGenerations(Array.from(new Set(data.map((entry) => (entry.generation)))))
         setData(data)
         setId(data[0].experiment_id)
     }
@@ -220,7 +223,7 @@ function DataVisualization() {
         for (let i = 0; i <= data[0].length; i++){
             Generations.push(String(i))
         }
-        console.log(Generations)
+        console.log('generations', Generations)
         setGenerations(Generations)
     }
 
@@ -262,6 +265,8 @@ function DataVisualization() {
     }
 
     function uploadCSV(event: React.ChangeEvent<HTMLInputElement>){
+        console.log("uploadCSV")
+
         // get selected file
         const file = event.target.files?.[0];  // Nutze optional chaining
 
@@ -283,12 +288,7 @@ function DataVisualization() {
             // TODO: Usage for pasedList (backend i.e)
             getGenertations(parsedList)
 
-            console.log("daten sind spaß")
             console.log(parsedList)
-
-            // Quick fix
-            const values = Object.values(parsedList).flat() as HistoricalDataType[];
-            setData(values)
 
             console.log(Object.values(parsedList).flat())
 
@@ -298,6 +298,14 @@ function DataVisualization() {
             graph(Object.values(parsedList).flat())
             //graph(parsedList);
             //Object.values(parsedList)[1]
+            // for-loop > select gen > setData
+            let filteredList: HistoricalDataType[] = [];
+            
+            for (let i = 0; i < Object.values(parsedList).length; i++) {
+                filteredList = filteredList.concat(filteredList, Object.values(parsedList)[i] as HistoricalDataType[])
+            }
+            console.log("text", filteredList)
+            setData(filteredList);
         };
 
         reader.readAsText(file); // Liest die Datei als Text

@@ -10,3 +10,4 @@ function DarkModeButton()
 
 DarkModeButton ist eine Komponente, die einen Schalter darstellt, mit dem der Benutzer den Dark Mode aktivieren oder deaktivieren kann.
 
+Die Funktion gibt das nötige HTML für den Darkmode Button zurück.
