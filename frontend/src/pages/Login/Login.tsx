@@ -100,7 +100,6 @@ function Login() {
                     <GenericButton title = "Login" onClick={() => enter(username)} idd={"login_Login"}></GenericButton>
                     <p><br/></p>
                     <div className={styles.signupLink}>
-                        Continue as Simulator
                     </div>
                 </form>
             </div>

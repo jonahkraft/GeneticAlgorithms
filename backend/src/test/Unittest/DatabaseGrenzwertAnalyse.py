@@ -1,6 +1,9 @@
+import sys
+sys.path.append("../..")
+
 import random
 import sqlite3
-from backend.src import database
+import database
 import UnitMeta
 
 

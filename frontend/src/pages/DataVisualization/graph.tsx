@@ -17,6 +17,8 @@ interface HistoricalDataType {
 function graph(data: HistoricalDataType[]) {
     if (!data || Object.keys(data).length === 0) return;
 
+    console.log('creating graph', data)
+
     // Liste für Scatter-Plot (Einzelne Werte)
     const list: { gen: string; consumption: string }[] = [];
 

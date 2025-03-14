@@ -27,6 +27,12 @@ eingeblendet wird, falls der Nutzername oder das Passwort falsch ist und einen V
 angezeigt wird.
 
 ```
+const navigate = useNavigate();
+
+```
+Diese Variable nutzt useNavigate() um zwischen den verschiedenen Seiten der Website zu navigieren
+
+```
 function getUserdata(event) {}
 ```
 
@@ -51,6 +57,11 @@ In dieser Funktion wird der Anfangs gesetzte leere String mit dem eingegebenem U
 function onPasswordInput(event: any) {}
 ```
 Hier wird wieder der zu Anfang gesetzte leere String mit dem neu eingegebenen Passwort überschrieben und gecheckt, ob eine Warnung angezeigt wird. ist dies der Fall, wird disableWarning aufgerufen.
+
+```
+function enter(username: string){}
+```
+...
 
 
 

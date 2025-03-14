@@ -34,7 +34,7 @@ function ToggleButton({ initialChecked }: ToggleButtonProps) {
                     checked={isChecked}
                     onChange={handleToggle}
                 />
-                <span className={styles.slider} />
+                <span className={styles.slider} id={"slider"}/>
             </label>
         </div>
     );

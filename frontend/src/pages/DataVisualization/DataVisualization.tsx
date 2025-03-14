@@ -88,8 +88,10 @@ function DataVisualization() {
 
     // Anzeige Graph aller Generationen
     useEffect(() => {
+        console.log("hook: create graph with: ", data)
         if( data != null && data!.length > 0 ) {
             graph(data!);
+            console.log("graph created")
         }
     }, [data]);
 
@@ -191,6 +193,7 @@ function DataVisualization() {
     }
 
     function updateData(data: HistoricalDataType[]) {
+        //setGenerations(Array.from(new Set(data.map((entry) => (entry.generation)))))
         setData(data)
         setId(data[0].experiment_id)
     }
@@ -220,7 +223,7 @@ function DataVisualization() {
         for (let i = 0; i <= data[0].length; i++){
             Generations.push(String(i))
         }
-        console.log(Generations)
+        console.log('generations', Generations)
         setGenerations(Generations)
     }
 
@@ -262,6 +265,8 @@ function DataVisualization() {
     }
 
     function uploadCSV(event: React.ChangeEvent<HTMLInputElement>){
+        console.log("uploadCSV")
+
         // get selected file
         const file = event.target.files?.[0];  // Nutze optional chaining
 
@@ -283,12 +288,10 @@ function DataVisualization() {
             // TODO: Usage for pasedList (backend i.e)
             getGenertations(parsedList)
 
-            console.log("daten sind spaß")
             console.log(parsedList)
 
-            setData(Object.values(parsedList).flat())
-
-            console.log(Object.values(parsedList).flat())
+            const values = Object.values(parsedList).flat() as HistoricalDataType[];
+            console.log(values)
 
 
 
@@ -296,6 +299,14 @@ function DataVisualization() {
             graph(Object.values(parsedList).flat())
             //graph(parsedList);
             //Object.values(parsedList)[1]
+            // for-loop > select gen > setData
+            let filteredList: HistoricalDataType[] = [];
+            
+            for (let i = 0; i < Object.values(parsedList).length; i++) {
+                filteredList = filteredList.concat(filteredList, Object.values(parsedList)[i] as HistoricalDataType[])
+            }
+            console.log("text", filteredList)
+            setData(filteredList);
         };
 
         reader.readAsText(file); // Liest die Datei als Text
@@ -306,7 +317,7 @@ function DataVisualization() {
             <div className={styles.container}>
             </div>
 
-            <div className={styles.mainContent}>
+            <div className={styles.mainContent} id={"data_description"}>
                 <Card>
                     <h2>Description</h2>
                     <p>
@@ -319,7 +330,7 @@ function DataVisualization() {
                             <tr>
                                 <td>Mutationsrate</td>
                                 <td><input className={styles.userFormSelect} type="text" name="aep" value={paraInputs.aep} onChange={handleParaChange} /></td>
-                                <td>Rate of mutation. A higher value results in less mutation (values between 0 and 1)</td>
+                                <td>Rate of mutation. A higher value results in higher mutation (values between 0 and 1)</td>
                             </tr>
                             <tr>
                                 <td>Generation Count</td>

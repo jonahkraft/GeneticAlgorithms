@@ -11,6 +11,7 @@ function Header() {
         if (confirm("Are you sure you want to sign out?")) {
             cookies.deleteCookies();
             window.location.reload();
+            window.location.href = "/"
             navigate("/")
         }
     }
