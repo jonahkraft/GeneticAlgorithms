@@ -56,16 +56,16 @@ function Home() {
             <div className={styles.faq}>
                 <h3 className={styles.smallHeader}>FAQ</h3>
                 <details className={styles.details}>
-                    <summary className={styles.summary}>What is the purpose of this simulation?</summary>
-                    <p className={styles.detailsText}>{easySpeech ? easyFAQ.purpose: normalFAQ.purpose}</p>
+                    <summary className={styles.summary} id={"FAQ1"}>What is the purpose of this simulation?</summary>
+                    <p className={styles.detailsText} id={"answer1"}>{easySpeech ? easyFAQ.purpose: normalFAQ.purpose}</p>
                 </details>
                 <details className={styles.details}>
-                    <summary className={styles.summary}>How do I use the simulation?</summary>
-                    <p className={styles.detailsText}>{easySpeech ? easyFAQ.usage: normalFAQ.usage}</p>
+                    <summary className={styles.summary} id={"FAQ2"}>How do I use the simulation?</summary>
+                    <p className={styles.detailsText}id={"answer2"}>{easySpeech ? easyFAQ.usage: normalFAQ.usage}</p>
                 </details>
                 <details className={styles.details}>
-                    <summary className={styles.summary}>What do the graphs represent?</summary>
-                    <p className={styles.detailsText}>{easySpeech ? easyFAQ.graphs: normalFAQ.graphs}</p>
+                    <summary className={styles.summary} id={"FAQ3"}>What do the graphs represent?</summary>
+                    <p className={styles.detailsText} id={"answer3"}>{easySpeech ? easyFAQ.graphs: normalFAQ.graphs}</p>
                 </details>
             </div>
         </div>
