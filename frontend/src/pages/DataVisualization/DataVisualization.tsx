@@ -1,10 +1,7 @@
 import cookies from "../../cookies.ts";
-import HistoricalData from "../../components/HistoricalData/HistoricalData.tsx";
 import { useNavigate } from "react-router-dom";
 import generateResultList from "./generate_result_list.ts";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-import Papa from 'papaparse';
 import { useEffect, useState } from "react";
 import {placeholderButtonFunction} from "./ButtonFunctions.ts";
 import graph from "./graph.tsx";
@@ -19,16 +16,9 @@ import {downloadCSV} from "./ButtonFunctions.ts";
 import GenericButton from '../../components/GenericButton/GenericButton.tsx';
 import DropDown from "../../components/DropdownMenu/DropDown.tsx";
 import CallBack from "../../components/DropdownMenu/CallBack.tsx";
-// import {send} from "vite";
+import HistoricalData from "../../components/HistoricalData/HistoricalData.tsx"
 
-//
-
-// function toggleSidebar(side: any) {
-//     document.getElementById(side + 'Sidebar')?.classList.toggle('open')
-// }
-
-// Interface für Datentyp in functions loadGenerations
-interface GenerationData {
+export interface HistoricalDataType {
     generation: string;
     'Final Drive': string;
     'Roll Radius': string;
@@ -39,13 +29,15 @@ interface GenerationData {
     'Elasticity 3': string;
     'Elasticity 4': string;
     'Elasticity 5': string;
+    'experiment_id': string;
 }
-
 
 function DataVisualization() {
     const navigate = useNavigate();
     const easySpeech = cookies.getCookies().easy_speech
     const role = cookies.getCookies().role
+
+    var commonConfig = { delimiter: "," };
 
     const normalText = "In the genetic algorithm we start with a population of entities. This population is the first generation. Every generation is the base of the following generation. This is archived by selecting and multiplying good entities and deleting bad ones. Each entity represents a set of input values and their corresponding results for consumption and elasticity. First the input values will be randomly set. After all results are computed, the entities will be ranked depending on their result values. Good performing entities with slightly modified values are used to generate a new population. The best performing entities are called elites. Elites are not modified, but copied to the next generation. The worst performing entities will not be used for future generations.";
     const easyText = "In the genetic algorithm, we start with a group of entities. This group is the first generation. Every generation is the base for the next one. Good entities are chosen and multiplied, while bad ones are removed. Each entity represents a set of values and their results for fuel usage and elasticity. The values are first set randomly. After computing the results, the entities are ranked based on their performance. Good performing entities are slightly changed and used to create a new group. The best performing entities are called elites. Elites are not changed but copied to the next group. The worst entities are not used in future generations.";
@@ -63,8 +55,11 @@ function DataVisualization() {
         setShowHistoricalData(!showHistoricalData)
     }
 
+    // id von dem Experiment, das gerade angezeigt wird
+    const [id, setId] = useState("0")
+
     // data speichert Datensatz vom backend Server, funktioniert aktell noch nicht, daher ist data Null
-    const [data, setData] = useState<object[]>([]);
+    const [data, setData] = useState<HistoricalDataType[]>();
 
     // generations erstellt eine Liste aller Generations von 0 - x (in Test Liste 0-10)
     const [generations, setGenerations] = useState<string[]>([]);
@@ -91,47 +86,29 @@ function DataVisualization() {
     // Display the transmitted Parameters
     const [transmittedData, setTransmittedData] = useState("Transmitted Data: None");
 
-    // Verarbeitung der Daten (generateResultList & loadGenerations)
+    // Anzeige Graph aller Generationen
     useEffect(() => {
-        if (data.length > 0) {
-            const generations = generateResultList(data);
-            loadGenerations(generations);
-        } else {
-            // do it anyway for testing
-            // TODO: else Fall abändern, wenn backend Abfrage funktioniert
-            const generations = generateResultList(data);
-            loadGenerations(generations);
+        if( data != null && data!.length > 0 ) {
+            graph(data!);
         }
     }, [data]);
 
     // Anzeige Graph aller Generationen
     useEffect(() => {
-        graph();
-    }, []);
-
-    // Anzeige Graph einer spezifischen Generation (alle Generationen x)
-    useEffect(() => {
-        graphGen(selectedGeneration!);
-    }, [selectedGeneration]);
-
-    // Show Generation Drop Down
-    function loadGenerations(arr: Record<string, GenerationData[]>) {
-        console.log("in function loadGen:", typeof (arr)) // returned object
-        if (Object.keys(arr).length === 0) {
-            return
+        console.log(data)
+        console.log(selectedGeneration)
+        console.log(Boolean(data))
+        console.log(Boolean(selectedGeneration))
+        if( data && selectedGeneration) {
+            const filtereddata = data.filter(entity => entity.generation === selectedGeneration);
+            console.log(filtereddata)
+            graphGen(filtereddata);
         }
-
-        const newGenerations: string[] = [];
-
-        for (let i = 0; i <= arr[0].length; i++) {
-            //newGenerations.push(`Generation ${i}`);
-            newGenerations.push(String(i));
-        }
-        setGenerations(newGenerations);
-    }
+    }, [data, generatedElement]);
 
     // Change Drop Down Element
     function handleDropdownSelect(index: number) {
+        console.log("handleDD")
         // Saves selected generation in state
         setSelectedGeneration(generations[index]);
 
@@ -141,6 +118,10 @@ function DataVisualization() {
                 <div style={{ width: "800px" }}><canvas id="my_graph_gen"></canvas></div>
             </div>
         );
+
+        if( data && data.length > 0 && selectedGeneration) {
+            graphGen(data.filter(entity => entity.generation === selectedGeneration));
+        }
     }
 
     // Überprüfe, ob gegebener Input eine gültige Dezimalzahl ist (zB 1234.5678). Die Funktion erlaubt auch nur ein Komma (.)
@@ -209,15 +190,116 @@ function DataVisualization() {
         }
     }
 
-    // Zeigt übermittelte Daten auf Seite an
-    function handleTransmit(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weights: string) {
-        const result = transmitParameters(aep, generation_count, population_size, given_seed, elite_count, alien_count, weights)
-        //const result = `AEP: ${aep}, Generation Count: ${generation_count}, Population Size: ${population_size}, Given Seed: ${given_seed}, Elite Count: ${elite_count}, Alien Count: ${alien_count}, Weights: ${weigths}`;
-        // @ts-ignore
-        setTransmittedData(result);
+    function updateData(data: HistoricalDataType[]) {
+        setData(data)
+        setId(data[0].experiment_id)
     }
 
-    const tmpList = generateResultList(data)
+    // Zeigt übermittelte Daten auf Seite an
+     function handleTransmit(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weights: string, call: ((data: HistoricalDataType[]) => void)) {
+        const result =  transmitParameters(aep, generation_count, population_size, given_seed, elite_count, alien_count, weights, call)
+        //const result = `AEP: ${aep}, Generation Count: ${generation_count}, Population Size: ${population_size}, Given Seed: ${given_seed}, Elite Count: ${elite_count}, Alien Count: ${alien_count}, Weights: ${weigths}`;
+        console.log("Rückgabe parameter")
+        console.log(result)
+       
+        /*Papa.parse(result,{
+            ...commonConfig,
+            complete: (json: any) => {
+              setTransmittedData(json.data);
+            }
+          });*/
+    }
+
+    function getGenertations(data: Record<string, HistoricalDataType[]>){
+        if (Object.keys(data).length === 0){
+            return
+        }
+
+        const Generations: string[] = []
+
+        for (let i = 0; i <= data[0].length; i++){
+            Generations.push(String(i))
+        }
+        console.log(Generations)
+        setGenerations(Generations)
+    }
+
+    function parseCSVToList(csvContent: string) {
+        const result: any = {};
+
+        // Remove unnecessary spaces
+        const lines = csvContent.trim().split("\n");
+
+        if (lines.length < 2) {
+            console.error("CSV file is empty or has no data rows!");
+            return result;
+        }
+
+        // Extract column headers
+        const keys = lines[0].split(";");
+
+        // Process each data row
+        for (let i = 1; i < lines.length; i++) {
+            const values = lines[i].split(";");
+            if (values.length !== keys.length) continue; // Ignore malformed rows
+
+            // Create row object
+            const row: any = {};
+            keys.forEach((key, index) => {
+                row[key] = values[index];
+            });
+
+            // Determine the generation from the "generation" column
+            const generation = row["generation"];
+            if (!result[generation]) {
+                result[generation] = [];
+            }
+
+            result[generation].push(row);
+        }
+
+        return result;
+    }
+
+    function uploadCSV(event: React.ChangeEvent<HTMLInputElement>){
+        // get selected file
+        const file = event.target.files?.[0];  // Nutze optional chaining
+
+        // check file
+        if (!file) {
+            alert('Please choose a CSV-File');
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            // content of uploaded file
+            // @ts-ignore
+            const csvContent = e.target.result;
+            // list which will contain the parsedCSV file
+            // @ts-ignore
+            const parsedList = parseCSVToList(csvContent);
+            // TODO: Usage for pasedList (backend i.e)
+            getGenertations(parsedList)
+
+            console.log("daten sind spaß")
+            console.log(parsedList)
+
+            setData(Object.values(parsedList).flat())
+
+            console.log(Object.values(parsedList).flat())
+
+
+
+            // @ts-ignore
+            graph(Object.values(parsedList).flat())
+            //graph(parsedList);
+            //Object.values(parsedList)[1]
+        };
+
+        reader.readAsText(file); // Liest die Datei als Text
+    }
 
     return (
         <div className={styles.wrapper}>
@@ -276,8 +358,8 @@ function DataVisualization() {
                     </table>
 
                         <GenericButton title='Start Simulation' onClick={() => {
-                            handleTransmit(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights)
-                        }} />
+                            handleTransmit(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights, updateData)
+                        }} idd={"data_StartSimu"}/>
                     <hr/>
                     <label id="transData">{transmittedData}</label>
                 </Card>
@@ -314,19 +396,19 @@ function DataVisualization() {
 
                         {role === "administrator" ? (
                             <>
-                                <GenericButton title="Protocol" onClick={placeholderButtonFunction}/>
-                                <GenericButton title="Debug" onClick={placeholderButtonFunction}/>
-                                <GenericButton title="History" onClick={toggleHistoricalData}/>
+                                <GenericButton title="Protocol" onClick={placeholderButtonFunction} idd={"data_Protocol"}/>
+                                <GenericButton title="Debug" onClick={placeholderButtonFunction} idd={"data_Debug"}/>
+                                <GenericButton title="History" onClick={toggleHistoricalData} idd={"data_History"}/>
                             </>
                         ) : <></>}
                         {role === "data_analyst" ? (
                             <>
-                                <GenericButton title="History" onClick={placeholderButtonFunction}/>
+                                <GenericButton title="History" onClick={placeholderButtonFunction} idd={"data_History"}/>
                             </>
                         ) : <></>}
 
-                        <UploadButton></UploadButton>
-                        <DownloadButton onClick={() => downloadCSV(tmpList, 'Frontendtest')}></DownloadButton>
+                        <UploadButton onChange={uploadCSV}></UploadButton>
+                        <DownloadButton onClick={() => downloadCSV('Frontendtest', id)}></DownloadButton>
                     </div>
                 </Card>
             </div>

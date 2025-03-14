@@ -151,20 +151,20 @@ function Settings() {
                     <h1 className={styles.header}>Settings</h1>
 
                     <nav className={styles.navigation}>
-                        <a className={selectedTab === "account" ? styles.navigationLinkActive : styles.navigationLinkInactive} onClick={() => handleTabClick("account")}>
+                        <a className={selectedTab === "account" ? styles.navigationLinkActive : styles.navigationLinkInactive} id={"settings_Account"} onClick={() => handleTabClick("account")}>
                             Account
                         </a>
-                        <a className={selectedTab === "color" ? styles.navigationLinkActive : styles.navigationLinkInactive} onClick={() => handleTabClick("color")}>
+                        <a className={selectedTab === "color" ? styles.navigationLinkActive : styles.navigationLinkInactive} id={"settings_Appearance"} onClick={() => handleTabClick("color")}>
                             Appearance
                         </a>
-                        <a className={selectedTab === "speech" ? styles.navigationLinkActive : styles.navigationLinkInactive} onClick={() => handleTabClick("speech")}>
+                        <a className={selectedTab === "speech" ? styles.navigationLinkActive : styles.navigationLinkInactive} id={"settings_Accesibility"} onClick={() => handleTabClick("speech")}>
                             Accesibility
 
                         </a>
 
                         {/* Nutzerverwaltung: Nur für Admins verfügbar */}
                         {role === "administrator" && (
-                            <a className={selectedTab === "user-management" ? styles.navigationLinkActive : styles.navigationLinkInactive} onClick={() => handleTabClick("user-management")}>
+                            <a className={selectedTab === "user-management" ? styles.navigationLinkActive : styles.navigationLinkInactive} id={"settings_Management"} onClick={() => handleTabClick("user-management")}>
                                 User Management
                             </a>
                         )}
@@ -179,8 +179,8 @@ function Settings() {
                 <div className={styles.rightbox}>
                     {selectedTab === "account" && (
                         <>
-                            <span className={styles.settingsText}>username: {name}</span>
-                            <span className={styles.settingsText}>role: {role}</span>
+                            <span className={styles.settingsText} id={"settings_username"}>username: {name}</span>
+                            <span className={styles.settingsText} id={"settings_role"}>role: {role}</span>
                             <button onClick={togglePopup} className = {styles.accountbutton}>Change Password</button> {/*TODO Funktion implementieren und schöner*/}
                             {isPopupVisible && (
                                 <div>
@@ -238,6 +238,7 @@ function Settings() {
                                 <form onSubmit={(e) => e.preventDefault()}>
                                     <input
                                         className={styles.userFormInput}
+                                        id={"settings_NewUser"}
                                         type="text"
                                         placeholder="Enter username"
                                         required
@@ -247,6 +248,7 @@ function Settings() {
 
                                     <input
                                         className={styles.userFormInput}
+                                        id={"settings_NewPassword"}
                                         type="password"
                                         placeholder="Enter password"
                                         required
@@ -256,17 +258,19 @@ function Settings() {
 
                                     <select
                                         className={styles.userFormSelect}
+                                        id={"settings_ChooseRole"}
                                         required
                                         value={roleSet}
                                         onChange={(e) => setRole(e.target.value)}>
 
-                                        <option value="simulator">Simulator</option>
-                                        <option value="data_analyst">Data Analyst</option>
-                                        <option value="administrator">Admin</option>
+                                        <option value="simulator" id={"role_Simulator"}>Simulator</option>
+                                        <option value="data_analyst" id={"role_Analyst"}>Data Analyst</option>
+                                        <option value="administrator" id={"role_Admin"}>Admin</option>
                                     </select>
 
                                     <button
                                         type="button"
+                                        id={"settings_AddUser"}
                                         className={styles.userFormButton}
                                         onClick={() => addUser(username, password, roleSet)}>
                                         Add User
@@ -301,6 +305,7 @@ function Settings() {
                             <form onSubmit={(e) => e.preventDefault()}>
                                 <input
                                     className={styles.userFormInput}
+                                    id={"settings_OldUser"}
                                     type="text"
                                     placeholder="Enter username"
                                     required
@@ -311,6 +316,7 @@ function Settings() {
                                     type="button"
                                     className={styles.userFormButton}
                                     onClick={() => deleteUser(userToBeDeleted)}
+                                    id={"settings_DeleteUser"}
                                 >
                                     Delete User
                                 </button>
@@ -321,6 +327,7 @@ function Settings() {
                             <form onSubmit={(e) => e.preventDefault()}>
                                 <input
                                     className={styles.userFormInput}
+                                    id={"settings_OldUsername"}
                                     type="text"
                                     placeholder="Enter old username"
                                     required
@@ -329,6 +336,7 @@ function Settings() {
                                 />
                                 <input
                                     className={styles.userFormInput}
+                                    id={"settings_ChangedUsername"}
                                     type="text"
                                     placeholder="Enter new username"
                                     value={newName}
@@ -337,6 +345,7 @@ function Settings() {
 
                                 <input
                                     className={styles.userFormInput}
+                                    id={"settings_ChangedPassword"}
                                     type="password"
                                     placeholder="Enter new password"
                                     value={newPW}
@@ -348,16 +357,18 @@ function Settings() {
                                     required
                                     value={newRole}
                                     onChange={(e) => setNewRole(e.target.value)}
+                                    id={"settings_ChooseRole2"}
                                 >
-                                    <option value="simulator">Simulator</option>
-                                    <option value="data_analyst">Data Analyst</option>
-                                    <option value="administrator">Admin</option>
+                                    <option value="simulator" id={"settings_NewSimulator"} >Simulator</option>
+                                    <option value="data_analyst" id={"settings_NewData"} >Data Analyst</option>
+                                    <option value="administrator" id={"settings_NewAdmin"} >Admin</option>
                                 </select>
 
                                 <button
                                     type="button"
                                     className={styles.userFormButton}
                                     onClick={() => editUserAdmin(oldName, newName, newPW,newRole)}
+                                    id={"settings_ApplyChanges"}
                                 >
                                     Apply
                                 </button>

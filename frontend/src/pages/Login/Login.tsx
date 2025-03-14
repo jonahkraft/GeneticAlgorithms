@@ -97,7 +97,7 @@ function Login() {
 
                     <div className={styles.pass}>Forgot Password?</div>
 
-                    <GenericButton title = "Login" onClick={() => enter(username)}></GenericButton>
+                    <GenericButton title = "Login" onClick={() => enter(username)} idd={"login_Login"}></GenericButton>
                     <p><br/></p>
                     <div className={styles.signupLink}>
                         Continue as Simulator
