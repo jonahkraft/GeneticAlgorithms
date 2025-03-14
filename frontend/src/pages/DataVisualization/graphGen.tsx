@@ -31,7 +31,7 @@ const graphGen = (data: HistoricalDataType[]) => {
     if (!ctx) return;
 
     // Neues Chart.js Diagramm erstellen
-    new Chart(ctx, {
+    const chart = new Chart(ctx, {
         type: "scatter",
         data: {
             datasets: [
@@ -62,6 +62,7 @@ const graphGen = (data: HistoricalDataType[]) => {
             },
         },
     });
+    return chart;
 };
 
 export default graphGen;

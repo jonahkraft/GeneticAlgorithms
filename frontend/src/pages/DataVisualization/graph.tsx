@@ -51,7 +51,7 @@ function graph(data: HistoricalDataType[]) {
     if (!ctx) return;
 
     // Erstelle den Graphen mit Chart.js
-    new Chart(ctx, {
+    const chart = new Chart(ctx, {
         type: "scatter",
         data: {
             datasets: [
@@ -80,6 +80,7 @@ function graph(data: HistoricalDataType[]) {
             },
         },
     });
+    return chart;
 }
 
 export default graph;
