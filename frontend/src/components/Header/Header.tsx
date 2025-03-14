@@ -5,14 +5,14 @@ import UserLabel from "../UserLabel/UserLabel.tsx";
 
 function Header() {
     const signed_in = cookies.isLoggedIn()
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
     function logOut() {
         if (confirm("Are you sure you want to sign out?")) {
             cookies.deleteCookies();
-            //window.location.reload();
-            //window.location.href = "/"
-            navigate("/")
+            window.location.reload();
+            window.location.href = "/"
+            //navigate("/")
         }
     }
 
