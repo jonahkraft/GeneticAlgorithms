@@ -1,12 +1,9 @@
 import cookies from "../../cookies.ts";
-import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import generateResultList from "./generate_result_list.ts";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-import Papa from 'papaparse';
 import { useEffect, useState } from "react";
-import { Dropdown } from 'react-bootstrap';
+import {placeholderButtonFunction} from "./ButtonFunctions.ts";
 import graph from "./graph.tsx";
 import graphGen from "./graphGen.tsx";
 import styles from './DataVisualization.module.css';
@@ -14,19 +11,14 @@ import Card from "../../components/Card/Card.tsx";
 import transmitParameters from "./parameters.tsx";
 // import {type} from "node:os";
 import DownloadButton from "../../components/DownloadButton/DownloadButton.tsx"
-import UserPersmissions from '../../components/UserPermissions/UserPersmissions.tsx'
 import UploadButton from "../../components/UploadButton/UploadButton.tsx";
 import {downloadCSV} from "./ButtonFunctions.ts";
 import GenericButton from '../../components/GenericButton/GenericButton.tsx';
+import DropDown from "../../components/DropdownMenu/DropDown.tsx";
+import CallBack from "../../components/DropdownMenu/CallBack.tsx";
+import HistoricalData from "../../components/HistoricalData/HistoricalData.tsx"
 
-//
-
-// function toggleSidebar(side: any) {
-//     document.getElementById(side + 'Sidebar')?.classList.toggle('open')
-// }
-
-// Interface für Datentyp in functions loadGenerations
-interface GenerationData {
+export interface HistoricalDataType {
     generation: string;
     'Final Drive': string;
     'Roll Radius': string;
@@ -37,12 +29,15 @@ interface GenerationData {
     'Elasticity 3': string;
     'Elasticity 4': string;
     'Elasticity 5': string;
+    'experiment_id': string;
 }
-
 
 function DataVisualization() {
     const navigate = useNavigate();
     const easySpeech = cookies.getCookies().easy_speech
+    const role = cookies.getCookies().role
+
+    var commonConfig = { delimiter: "," };
 
     const normalText = "In the genetic algorithm we start with a population of entities. This population is the first generation. Every generation is the base of the following generation. This is archived by selecting and multiplying good entities and deleting bad ones. Each entity represents a set of input values and their corresponding results for consumption and elasticity. First the input values will be randomly set. After all results are computed, the entities will be ranked depending on their result values. Good performing entities with slightly modified values are used to generate a new population. The best performing entities are called elites. Elites are not modified, but copied to the next generation. The worst performing entities will not be used for future generations.";
     const easyText = "In the genetic algorithm, we start with a group of entities. This group is the first generation. Every generation is the base for the next one. Good entities are chosen and multiplied, while bad ones are removed. Each entity represents a set of values and their results for fuel usage and elasticity. The values are first set randomly. After computing the results, the entities are ranked based on their performance. Good performing entities are slightly changed and used to create a new group. The best performing entities are called elites. Elites are not changed but copied to the next group. The worst entities are not used in future generations.";
@@ -54,8 +49,17 @@ function DataVisualization() {
         }
     }, [navigate]);
 
+    const [showHistoricalData, setShowHistoricalData] = useState(false)
+
+    function toggleHistoricalData() {
+        setShowHistoricalData(!showHistoricalData)
+    }
+
+    // id von dem Experiment, das gerade angezeigt wird
+    const [id, setId] = useState("0")
+
     // data speichert Datensatz vom backend Server, funktioniert aktell noch nicht, daher ist data Null
-    const [data, setData] = useState<object[]>([]);
+    const [data, setData] = useState<HistoricalDataType[]>();
 
     // generations erstellt eine Liste aller Generations von 0 - x (in Test Liste 0-10)
     const [generations, setGenerations] = useState<string[]>([]);
@@ -68,98 +72,45 @@ function DataVisualization() {
     // @ts-expect-error
     const [generatedElement, setGeneratedElement] = useState<JSX.Element | null>(null);
 
-    /*
-    // Parameter //TODO: Stuff for later
-    const [inputs, setInputs] = useState({
-        finalDrive: "",
-        rollRadius: "",
-        gear3: "",
-        gear4: "",
-        gear5: ""
-    });
-     */
-
     // Parameter from Requirement
     const [paraInputs, setParaInputs] = useState({
-        aep: "",                    // Wert zwischen 0 und 1
+        aep: "",                    // Wert zwischen 0 und 1, float
         generation_count: "",       // int
         population_size: "",        // int
         given_seed: "",             // feste Vorgabe/random -> float
         elite_count: "",            // int
         alien_count: "",            // int
-        weights: ""                 // float
+        weights: ""                 // list[float]
     });
 
     // Display the transmitted Parameters
-    const [transmittedData, setTransmittedData] = useState("Transmitted Data: Placeholder");
+    const [transmittedData, setTransmittedData] = useState("Transmitted Data: None");
 
-    //const token = 'bla'
-    // load CSV Files
+    // Anzeige Graph aller Generationen
     useEffect(() => {
-        console.log('DataVisualization vor axios get');
-        // call backend-API
-        //        axios.post("/api/get_simulation_data", {columns: [], row_constraints: []}, {"Content-Type": "application/json", "Authorization": `Bearer ${token}`})
-        axios.post("/api/get_simulation_data")
-            .then((response) => {
-                console.log('DataVisualization NACH axios get');
-                console.log('Result von AXIOS GET', response.data, 'Result von AXIOS GET', response);
-                const result = Papa.parse(response.data, { header: true, skipEmptyLines: true });
-                setData(result.data);
-            })
-            .catch((error) => console.error("Fehler beim Laden der CSV:", error));
-    }, []);
-
-    // Verarbeitung der Daten (generateResultList & loadGenerations)
-    useEffect(() => {
-        if (data.length > 0) {
-            const generations = generateResultList(data);
-            loadGenerations(generations);
-        } else {
-            // do it anyway for testing
-            // TODO: else Fall abändern, wenn backend Abfrage funktioniert
-            const generations = generateResultList(data);
-            loadGenerations(generations);
+        if( data != null && data!.length > 0 ) {
+            graph(data!);
         }
     }, [data]);
 
     // Anzeige Graph aller Generationen
     useEffect(() => {
-        graph();
-    }, []);
-
-    // Anzeige Graph einer spezifischen Generation (alle Generationen x)
-    useEffect(() => {
-        graphGen(selectedGeneration!);
-    }, [selectedGeneration]);
-
-    // Show Generation Drop Down
-    function loadGenerations(arr: Record<string, GenerationData[]>) {
-        console.log("in function loadGen:", typeof (arr)) // returned object
-        if (Object.keys(arr).length === 0) {
-            return
+        console.log(data)
+        console.log(selectedGeneration)
+        console.log(Boolean(data))
+        console.log(Boolean(selectedGeneration))
+        if( data && selectedGeneration) {
+            const filtereddata = data.filter(entity => entity.generation === selectedGeneration);
+            console.log(filtereddata)
+            graphGen(filtereddata);
         }
-
-        const newGenerations: string[] = [];
-        //console.log(arr);
-
-        for (let i = 0; i <= arr[0].length; i++) {
-            //console.log(arr[i]);
-            //newGenerations.push(`Generation ${i}`);
-            newGenerations.push(String(i));
-        }
-        setGenerations(newGenerations);
-    }
+    }, [data, generatedElement]);
 
     // Change Drop Down Element
     function handleDropdownSelect(index: number) {
-        const selectedGen = 'Generation ' + generations[index];
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        document.getElementById("dropdown-basic").innerHTML = selectedGen;
-
+        console.log("handleDD")
         // Saves selected generation in state
         setSelectedGeneration(generations[index]);
-        //console.log("Ausgewählte Generation:", selectedGen);
 
         // Add Stuff like Update-UI
         setGeneratedElement(
@@ -167,150 +118,256 @@ function DataVisualization() {
                 <div style={{ width: "800px" }}><canvas id="my_graph_gen"></canvas></div>
             </div>
         );
+
+        if( data && data.length > 0 && selectedGeneration) {
+            graphGen(data.filter(entity => entity.generation === selectedGeneration));
+        }
     }
 
     // Überprüfe, ob gegebener Input eine gültige Dezimalzahl ist (zB 1234.5678). Die Funktion erlaubt auch nur ein Komma (.)
     function handleParaChange(e: React.ChangeEvent<HTMLInputElement>) {
-        // TODO: Eingabefeld begrenzen, damit man nicht zu lange zahlen eintragen kann
         const { name, value } = e.target;
-        if (e.target.name === 'generation_count' || e.target.name === 'population_size' || e.target.name === 'elite_count' || e.target.name === 'alien_count') {
+
+        // Begrenzung der Eingabe auf 20 Zeichen
+        if (value.length > 20) return;
+
+        if(name === "generation_count"){
             // Erlaubt nur int-Zahlen
             if (/^\d+$|^$/.test(value)) {
                 setParaInputs((prev) => ({ ...prev, [name]: value }));
             }
         }
-        if (e.target.name === 'given_seed' || e.target.name === 'weights') {
-            // Erlaubt nur float-Zahlen
-            if (/^\d*\.?\d*$/.test(value)) {
-                setParaInputs((prev) => ({ ...prev, [name]: value }));
+
+        if (["population_size", "elite_count", "alien_count"].includes(name)) {
+            // Erlaubt nur int-Zahlen
+            if (/^\d+$|^$/.test(value)) {
+                setParaInputs((prev) => {
+                    const updatedValues = { ...prev, [name]: value };
+
+                    // Validierung: Alien + Elite dürfen Population nicht übersteigen
+                    const populationSize = parseInt(updatedValues.population_size || "0", 10);
+                    const eliteCount = parseInt(updatedValues.elite_count || "0", 10);
+                    const alienCount = parseInt(updatedValues.alien_count || "0", 10);
+
+                    if (eliteCount + alienCount >= populationSize) {
+                        return prev; // Verhindert ungültige Werte
+                    }
+
+                    return updatedValues;
+                });
             }
         }
-        if (e.target.name === 'aep') {
+
+        if (name === 'given_seed') {
+            // Erlaubt nur float-Zahlen
+            if (/^\d*$/.test(value)) {
+                const num = parseInt(value, 10);
+                if (value === "" || (num >= 1 && num <= 1000)) {
+                    setParaInputs((prev) => ({ ...prev, [name]: value }));
+                }
+            }
+        }
+
+        if (name === 'aep') {
             // Erlaubt nur 0-1 Zahlen
             if (/^0(\.\d*)?$|^1$|^$/.test(value)) {
                 setParaInputs((prev) => ({ ...prev, [name]: value }));
             }
         }
+        // TODO: 4 weights müssen übergeben werden zwischen alles (sinnvoll wäre negative Werte)
+        if (name === "weights") {
+            // Entferne unnötige Leerzeichen und trenne an ","
+            const values = value.split(",").map((v) => v.trim());
+
+            // Prüfe, ob jede Zahl ein Float
+            const isValid = values.every(
+                (num) => num === "" || num === "-" || !isNaN(Number(num)) || /^-?\d+(\.\d+)?$/.test(num)
+            );
+            // Falls gültig, setze den State
+            if (isValid) {
+                setParaInputs((prev) => ({ ...prev, [name]: value }));
+            }
+        }
+    }
+
+    function updateData(data: HistoricalDataType[]) {
+        setData(data)
+        setId(data[0].experiment_id)
     }
 
     // Zeigt übermittelte Daten auf Seite an
-    function handleTransmit(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weigths: string) {
-        const result = `AEP: ${aep}, Generation Count: ${generation_count}, Population Size: ${population_size}, Given Seed: ${given_seed}, Elite Count: ${elite_count}, Alien Count: ${alien_count}, Weights: ${weigths}`;
-        setTransmittedData(result);
+     function handleTransmit(aep: string, generation_count: string, population_size: string, given_seed: string, elite_count: string, alien_count: string, weights: string, call: ((data: HistoricalDataType[]) => void)) {
+        const result =  transmitParameters(aep, generation_count, population_size, given_seed, elite_count, alien_count, weights, call)
+        //const result = `AEP: ${aep}, Generation Count: ${generation_count}, Population Size: ${population_size}, Given Seed: ${given_seed}, Elite Count: ${elite_count}, Alien Count: ${alien_count}, Weights: ${weigths}`;
+        console.log("Rückgabe parameter")
+        console.log(result)
+       
+        /*Papa.parse(result,{
+            ...commonConfig,
+            complete: (json: any) => {
+              setTransmittedData(json.data);
+            }
+          });*/
     }
 
-    // For Debugging Purpose/ Test Purpose
-    //console.log('Data: ', data, typeof (data))
-    //console.log('Generations: ', generations, typeof (generations))
-    //console.log('SelectedGeneration: ', selectedGeneration, typeof (selectedGeneration))
-    //console.log('GeneratedElement: ', generatedElement, typeof (generatedElement))
-    //console.log(document.cookie)
-    const tmpList = generateResultList(data)
+    function getGenertations(data: Record<string, HistoricalDataType[]>){
+        if (Object.keys(data).length === 0){
+            return
+        }
+
+        const Generations: string[] = []
+
+        for (let i = 0; i <= data[0].length; i++){
+            Generations.push(String(i))
+        }
+        console.log(Generations)
+        setGenerations(Generations)
+    }
+
+    function parseCSVToList(csvContent: string) {
+        const result: any = {};
+
+        // Remove unnecessary spaces
+        const lines = csvContent.trim().split("\n");
+
+        if (lines.length < 2) {
+            console.error("CSV file is empty or has no data rows!");
+            return result;
+        }
+
+        // Extract column headers
+        const keys = lines[0].split(";");
+
+        // Process each data row
+        for (let i = 1; i < lines.length; i++) {
+            const values = lines[i].split(";");
+            if (values.length !== keys.length) continue; // Ignore malformed rows
+
+            // Create row object
+            const row: any = {};
+            keys.forEach((key, index) => {
+                row[key] = values[index];
+            });
+
+            // Determine the generation from the "generation" column
+            const generation = row["generation"];
+            if (!result[generation]) {
+                result[generation] = [];
+            }
+
+            result[generation].push(row);
+        }
+
+        return result;
+    }
+
+    function uploadCSV(event: React.ChangeEvent<HTMLInputElement>){
+        // get selected file
+        const file = event.target.files?.[0];  // Nutze optional chaining
+
+        // check file
+        if (!file) {
+            alert('Please choose a CSV-File');
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            // content of uploaded file
+            // @ts-ignore
+            const csvContent = e.target.result;
+            // list which will contain the parsedCSV file
+            // @ts-ignore
+            const parsedList = parseCSVToList(csvContent);
+            // TODO: Usage for pasedList (backend i.e)
+            getGenertations(parsedList)
+
+            console.log("daten sind spaß")
+            console.log(parsedList)
+
+            setData(Object.values(parsedList).flat())
+
+            console.log(Object.values(parsedList).flat())
+
+
+
+            // @ts-ignore
+            graph(Object.values(parsedList).flat())
+            //graph(parsedList);
+            //Object.values(parsedList)[1]
+        };
+
+        reader.readAsText(file); // Liest die Datei als Text
+    }
 
     return (
         <div className={styles.wrapper}>
-            {/*<div className={styles.toolbar}>Toolbar</div><*/}
-
             <div className={styles.container}>
-                {/*<button className="toggle-btn left-btn" onClick={() => toggleSidebar('left')}>☰</button>*/}
-                {/*<div className="sidebar left" id="leftSidebar">*/}
-                {/*    <button className="close-btn" onClick={() => toggleSidebar('left')}>✖</button>*/}
-                {/*    Left Sidebar Content*/}
-                {/*</div>*/}
             </div>
 
             <div className={styles.mainContent}>
-                {/*<Card>
-                    <div className={styles.paraContent}>
-                        <a>Final Drive</a>
-                        <input type="text" name="finalDrive" value={inputs.finalDrive} onChange={handleParaChange} />
-                        <a>Roll Radius</a>
-                        <input type="text" name="rollRadius" value={inputs.rollRadius} onChange={handleParaChange} />
-                        <a>Gear 3</a>
-                        <input type="text" name="gear3" value={inputs.gear3} onChange={handleParaChange} />
-                        <a>Gear 4</a>
-                        <input type="text" name="gear4" value={inputs.gear4} onChange={handleParaChange} />
-                        <a>Gear 5</a>
-                        <input type="text" name="gear5" value={inputs.gear5} onChange={handleParaChange} />
-                        <button className={styles.paraButton} onClick={() => transmitParameters(inputs.finalDrive, inputs.rollRadius, inputs.gear3, inputs.gear4, inputs.gear5)}>Apply Changes</button>
-                    </div>
-                </Card>*/}
-
                 <Card>
                     <h2>Description</h2>
                     <p>
                         {easySpeech ? easyText : normalText}
                     </p>
-                </Card>
-
-                <Card>
+                
+                    <h2>Simulation Parameter</h2>
                     <table>
                         <tbody>
                             <tr>
                                 <td>Mutationsrate</td>
-                                <td><input type="text" name="aep" value={paraInputs.aep} onChange={handleParaChange} /></td>
-                                <td>rate of mutation. A higher value results in less mutation (values between 0 and 1)</td>
+                                <td><input className={styles.userFormSelect} type="text" name="aep" value={paraInputs.aep} onChange={handleParaChange} /></td>
+                                <td>Rate of mutation. A higher value results in less mutation (values between 0 and 1)</td>
                             </tr>
                             <tr>
                                 <td>Generation Count</td>
-                                <td><input type="text" name="generation_count" value={paraInputs.generation_count} onChange={handleParaChange} /></td>
+                                <td><input className={styles.userFormSelect} type="text" name="generation_count" value={paraInputs.generation_count} onChange={handleParaChange} /></td>
                                 <td>Number of computaded generations</td>
                             </tr>
                             <tr>
                                 <td>Population Size</td>
-                                <td><input type="text" name="population_size" value={paraInputs.population_size} onChange={handleParaChange} /></td>
-                                <td>Size of a population</td>
+                                <td><input className={styles.userFormSelect} type="text" name="population_size" value={paraInputs.population_size} onChange={handleParaChange} /></td>
+                                <td>Size of a population (Population Size &gt; Elite Count + Alien Count) </td>
                             </tr>
                             <tr>
                                 <td>Given Seed</td>
-                                <td><input type="text" name="given_seed" value={paraInputs.given_seed} onChange={handleParaChange} /></td>
-                                <td>Seed for random generation of the first population</td>
+                                <td><input className={styles.userFormSelect} type="text" name="given_seed" value={paraInputs.given_seed} onChange={handleParaChange} /></td>
+                                <td>Seed for random generation of the first population Number between 1-1000. If kept empty, it will generate a random one between 1-1000</td>
                             </tr>
                             <tr>
                                 <td>Elite Count</td>
-                                <td><input type="text" name="elite_count" value={paraInputs.elite_count} onChange={handleParaChange} /></td>
+                                <td><input className={styles.userFormSelect} type="text" name="elite_count" value={paraInputs.elite_count} onChange={handleParaChange} /></td>
                                 <td>Number of elites. Elites are the top entities that will remain unchanged for the next generation</td>
                             </tr>
                             <tr>
                                 <td>Alien Count</td>
-                                <td><input type="text" name="alien_count" value={paraInputs.alien_count} onChange={handleParaChange} /></td>
+                                <td><input className={styles.userFormSelect} type="text" name="alien_count" value={paraInputs.alien_count} onChange={handleParaChange} /></td>
                                 <td>Number of Entities that will be randomly generated in every generation</td>
                             </tr>
                             <tr>
                                 <td>Weigths</td>
-                                <td><input type="text" name="weights" value={paraInputs.weights} onChange={handleParaChange} /></td>
-                                <td>Weights of the result-values: consumption, elasticity (values between 3-5)</td>
+                                <td><input className={styles.userFormSelect} type="text" name="weights" value={paraInputs.weights} onChange={handleParaChange} /></td>
+                                <td>Weights of the result-values: Has to be 4 Values (x,x,x,x an x can be y.y or -y.y)</td>
+                            </tr>
+                            <tr>
+                                <td>All parameters have a cap at 20 chars</td>
                             </tr>
                         </tbody>
                     </table>
 
                         <GenericButton title='Start Simulation' onClick={() => {
-                            transmitParameters(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights);
-                            handleTransmit(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights)
-                        }} />
+                            handleTransmit(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights, updateData)
+                        }} idd={"data_StartSimu"}/>
                     <hr/>
-                    <a id="transData">{transmittedData}</a>
+                    <label id="transData">{transmittedData}</label>
                 </Card>
 
-                <hr/>
+                <DropDown text={generations} callBack={new CallBack((index:number) => handleDropdownSelect(index))}></DropDown>
 
-                <Dropdown id={styles.dropdownWrapper}>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">
-                        Select Generation
-                    </Dropdown.Toggle>
+                <hr />
 
-                    <Dropdown.Menu id="dropdown-basic">
-                        {generations.length > 0 ? (
-                            generations.map((gen, index) => (
-                                <Dropdown.Item key={index} onClick={() => handleDropdownSelect(index)}>
-                                    {'Generation ' + gen}
-                                </Dropdown.Item>
-                            ))
-                        ) : (
-                            <Dropdown.Item disabled>Load generations...</Dropdown.Item>
-                        )}
-                    </Dropdown.Menu>
-                </Dropdown>
                 {selectedGeneration ? (
                     <Card>
                         <h2>Selected generation: {selectedGeneration}</h2>
@@ -327,20 +384,34 @@ function DataVisualization() {
                     <div style={{ width: "800px" }}><canvas id="my_graph"></canvas></div>
                 </Card>
                 <hr/>
+
+                {showHistoricalData ? (
+                    <HistoricalData/>
+                ) : (
+                    <></>
+                )}
+
                 <Card>
                     <div className={styles.userButtons}>
-                        <UserPersmissions></UserPersmissions>
-                        <UploadButton></UploadButton>
-                        <DownloadButton onClick={() => downloadCSV(tmpList, 'Frontendtest')}></DownloadButton>
+
+                        {role === "administrator" ? (
+                            <>
+                                <GenericButton title="Protocol" onClick={placeholderButtonFunction} idd={"data_Protocol"}/>
+                                <GenericButton title="Debug" onClick={placeholderButtonFunction} idd={"data_Debug"}/>
+                                <GenericButton title="History" onClick={toggleHistoricalData} idd={"data_History"}/>
+                            </>
+                        ) : <></>}
+                        {role === "data_analyst" ? (
+                            <>
+                                <GenericButton title="History" onClick={placeholderButtonFunction} idd={"data_History"}/>
+                            </>
+                        ) : <></>}
+
+                        <UploadButton onChange={uploadCSV}></UploadButton>
+                        <DownloadButton onClick={() => downloadCSV('Frontendtest', id)}></DownloadButton>
                     </div>
                 </Card>
-
-                {/*<h2>{selectedGeneration ? `Selected generation: ${selectedGeneration}` : "Please select a generation"}</h2>*/}
-                {/*{generatedElement}*/}
             </div>
-
-            {/*<div className="sidebar right" id="rightSidebar">Right Sidebar Content</div>*/}
-            {/*<button className="toggle-btn right-btn" onClick={() => toggleSidebar('right')}>☰</button>*/}
         </div>
     );
 }

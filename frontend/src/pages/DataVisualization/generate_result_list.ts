@@ -1360,7 +1360,7 @@ function generateResultList(arr: object) {
             }
         ]
     }
-    console.log(typeof (testList))
+    //console.log(typeof (testList))
     console.log(arr)
     return (testList)
 }

@@ -2,17 +2,11 @@ import sqlite3
 import csv
 import hashlib
 import os
-from redis import Redis
+import io
 
-redis_host = os.getenv('REDIS_HOST', 'localhost')
-redis_client = Redis(host=redis_host)
-
-
-#user_connection = sqlite3.connect("../db/simulation_data.db")
+#user_connection = sqlite3.connect("./backend/db/logs.db")
 #cur = user_connection.cursor()
-#cur.execute("""CREATE TABLE experiment_owners(
-#             experiment_id INTEGER PRIMARY KEY,
-#             username text)""")
+#cur.execute("CREATE TABLE logs(id INT PRIMARY KEY,time TEXT,log TEXT)")
 #user_connection.commit()
 
 def get_users(connection_path: str = "db/users.db") -> list[tuple[str, str]]:
@@ -29,17 +23,34 @@ def get_users(connection_path: str = "db/users.db") -> list[tuple[str, str]]:
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
-    cur.execute("SELECT user_name, role FROM users")
+    cur.execute("SELECT username, role FROM users")
 
     return cur.fetchall()
 
+def get_logs(connection_path: str = "db/logs.db") -> list[tuple[str, str]]:
+    """
+    Gets a list of all logs.
 
-def add_user(user_name: str, password: str, role: str = "data_analyst", connection_path: str = "db/users.db")-> None:
+    :param connection_path: path to the database
+    :type connection_path: str
+
+    :returns A list of logs
+    :type list[tuple[str, str]]
+    """
+    
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+
+    cur.execute("SELECT time, log FROM logs")
+
+    return cur.fetchall()
+
+def add_user(username: str, password: str, role: str = "data_analyst", connection_path: str = "db/users.db")-> None:
     """
     Adds a user to the user database
 
-    :param user_name: The first Name of the User
-    :type user_name: str
+    :param username: The first Name of the User
+    :type username: str
 
     :param role: The users role
     :type role: str
@@ -47,8 +58,8 @@ def add_user(user_name: str, password: str, role: str = "data_analyst", connecti
     :param password: The users password
     :type password: str
 
-    :param conn: path to the database
-    :type conn: str
+    :param connection_path: path to the database
+    :type connection_path: str
 
     :returns:
         bool: returns True if user has been added successfully, False otherwise
@@ -62,7 +73,7 @@ def add_user(user_name: str, password: str, role: str = "data_analyst", connecti
 
     user_added_successfully = True
     try:
-        cur.execute("INSERT INTO users(user_name,role,hashed_password) VALUES(?,?,?)",(user_name,role,h.hexdigest()))
+        cur.execute("INSERT INTO users(username,role,hashed_password) VALUES(?,?,?)",(username,role,h.hexdigest()))
         connection.commit()
     except sqlite3.IntegrityError:
         user_added_successfully = False
@@ -70,15 +81,15 @@ def add_user(user_name: str, password: str, role: str = "data_analyst", connecti
         connection.close()
         return user_added_successfully
 
-def delete_user(user_name:str, connection_path: str = "db/users.db") -> bool:
+def delete_user(username:str, connection_path: str = "db/users.db") -> bool:
     """
     Deletes the given user.
 
-    :param user_name: The name of the user
-    :type user_name: str
+    :param username: The name of the user
+    :type username: str
 
-    :param conn: path to the database
-    :type conn: str
+    :param connection_path: path to the database
+    :type connection_path: str
 
     :returns: Returns true if deletion successful
     :retype: bool
@@ -87,26 +98,26 @@ def delete_user(user_name:str, connection_path: str = "db/users.db") -> bool:
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
-    if not user_exists(user_name, connection_path):
+    if not user_exists(username, connection_path):
         connection.close()
         return False
-    cur.execute("DELETE FROM users WHERE user_name=?",[user_name])
+    cur.execute("DELETE FROM users WHERE username=?",[username])
     connection.commit()
     connection.close()
     return True
 
-def change_password(user_name: str, new_password: str, connection_path: str = "db/users.db") -> bool:
+def change_password(username: str, new_password: str, connection_path: str = "db/users.db") -> bool:
     """
     Changes a users password in the user database
 
-    :param user_name: The name of the User
-    :type user_name: str
+    :param username: The name of the User
+    :type username: str
 
     :param new_password: The users new_password
     :type new_password: str
 
-    :param conn: path to the database
-    :type conn: str
+    :param connection_path: path to the database
+    :type connection_path: str
 
     :returns: returns True if the password has been changed successfully, False otherwise
     :rytpe: bool
@@ -119,33 +130,109 @@ def change_password(user_name: str, new_password: str, connection_path: str = "d
     h = hashlib.sha256()
     h.update(str.encode(new_password))
 
-    if user_exists(user_name,connection_path):
-        cur.execute("UPDATE users SET hashed_password = ? WHERE user_name=?",[h.hexdigest(),user_name])
-
-        connection.commit()
+    if not user_exists(username,connection_path):
         connection.close()
-        return True
+        return False
     
+    cur.execute("UPDATE users SET hashed_password = ? WHERE username=?",[h.hexdigest(),username])
     connection.commit()
     connection.close()
-    return False
+    return True
 
-def get_role(user_name: str, connection_path: str = "db/users.db")-> str:
+def change_username(old_username: str, new_username: str, users_connection_path: str = "db/users.db", simulation_data_connection_path: str = "db/simulation_data.db"):
+    """
+    Changes a users name in the user database
+
+    :param old_username: The name of the User to change
+    :type old_username: str
+
+    :param new_username: The users new username
+    :type new_username: str
+
+    :param users_connection_path: path to the users database
+    :type users_connection_path: str
+
+    :param simulation_data_connection_path: path to the simulation data database
+    :type simulation_data_connection_path: str
+
+    :returns: returns True if the username has been changed successfully, False otherwise
+    :rytpe: bool
+    """
+
+    connection = sqlite3.connect(users_connection_path)
+    cur = connection.cursor()
+
+    if not user_exists(old_username, users_connection_path):
+        connection.close()
+        return False
+
+    cur.execute("UPDATE users SET username = ? WHERE username = ?", [new_username, old_username])
+
+    connection.commit()
+    connection.close()
+
+    connection = sqlite3.connect(simulation_data_connection_path)
+    cur = connection.cursor()
+
+    cur.execute("UPDATE experiments SET username = ? WHERE username = ?", [new_username, old_username])
+
+    connection.commit()
+    connection.close()
+
+    return True
+
+def change_role(username: str, role: str, connection_path: str = "db/users.db"):
+    """
+    Changes a users name in the user database
+
+    :param username: The name of the User to change the role of
+    :type username: str
+
+    :param role: The users new role (simulator | data_analyst | administrator)
+    :type role: str
+
+    :param connection_path: path to the database
+    :type connection_path: str
+
+    :returns: returns True if the role has been changed successfully, False otherwise
+    :rytpe: bool
+    """
+
+    allowed_roles = {"data_analyst", "administrator", "simulator"}
+
+    if role not in allowed_roles:
+        return False
+
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+
+    if not user_exists(username, connection_path):
+        connection.close()
+        return False
+
+    cur.execute("UPDATE users SET role = ? WHERE username = ?", [role, username])
+
+    connection.commit()
+    connection.close()
+
+    return True
+
+def get_role(username: str, connection_path: str = "db/users.db")-> str:
     """
     Returns the role of the entered user
 
-    :param user_name: The name of the user
-    :type user_name: str
+    :param username: The name of the user
+    :type username: str
 
-    :param conn: path to the database
-    :type conn: str
+    :param connection_path: path to the database
+    :type connection_path: str
 
     :returns: The role of the user if one exists, None otherwise
     :rtype: str
     """
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
-    cur.execute("SELECT role FROM users WHERE ?=user_name",[user_name])
+    cur.execute("SELECT role FROM users WHERE ?=username",[username])
     try:
         res = cur.fetchone()[0]
     except TypeError:
@@ -154,18 +241,18 @@ def get_role(user_name: str, connection_path: str = "db/users.db")-> str:
         connection.close()
         return res
 
-def check_password(user_name: str, password: str, connection_path: str = "db/users.db") -> bool:
+def check_password(username: str, password: str, connection_path: str = "db/users.db") -> bool:
     """
     Checks if an entered password is correct
 
-    :param user_name: The name of the user
-    :type user_name: str
+    :param username: The name of the user
+    :type username: str
 
     :param password: The entered password
     :type password: str
 
-    :param conn: path to the database
-    :type conn: str
+    :param connection_path: path to the database
+    :type connection_path: str
 
     :returns: returns True if the password is correct, False otherwise
     :rtype: bool
@@ -174,7 +261,7 @@ def check_password(user_name: str, password: str, connection_path: str = "db/use
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
-    cur.execute("SELECT hashed_password FROM users WHERE ?=user_name",[user_name])
+    cur.execute("SELECT hashed_password FROM users WHERE ?=username",[username])
 
     users_hashed_password = cur.fetchone()[0]
     h = hashlib.sha256()
@@ -184,15 +271,15 @@ def check_password(user_name: str, password: str, connection_path: str = "db/use
 
     return users_hashed_password == entered_hashed_password
 
-def user_exists(user_name: str, connection_path: str = "db/users.db") -> bool:
+def user_exists(username: str, connection_path: str = "db/users.db") -> bool:
     """
     Checks if a user exists in the database
 
-    :param user_name: The first Name of the User
-    :type user_name: str
+    :param username: The first Name of the User
+    :type username: str
 
-    :param conn: path to the database
-    :type conn: str
+    :param connection_path: path to the database
+    :type connection_path: str
 
     :returns: returns True if user exists, False otherwise
     :rtype: bool
@@ -201,12 +288,12 @@ def user_exists(user_name: str, connection_path: str = "db/users.db") -> bool:
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
-    cur.execute("SELECT * FROM users WHERE ?=user_name",[user_name])
+    cur.execute("SELECT * FROM users WHERE ?=username",[username])
     res = len(cur.fetchall()) == 1
     connection.close()
     return res
 
-def get_experiment_owner(experiment_id: int, connection_path: str = "db/simulation_data.db"):
+def get_experiment(experiment_id: int, connection_path: str = "db/simulation_data.db"):
     """
     Returns who ran which experiment
 
@@ -216,19 +303,32 @@ def get_experiment_owner(experiment_id: int, connection_path: str = "db/simulati
     :param connection_path: The path to the database
     :type connection_path: str
 
-    :returns The username of the one who ran the experiment  
+    :returns The inputs used to run the experiment as well as username of the one who ran the experiment  
+    :type dict
     """ 
     
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
-    cur.execute("SELECT username FROM experiment_owners WHERE experiment_id = ?", [experiment_id])
+    cur.execute("SELECT username, population_size, simulation_seed, generation_count, strategy, aep, elite_count, alien_count, consumption_weight, elasticity_3_weight, elasticity_4_weight, elasticity_5_weight FROM experiments WHERE experiment_id = ?", [experiment_id])
 
     res = cur.fetchone()
-    
+
+    experiment = {
+        "username": res[0],
+        "population_size": res[1],
+        "simulation_seed": res[2],
+        "generation_count": res[3],
+        "strategy": res[4],
+        "aep": res[5],
+        "elite_count": res[6],
+        "alien_count": res[7],
+        "weights": [res[8], res[9], res[10], res[11]]
+    }
+
     connection.close()
 
-    return res
+    return experiment
 
 def get_users_experiments(username: str, connection_path: str = "db/simulation_data.db"):
     """
@@ -244,13 +344,13 @@ def get_users_experiments(username: str, connection_path: str = "db/simulation_d
     connection = sqlite3.connect(connection_path)
     cur = connection.cursor()
 
-    cur.execute("SELECT experiment_id FROM experiment_owners WHERE username = ?", [username])
+    cur.execute("SELECT experiment_id FROM experiments WHERE username = ?", [username])
     ids = cur.fetchall()
     ids = [i[0] for i in ids]
 
     return ids
 
-def add_experiment_data(username: str, data: list[list], connection_path: str = "db/simulation_data.db") -> None:
+def add_experiment(username: str, data: list[list], population_size: int, simulation_seed: int, generation_count: int, strategy: int, aep: float, elite_count: int, alien_count: int, weights: list[int], connection_path: str = "db/simulation_data.db") -> None:
     """
     Adds the given csv data to the given connection
 
@@ -281,14 +381,36 @@ def add_experiment_data(username: str, data: list[list], connection_path: str = 
 
     cur.executemany("INSERT INTO car_data (generation, final_drive, roll_radius, gear_3, gear_4, gear_5, consumption, elasticity_3, elasticity_4, elasticity_5,experiment_id) VALUES (?,?,?,?,?,?,?,?,?,?,?);", to_db)
 
-    cur.execute("INSERT INTO experiment_owners (experiment_id, username) VALUES(?,?)", [experiment_id, username])
+    cur.execute("INSERT INTO experiments (experiment_id, username, population_size, simulation_seed, generation_count, strategy, aep, elite_count, alien_count, consumption_weight, elasticity_3_weight, elasticity_4_weight, elasticity_5_weight) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)", [experiment_id, username, population_size, simulation_seed, generation_count, strategy, aep, elite_count, alien_count, weights[0], weights[1], weights[2], weights[3]])
 
     connection.commit()
     connection.close()
     
     return experiment_id
 
-def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], constraints: list[str] = [], connection_path: str = "db/simulation_data.db") -> str:
+def get_experiment_inputs(experiment_id: int, connection_path: str = "db/simulation_data.db") -> list:
+    """
+    Gets the data of the given experiment
+
+    :param experiment_id: The id of the experiment
+    :type experiment_id: int
+
+    :param connection_path: The path to the database
+    :type connection_path: str
+
+    :returns: The imputs of the experiment
+    :rtype: list[list]
+    """
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+
+    cur.execute("SELECT generation_count,simulation_seed, population_size, strategy, aep, elite_count, alien_count, consumption_weight, elasticity_3_weight, elasticity_4_weight, elasticity_5_weight FROM experiments WHERE experiment_id = ?", [experiment_id])
+    data = cur.fetchone()
+    connection.close()
+
+    return data
+
+def export_experiment(columns: list[str] = [], constraints: list[str] = [], connection_path: str = "db/simulation_data.db") -> str:
     """
     Exports the data from the database to csv
 
@@ -298,7 +420,7 @@ def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], const
     :param columns: The columns to be exported
     :type columns: list[str]
 
-    :param constraints: The constraints to be applied. Contrainsts are in the form of "lhs op rhs" where lhs and rhs are either column names or numbers and op is one of the following operators: "<",">","<=",">=","="
+    :param constraints: The constraints to be applied. Contrainsts are in the form of "lhs op rhs" where lhs and rhs are either column names or numbers and op is one of the following operators: "<",">","<=",">=","=", "<>"
     :type constraints: list[str]
 
     :param connection_path: The path to the database
@@ -353,9 +475,20 @@ def export_experiment_data_to_csv(file_path: str, columns: list[str] = [], const
 
     header = [i[0] for i in cur.description]
 
-    with open(file_path, "w", newline="") as file:
-        writer = csv.writer(file)
-        writer.writerow(header)
-        writer.writerows(results)
+    output = io.StringIO()
 
-#print(get_users_experiments("simulation_expert", "./backend/db/simulation_data.db"))
+    writer = csv.writer(output)
+    writer.writerow(header)
+    writer.writerows(results)
+
+    return output.getvalue()
+
+def write_log(log: str, connection_path = "db/logs.db"):
+    connection = sqlite3.connect(connection_path)
+    cur = connection.cursor()
+
+    cur.execute("INSERT INTO logs(time,log) VALUES(DATETIME(),?)",[log])
+    connection.commit()
+    connection.close()
+
+#print(get_experiment_inputs(7,"./backend/db/simulation_data.db"))

@@ -20,7 +20,7 @@ class UserDataBaseTestsNewFunctions(UnitMeta):
             for data in self.TestData:
                 database.add_user(data["user"], data["pass"], data["role"], self.testConnection)
         changedPasswords = [DatabaseGrenzwertAnalyse.GetRandomPassword() for _ in range(len(self.TestData))]
-        for val in changedPasswords:
+
 
     def TestDeleteUser(self):
         if not self.addedData:

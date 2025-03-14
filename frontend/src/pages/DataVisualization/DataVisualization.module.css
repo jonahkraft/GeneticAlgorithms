@@ -17,7 +17,7 @@
 
 .mainContent {
     padding: 20px;
-    background: white;
+    color: black;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
@@ -26,6 +26,22 @@
     display: flex;
     gap: 30px
 }
+
+td {
+    text-align: left;
+}
+
+.userFormSelect {
+    width: 75%;
+    margin: 2px;
+    padding: 2px;
+    padding-left: 5px;
+    border: 1px solid #0b132f;
+    border-radius: 5px;
+    font-size: 1em;
+    background-color: #f8f8f8;
+    color: #333;
+  }
 
 /* Zeug von der Sidebar */
 
