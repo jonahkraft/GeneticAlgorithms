@@ -5,6 +5,7 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
+from flask.wrappers import Response
 
 from app import app as api
 
@@ -121,7 +122,10 @@ def api_register():
 
     return register(username, password, role)
 
+@api.route("/api/integration/empty_ping", methods = ["GET"])
+def empty_ping() -> Response:
 
+    return Response(response=None, status=200)
 
 
 @api.route("/api/delete_user", methods=["POST"])

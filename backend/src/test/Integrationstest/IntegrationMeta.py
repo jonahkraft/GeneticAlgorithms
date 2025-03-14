@@ -43,17 +43,25 @@ class IntegrationMeta(MetaTest):
         # TODO : recursive decomposition of the testpassed object
         pass
 
-    def deleteUserData(self, **kwargs):
+    @classmethod
+    def deleteUserData(cls, **kwargs):
+
+        usernames = kwargs["testUserNames"]
 
         database : Connection = sqlite3.connect(kwargs['database_path'])
         cursor : Cursor = database.cursor()
 
-        cursor.execute('DELETE FROM users WHERE ?= username', ["TestUser"])
+        if usernames:
+            for username in usernames:
+                print("deleted", username)
+                cursor.execute('DELETE FROM users WHERE ?= user_name', [username])
+        else: cursor.execute('DELETE FROM users WHERE ?= user_name', ["TestUser"])
         database.close()
 
-
     def disconnect(self, **kwargs):
-        self.deleteUserData(database_path=kwargs['database_path'])
+        self.deleteUserData(**kwargs)
+
+        return True
 
     def databaseConnection(self, database_path: str) -> Connection:
 
@@ -78,17 +86,3 @@ class TestResult(IntegrationMeta):
 
 if __name__ == '__main__':
     pass
-    #Integrations
-
-
-    #SHOULD BE IN OWN INTEGRATION
-    #
-    # #DATABASE INTEGRATION
-    # DatabaseIntegrationInstance = DatabaseIntegration.DatabaseIntegrationTest()
-    # DatabaseIntegrationInstance(connectionInterface=sqlite3.connect, database_path = "")
-    #
-    #
-    #
-    # #DOCKER INTEGRATION
-    # ServerIntegrationInstance = DockerIntegration.DockerIntegrationTest()
-    # ServerIntegrationInstance()
