@@ -10,7 +10,6 @@ driver = initialize_driver1()
 newusername = "khan"
 newpassword = "nknk"
 
-bb ="bb"
 
 click_button(driver, "navbar_Login")
 wait_element(driver, By.ID, "username").send_keys(newusername)
@@ -22,8 +21,8 @@ alert = Alert(driver)
 alert.accept()
 time.sleep(2)
 click_button(driver, "navbar_Login")
-wait_element(driver, By.ID, "username").send_keys(bb)
-wait_element(driver, By.ID, "password").send_keys(bb)
+wait_element(driver, By.ID, "username").send_keys("user")
+wait_element(driver, By.ID, "password").send_keys("password")
 click_button(driver, "login_Login")
 time.sleep(2)                                           ##Login als Admin
 click_button(driver, "navbar_Settings")
