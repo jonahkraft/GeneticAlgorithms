@@ -289,8 +289,16 @@ function DataVisualization() {
             getGenertations(parsedList)
 
             console.log(parsedList)
-            // setData(Object.values(parsedList))
 
+            const values = Object.values(parsedList).flat() as HistoricalDataType[];
+            console.log(values)
+
+
+
+            // @ts-ignore
+            graph(Object.values(parsedList).flat())
+            //graph(parsedList);
+            //Object.values(parsedList)[1]
             // for-loop > select gen > setData
             let filteredList: HistoricalDataType[] = [];
             
