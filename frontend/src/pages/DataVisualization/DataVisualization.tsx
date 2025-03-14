@@ -17,6 +17,7 @@ import GenericButton from '../../components/GenericButton/GenericButton.tsx';
 import DropDown from "../../components/DropdownMenu/DropDown.tsx";
 import CallBack from "../../components/DropdownMenu/CallBack.tsx";
 import HistoricalData from "../../components/HistoricalData/HistoricalData.tsx"
+import { Chart } from "chart.js";
 
 export interface HistoricalDataType {
     generation: string;
@@ -36,9 +37,7 @@ function DataVisualization() {
     const navigate = useNavigate();
     const easySpeech = cookies.getCookies().easy_speech
     const role = cookies.getCookies().role
-
-    var commonConfig = { delimiter: "," };
-
+    
     const normalText = "In the genetic algorithm we start with a population of entities. This population is the first generation. Every generation is the base of the following generation. This is archived by selecting and multiplying good entities and deleting bad ones. Each entity represents a set of input values and their corresponding results for consumption and elasticity. First the input values will be randomly set. After all results are computed, the entities will be ranked depending on their result values. Good performing entities with slightly modified values are used to generate a new population. The best performing entities are called elites. Elites are not modified, but copied to the next generation. The worst performing entities will not be used for future generations.";
     const easyText = "In the genetic algorithm, we start with a group of entities. This group is the first generation. Every generation is the base for the next one. Good entities are chosen and multiplied, while bad ones are removed. Each entity represents a set of values and their results for fuel usage and elasticity. The values are first set randomly. After computing the results, the entities are ranked based on their performance. Good performing entities are slightly changed and used to create a new group. The best performing entities are called elites. Elites are not changed but copied to the next group. The worst entities are not used in future generations.";
 
@@ -54,6 +53,10 @@ function DataVisualization() {
     function toggleHistoricalData() {
         setShowHistoricalData(!showHistoricalData)
     }
+
+    const [varGraph, setVarGraph] = useState<Chart<"line" | "scatter", { x: string; y: string; }[], unknown> | null>(null)
+    const [varGraphGen, setVarGraphGen] = useState<Chart<"scatter", { x: number; y: number; }[], unknown> | null>(null);
+
 
     // id von dem Experiment, das gerade angezeigt wird
     const [id, setId] = useState("0")
@@ -90,7 +93,8 @@ function DataVisualization() {
     useEffect(() => {
         console.log("hook: create graph with: ", data)
         if( data != null && data!.length > 0 ) {
-            graph(data!);
+            deconstructGraphs()
+            setVarGraph(graph(data!))
             console.log("graph created")
         }
     }, [data]);
@@ -104,9 +108,28 @@ function DataVisualization() {
         if( data && selectedGeneration) {
             const filtereddata = data.filter(entity => entity.generation === selectedGeneration);
             console.log(filtereddata)
-            graphGen(filtereddata);
+            setVarGraphGen(graphGen(filtereddata));
         }
     }, [data, generatedElement]);
+
+    function deconstructGraphs() {
+        console.log("trying to destroy", varGraph, varGraphGen)
+
+        if (varGraph != null) {
+            console.log("destroy graph")
+            varGraph.destroy()
+        }
+        if (varGraphGen != null) {
+            console.log("destroy graphGen")
+            varGraphGen.destroy()
+            setSelectedGeneration(null)
+        }
+        
+        /*
+        const canvas = document.getElementById("my_graph") as HTMLCanvasElement
+        (canvas.getContext("2d") as CanvasRenderingContext2D)
+        */
+    }
 
     // Change Drop Down Element
     function handleDropdownSelect(index: number) {
@@ -293,10 +316,6 @@ function DataVisualization() {
             const values = Object.values(parsedList).flat() as HistoricalDataType[];
             console.log(values)
 
-
-
-            // @ts-ignore
-            graph(Object.values(parsedList).flat())
             //graph(parsedList);
             //Object.values(parsedList)[1]
             // for-loop > select gen > setData

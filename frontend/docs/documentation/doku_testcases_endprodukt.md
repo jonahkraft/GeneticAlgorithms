@@ -30,7 +30,13 @@ Test soll zeigen, dass Admins vorhandene Userdaten bearbeiten können
 5. Der User versucht erneut sich mit seinen alten Userdaten anzumelden, nur diesmal nicht erfolgreich.
 6. User versucht es erneut mit den neuen Daten, die der Admin zuvor festgelegt hatte. -> Diesmal erfolgreich.
 
-
+```
+EasySpeech.py
+```
+Test soll sicherstellen, dass nach Aktivierung von `EasySpeech` alle Texte der Website in einfache Sprache umgewandelt werden.
+1. User meldet sich an 
+2. User geht in die Einstellungen und aktiviert die EasySpeech Funktion
+3. Danach werden die Texte auf der Data Visualization und Home Seite überprüft.
 
 
 
