@@ -1,5 +1,6 @@
-.container{
 
+.icon {
+    transform: rotate(180deg) scale(0.35);
 }
 
 .uploadButton{
