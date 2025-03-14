@@ -193,7 +193,7 @@ function DataVisualization() {
     }
 
     function updateData(data: HistoricalDataType[]) {
-        setGenerations(Array.from(new Set(data.map((entry) => (entry.generation)))))
+        //setGenerations(Array.from(new Set(data.map((entry) => (entry.generation)))))
         setData(data)
         setId(data[0].experiment_id)
     }
@@ -289,8 +289,16 @@ function DataVisualization() {
             getGenertations(parsedList)
 
             console.log(parsedList)
-            // setData(Object.values(parsedList))
 
+            const values = Object.values(parsedList).flat() as HistoricalDataType[];
+            console.log(values)
+
+
+
+            // @ts-ignore
+            graph(Object.values(parsedList).flat())
+            //graph(parsedList);
+            //Object.values(parsedList)[1]
             // for-loop > select gen > setData
             let filteredList: HistoricalDataType[] = [];
             
@@ -322,7 +330,7 @@ function DataVisualization() {
                             <tr>
                                 <td>Mutationsrate</td>
                                 <td><input className={styles.userFormSelect} type="text" name="aep" value={paraInputs.aep} onChange={handleParaChange} /></td>
-                                <td>Rate of mutation. A higher value results in less mutation (values between 0 and 1)</td>
+                                <td>Rate of mutation. A higher value results in higher mutation (values between 0 and 1)</td>
                             </tr>
                             <tr>
                                 <td>Generation Count</td>
