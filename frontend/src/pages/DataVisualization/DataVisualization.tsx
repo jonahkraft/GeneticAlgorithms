@@ -54,9 +54,10 @@ function DataVisualization() {
         setShowHistoricalData(!showHistoricalData)
     }
 
+    const [waiting, setWaiting] = useState<boolean>(false)
+
     const [varGraph, setVarGraph] = useState<Chart<"line" | "scatter", { x: string; y: string; }[], unknown> | null>(null)
     const [varGraphGen, setVarGraphGen] = useState<Chart<"scatter", { x: number; y: number; }[], unknown> | null>(null);
-
 
     // id von dem Experiment, das gerade angezeigt wird
     const [id, setId] = useState("0")
@@ -217,6 +218,8 @@ function DataVisualization() {
 
     function updateData(data: HistoricalDataType[]) {
         //setGenerations(Array.from(new Set(data.map((entry) => (entry.generation)))))
+        setWaiting(false)
+        setGenerations(Array.from(new Set(data.map((entry) => (entry.generation)))))   
         setData(data)
         setId(data[0].experiment_id)
     }
@@ -387,7 +390,8 @@ function DataVisualization() {
                         </tbody>
                     </table>
 
-                        <GenericButton title='Start Simulation' onClick={() => {
+                        <GenericButton disabled={waiting} title='Start Simulation' onClick={() => {
+                            setWaiting(!waiting)
                             handleTransmit(paraInputs.aep, paraInputs.generation_count, paraInputs.population_size, paraInputs.given_seed, paraInputs.elite_count, paraInputs.alien_count, paraInputs.weights, updateData)
                         }} idd={"data_StartSimu"}/>
                     <hr/>

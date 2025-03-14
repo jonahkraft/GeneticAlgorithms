@@ -1,15 +1,16 @@
 import styles from './GenericButton.module.css';
 
 interface Props {
+    disabled?: boolean,
     title: string;
     onClick: () => void;
     idd: string;
 
 }
 
-function GenericButton({ title, onClick, idd}: Props) {
+function GenericButton({ disabled, title, onClick, idd}: Props) {
     return (
-        <button className={styles.GenericButton} onClick={onClick} id={idd}>{title}</button>
+        <button disabled={disabled} className={styles.GenericButton} onClick={onClick} id={idd}>{title}</button>
     );
 }
 
