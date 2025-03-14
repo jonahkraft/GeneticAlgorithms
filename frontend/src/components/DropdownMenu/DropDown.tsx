@@ -15,6 +15,7 @@ const DropDown = (props: DropDownProps) => (
                         <button
                             className={style.ddItem}
                             onClick={() => {
+                                console.log("item clicked", item)
                                 props.onChange();
                                 props.callBack.doWork(Number(item))
                             }}
