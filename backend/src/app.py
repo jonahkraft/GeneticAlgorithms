@@ -6,7 +6,7 @@ import json
 import os
 import database as db
 
-app = Flask(__name__, static_folder="static", template_folder="templates")
+app = Flask(__name__, static_folder="../static", template_folder="templates")
 CORS(app)  # Allow frontend to communicate with backend
 
 import api
@@ -22,32 +22,12 @@ protected_paths_simulation = ["register.html"]
 @app.route("/<path:path>")
 def serve_react(path: str):
     if path:
-        if path in protected_paths_analyst or path in protected_paths_simulation:
-            return serve_protected_react(path)
-        else:
-            return serve_unprotected_react(path)
-    return send_from_directory(app.static_folder, "index.html")
+        absolute_path = os.path.join(app.static_folder, path)
+        if os.path.exists(absolute_path):
+            return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, "index.html")
 
-# Behandelt die Routen welche einen Login benötigen bzw. handelt die Rollenberechtigung
-@jwt_required()
-def serve_protected_react(path: str):
-    current_user = get_jwt_identity()
-    role = db.get_role(current_user)
-    absolute_path = os.path.join(app.static_folder, path)
-    if os.path.exists(absolute_path):
-        if role == "data_analyst" and path in protected_paths_analyst:
-            return send_from_directory(app.static_folder, "index.html")
-        if role == "simulator" and path in protected_paths_simulation:
-            return send_from_directory(app.static_folder, "index.html")
-        return send_from_directory(app.static_folder, path)
-    return send_from_directory(app.static_folder, "index.html")
-
-# Behandelt unprotected Routes
-def serve_unprotected_react(path: str):
-    absolute_path = os.path.join(app.static_folder, path)
-    if os.path.exists(absolute_path):
-        return send_from_directory(app.static_folder, path)
-    return send_from_directory(app.static_folder, "index.html")
 
 if __name__ == "__main__":
     app.run(ssl_context=('cert.pem', 'key.pem'))

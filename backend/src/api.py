@@ -5,6 +5,7 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
+from flask.wrappers import Response
 
 from app import app as api
 
@@ -134,6 +135,12 @@ def api_register():
 
     return register(username, password, role)
 
+@api.route("/api/integration/empty_ping", methods = ["GET"])
+def empty_ping() -> Response:
+
+    return Response(response=None, status=200)
+
+
 @api.route("/api/delete_user", methods=["POST"])
 @jwt_required()
 def api_delete_user():
@@ -223,7 +230,7 @@ def api_change_password():
 @api.route("/api/change_username", methods=["POST"])
 @jwt_required()
 def api_change_username():
-    """Changes the users username  
+    """Changes the users username
 
     :param JSON
     {
@@ -270,7 +277,7 @@ def api_change_username():
 @api.route("/api/change_role", methods=["POST"])
 @jwt_required()
 def api_change_role():
-    """Changes the users role  
+    """Changes the users role
 
     :param JSON
     {
@@ -298,7 +305,7 @@ def api_change_role():
     allowed_roles = {"data_analyst", "administrator", "simulator"}
 
     if role not in allowed_roles:
-        db.write_log(f"Failed to change role of '{username}', because role '{role}' is invalid") 
+        db.write_log(f"Failed to change role of '{username}', because role '{role}' is invalid")
         return jsonify({"msg": f"Invalid role '{role}'"}), 400
 
     if db.get_role(current_user) != "administrator":
