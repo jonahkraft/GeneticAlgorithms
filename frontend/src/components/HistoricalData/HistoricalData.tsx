@@ -1,5 +1,7 @@
 import getSimulationData from "../../get_simulation_data.ts";
 import { useEffect, useState } from "react";
+import getExperimentInputs from "./loadInputs.ts"
+import cookies from "../../cookies.ts";
 
 interface HistoricalDataType {
     generation: string;
@@ -15,8 +17,28 @@ interface HistoricalDataType {
     'experiment_id': string;
 }
 
+interface ExperimentInputs {
+    population_size: number;
+    simulation_seed: number;
+    generation_count: number;
+    strategy: number;
+    aep: number;
+    elite_count: number;
+    alien_count: number;
+    weights: number[];
+}
+
 function HistoricalData() {
     const [resultData, setResultData] = useState<HistoricalDataType[]>([]);
+    const [inputId, setInputId] = useState("6")
+    const [input, setInput] = useState<ExperimentInputs>()
+
+    async function handleExperimentInput(experiment_id: string) {
+        const token = cookies.getCookies().token
+        const input: ExperimentInputs = await getExperimentInputs(experiment_id, token)
+        console.log(input)
+        setInput(input)
+    }
 
     useEffect(() => {
         getSimulationData(["generation", "final_drive", "roll_radius", "gear_3", "gear_4", "gear_5", "consumption", "elasticity_3", "elasticity_4", "elasticity_5", "experiment_id"], [])
@@ -72,6 +94,56 @@ function HistoricalData() {
                 ))}
                 </tbody>
             </table>
+
+            {input ? (
+                <table border={1}>
+                    <thead>
+                    <tr>
+                        <th>Population size</th>
+                        <th>Simulation Seed</th>
+                        <th>Generation Count</th>
+                        <th>Strategy</th>
+                        <th>Mutation Rate</th>
+                        <th>Elite Count</th>
+                        <th>Alien Count</th>
+                        <th>Weights</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td>{input.population_size}</td>
+                        <td>{input.simulation_seed}</td>
+                        <td>{input.generation_count}</td>
+                        <td>{input.strategy}</td>
+                        <td>{input.aep}</td>
+                        <td>{input.elite_count}</td>
+                        <td>{input.alien_count}</td>
+                        <td>{input.weights.join(", ")}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            ) : (<></>)}
+
+            <form onSubmit={(e) => e.preventDefault()}>
+                <input
+                    // className={styles.userFormInput}
+                    // id={"settings_NewUser"}
+                    type="text"
+                    placeholder="Enter experiment id"
+                    required
+                    value={inputId}
+                    onChange={(e) => setInputId(e.target.value)}
+                />
+
+                <button
+                    type="button"
+                    // id={"settings_AddUser"}
+                    // className={styles.userFormButton}
+                    onClick={() => handleExperimentInput(inputId)}>
+                    Apply
+                </button>
+            </form>
         </>
     );
 }
