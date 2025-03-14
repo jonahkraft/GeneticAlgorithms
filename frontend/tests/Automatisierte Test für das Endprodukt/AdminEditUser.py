@@ -33,7 +33,7 @@ wait_element(driver, By.ID, "settings_OldUsername").send_keys(oldusername)
 wait_element(driver, By.ID, "settings_ChangedUsername").send_keys(newusername)
 wait_element(driver, By.ID, "settings_ChangedPassword").send_keys(newpassword)
 time.sleep(3)                                           ##Hier wurde der User vom Admin gelöscht
-click_button(driver, "settings_ChoseRole2")
+click_button(driver, "settings_ChooseRole2")
 click_button(driver, "settings_NewAdmin")
 click_button(driver, "settings_ApplyChanges")
 driver.execute_script("window.scrollBy(0, 500);")

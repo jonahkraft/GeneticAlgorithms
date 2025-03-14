@@ -43,6 +43,4 @@ click_button(driver, "login_Login")
 time.sleep(3)
 
 ##Testablauf soll zeigen, dass der Admin neue User läschen kann
-
-
 driver.quit()
