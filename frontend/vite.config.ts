@@ -7,7 +7,7 @@ export default defineConfig({
   base: './',
   plugins: [react()],
   build: {
-    assetsDir: 'static',
+    assetsDir: 'assets',
   },
   server: {
     port: 3000,

@@ -286,7 +286,9 @@ function DataVisualization() {
             console.log("daten sind spaß")
             console.log(parsedList)
 
-            setData(Object.values(parsedList).flat())
+            // Quick fix
+            const values = Object.values(parsedList).flat() as HistoricalDataType[];
+            setData(values)
 
             console.log(Object.values(parsedList).flat())
 
