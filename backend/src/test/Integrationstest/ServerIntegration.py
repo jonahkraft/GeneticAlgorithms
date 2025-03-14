@@ -1,3 +1,5 @@
+import sys
+sys.path.append("..")
 
 import sqlite3, os
 import requests, json
@@ -10,7 +12,7 @@ from typing import Sequence, Any
 from sqlite3 import Connection, Cursor
 from threading import Thread
 
-from backend.src.test.Integrationstest.IntegrationMeta import IntegrationMeta, TestResult
+from IntegrationMeta import IntegrationMeta
 
 
 class ServerIntegrationTest(IntegrationMeta):
@@ -71,7 +73,7 @@ class ServerIntegrationTest(IntegrationMeta):
                                        }).status_code
 
         cursor : Cursor = database.cursor()
-        cursor.execute("SELECT * FROM users WHERE ?= user_name", [test_username_admin])
+        cursor.execute("SELECT * FROM users WHERE ?= username", [test_username_admin])
 
         databaseResponse : Any = cursor.fetchone()
         if databaseResponse is Sequence: databaseResponse = databaseResponse[0]
@@ -197,13 +199,13 @@ class ServerIntegrationTest(IntegrationMeta):
 
 
 if __name__ == '__main__':
-
-    from backend.src import database as database_module
+    sys.path.append("../..")
+    import database as database_module
 
     serverIntegrationInstance = ServerIntegrationTest()
     serverIntegrationResult = serverIntegrationInstance(server_address="http://127.0.0.1:5000/api",
                                                         server=Flask,                               #TODO do it right
-                                                        database_path="../../../../db/users.db",
+                                                        database_path="../../../db/users.db",
                                                         server_obj_type=type(Flask),
                                                         database_module=database_module,
                                                         personells=["data_analyst", "simulator"],
