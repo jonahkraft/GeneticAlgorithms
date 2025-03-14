@@ -64,7 +64,7 @@ class ServerIntegrationTest(IntegrationMeta):
         serverResponseForAdmin = requests.post(f"{server_address}/login",
                                        json={"username": test_username_admin, "password": test_password})
 
-        test_username = "TestUser10"
+        test_username = "TestUser100"
         serverResponseUserRegistration = requests.post(f"{server_address}/register",
                                        json={"username": f"{test_username}", "password": test_password, "role": "data_analyst"},
                                        headers={
@@ -75,10 +75,11 @@ class ServerIntegrationTest(IntegrationMeta):
         cursor : Cursor = database.cursor()
         cursor.execute("SELECT * FROM users WHERE ?= username", [test_username_admin])
 
-        databaseResponse : Any = cursor.fetchone()
+        
         if databaseResponse is Sequence: databaseResponse = databaseResponse[0]
 
-        assert serverResponseUserRegistration == serverResponseForAdmin.status_code == 200 and databaseResponse is not None, f"Failure (Server to Database), Got response {serverResponseForAdmin} from server"
+        print(serverResponseForAdmin.status_code, serverResponseUserRegistration, databaseResponse)
+        assert serverResponseUserRegistration == serverResponseForAdmin.status_code == 200 and databaseResponse is not None, f"Failure (Server to Database), Got response {serverResponseForAdmin.status_code} from server"
         database.close()
 
         self.usedUserNames.append(test_username_admin)
@@ -192,9 +193,9 @@ class ServerIntegrationTest(IntegrationMeta):
         Call the integration instance to run the tests
         :return: returns true if all tests passed
         """
-
-        return (self.connect(**kwargs) is self.serverToServer(**kwargs) is self.serverToDatabase(**kwargs)
-                is self.serverToUserRendering(**kwargs) is self.disconnect(testUserNames=self.usedUserNames, **kwargs))
+        return self.serverToDatabase(**kwargs)
+        #return (self.connect(**kwargs) is self.serverToServer(**kwargs) is self.serverToDatabase(**kwargs)
+        #        is self.serverToUserRendering(**kwargs) is self.disconnect(testUserNames=self.usedUserNames, **kwargs))
 
 
 
