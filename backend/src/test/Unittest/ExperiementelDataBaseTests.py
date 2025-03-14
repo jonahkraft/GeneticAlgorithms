@@ -1,4 +1,4 @@
-from ast import Try
+
 import sqlite3
 from concurrent.futures import ThreadPoolExecutor
 import csv
@@ -273,3 +273,4 @@ if __name__ == "__main__":
     print(inst.StressTestAdd())
     print(inst.TestExportData())
     print(inst.TestAddExperiementDataFromCSV())
+
