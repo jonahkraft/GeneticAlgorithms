@@ -3,6 +3,8 @@ import requests, json
 import hashlib
 from UnitMeta import UnitMeta
 import DatabaseGrenzwertAnalyse
+
+
 class APITests(UnitMeta):
     def __init__(self):
         self.ClearDataBase()
@@ -12,7 +14,7 @@ class APITests(UnitMeta):
 
         pass
     def ClearDataBase(self):
-        con = sqlite3.connect("..\\..\\..\\db\\users.db")
+        con = sqlite3.connect("../../../db/users.db")
         con.execute("delete from users where username <> \'user\'")
         con.commit()
 
@@ -96,7 +98,7 @@ class APITests(UnitMeta):
     def ChangePassword(self, data : dict[str, str], should_succeed : bool, token : str) -> bool:
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain', "Authorization": f"Bearer {token}"}
         res = requests.post("http://localhost:5000/api/change_password", data = json.dumps(data), headers= headers)
-        con = sqlite3.connect("..\\..\\..\\db\\users.db")
+        con = sqlite3.connect("../../../db/users.db")
         if token == "invalid-token":
             return res.status_code != 200
         cur = con.cursor()

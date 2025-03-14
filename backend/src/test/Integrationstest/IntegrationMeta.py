@@ -1,6 +1,9 @@
+import sys
+sys.path.append("..")
+
 import sqlite3
 
-from backend.src.test.MetaTest import MetaTest
+from MetaTest import MetaTest
 from typing import Callable, Sequence, Any, Union
 from sqlite3 import Connection, Cursor
 

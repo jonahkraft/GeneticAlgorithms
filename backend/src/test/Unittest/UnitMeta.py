@@ -1,4 +1,7 @@
-from backend.src.test.MetaTest import MetaTest
+import sys
+sys.path.append("..")
+
+from MetaTest import MetaTest
 from typing import Callable
 
 
