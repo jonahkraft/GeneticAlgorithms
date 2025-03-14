@@ -61,6 +61,25 @@ const easyP2 = "Our simulation uses genetic algorithms to find the best balance 
 ```
 easyP2 speichert den Text, für die Einführung zur Simulation, welcher gezeigt wird falls "Easy Speech" aktiviert ist
 
+```
+    const normalFAQ = {
+        purpose: "This simulation is designed to optimize specific characteristics of a car using a genetic algorithm. A set of predefined parameters is provided to the algorithm, which then iterates through multiple generations, continuously improving until an optimal solution is found.",
+        usage: "To begin, navigate to the Data Visualization page. There, you can define the relevant parameters and start the simulation. If you wish to analyze a specific generation in more detail, you can select it from the drop-down menu.",
+        graphs: "The overview graph displays all members of the population, organized by generation and consumption. The generation-specific graph provides a more detailed view, where each member of a generation is represented by three points—one for each of the three gears. These points are positioned based on their gear and elasticity."
+    };
+```
+normalFAQ speichert den Text für die 3 Antworten auf das FAQ. Purpose steht hierbei für die Antwort auf Frage 1, usagee für Frage 2 und graphs für Frage 3.
+Das ist der Text welcher genutzt wird wenn Easy Speech nicht aktiviert ist.
+
+```
+    const easyFAQ = {
+        purpose: "This simulation helps find the best car settings using a genetic algorithm. It improves over multiple rounds until it finds a good solution.",
+        usage: "Go to the Data Visualization page. There, you can set parameters and start the simulation. You can also choose a past round to look at in detail.",
+        graphs: "The first graph shows all results, sorted by round and fuel use. Another graph shows more details, where each car is marked by three points—one per gear."
+    };
+```
+easyFAQ speichert den Text für die 3 Antworten auf das FAQ. Purpose steht hierbei für die Antwort auf Frage 1, usagee für Frage 2 und graphs für Frage 3.
+Hier wird der Text gespeichert welcher bei Aktivität von easy speech genutzt wird
 
 ```
 function clickButton(){}
