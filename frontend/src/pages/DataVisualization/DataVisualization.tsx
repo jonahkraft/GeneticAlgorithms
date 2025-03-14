@@ -290,7 +290,8 @@ function DataVisualization() {
 
             console.log(parsedList)
 
-            console.log(Object.values(parsedList).flat())
+            const values = Object.values(parsedList).flat() as HistoricalDataType[];
+            console.log(values)
 
 
 
