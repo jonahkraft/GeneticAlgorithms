@@ -41,6 +41,8 @@ class Schnittstelle(object):
         müssen, gefüllt mit Zahlen (sowohl Integer als auch Float sind erlaubt).
         Negative Zahlen minimieren und positive Zahlen maximieren die Ausgabe, da wir den Konsum
         und die Zeit um von 0 auf 100 zu kommen betrachten, wollen wir Standardmäßig minimieren.
+        Wir negieren einmal alle Werte, so dass User intuitiv positive Zahlen eingeben können und
+        die Ausgaben trotzdem weiterhin Sinnvoll minimiert werden.
 
         :param population_size: size of the population (constant)
         :type population_size: int
@@ -51,7 +53,7 @@ class Schnittstelle(object):
         :param weights: defines how you weight consumption, elasticity 3, elasticity 4 and elasticity 5
         :type weights: list[float]
         '''
-        Car._Blueprint['goals'] = weights  # consumption, elasticity 3, elasticity 4, elasticity 5
+        Car._Blueprint['goals'] = [-weight for weight in weights]  # consumption, elasticity 3, elasticity 4, elasticity 5
 
         self.generation = Population(Car, population_size, seed=given_seed)
 
