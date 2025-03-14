@@ -193,7 +193,7 @@ function DataVisualization() {
     }
 
     function updateData(data: HistoricalDataType[]) {
-        setGenerations(Array.from(new Set(data.map((entry) => (entry.generation)))))
+        //setGenerations(Array.from(new Set(data.map((entry) => (entry.generation)))))
         setData(data)
         setId(data[0].experiment_id)
     }
@@ -317,7 +317,7 @@ function DataVisualization() {
             <div className={styles.container}>
             </div>
 
-            <div className={styles.mainContent}>
+            <div className={styles.mainContent} id={"data_description"}>
                 <Card>
                     <h2>Description</h2>
                     <p>
@@ -330,7 +330,7 @@ function DataVisualization() {
                             <tr>
                                 <td>Mutationsrate</td>
                                 <td><input className={styles.userFormSelect} type="text" name="aep" value={paraInputs.aep} onChange={handleParaChange} /></td>
-                                <td>Rate of mutation. A higher value results in less mutation (values between 0 and 1)</td>
+                                <td>Rate of mutation. A higher value results in higher mutation (values between 0 and 1)</td>
                             </tr>
                             <tr>
                                 <td>Generation Count</td>
