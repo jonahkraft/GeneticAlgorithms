@@ -309,7 +309,7 @@ function DataVisualization() {
             <div className={styles.container}>
             </div>
 
-            <div className={styles.mainContent}>
+            <div className={styles.mainContent} id={"data_description"}>
                 <Card>
                     <h2>Description</h2>
                     <p>
